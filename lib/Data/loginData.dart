@@ -1,0 +1,33 @@
+class LoginData
+{
+  int id;
+  String firstName;
+  String lastName;
+  String email;
+  String dob;
+  String age;
+  int gender;
+  String username;
+  String password;
+  String mobileno;
+  String deviceId;
+  String state;
+  String country;
+  String city;
+  String zipCode;
+  String address;
+  String facebookId;
+  String googleId;
+  String newPassword;
+  String confirmPassword;
+  String loginType;
+  String idProofFront;
+  String idProofBack;
+  String panCard;
+  String drugLicense;
+  String gstNo;
+  String profilePic;
+  String latitude;
+  String longitude;
+  String contactName;
+}
