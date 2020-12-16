@@ -229,6 +229,26 @@ getTheMobileNumber(String type) async
                           ),
                         ),
 
+
+                         Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 25,
+                            child: Text(
+                                "Request a call back regarding Together's B2B offerings using the form below.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black54),
+                              ),
+                              alignment: Alignment.center,
+                          ),
+                        ),
+
+
+
+
                     Padding(
                       padding: const EdgeInsets.fromLTRB(40, 0, 40, 10),
                       child: TextFormField(
