@@ -696,8 +696,8 @@ InputDecoration setInputDecorationForEdit(
     labelStyle: TextStyle(
         color:myFocusNode.hasFocus?appThemeColor1:Colors.black,
         ),
-    fillColor: Colors.transparent,
-    filled: true,
+    // fillColor: Colors.transparent,
+    // filled: true,
     errorStyle: TextStyle(color: Colors.black),
     labelText: labelText,
     hintText: hintText,
@@ -708,14 +708,27 @@ InputDecoration setInputDecorationForEdit(
             color:appThemeColor1,
           ),
     focusColor: myFocusNode.hasFocus?appThemeColor1:Colors.black,
-    // enabledBorder: UnderlineInputBorder(
-    // borderSide: BorderSide(color: Colors.red),
-    // ),
-    disabledBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color: Colors.black),
-    ),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: appThemeColor1,width: 1),
+    enabledBorder: OutlineInputBorder(
+       borderSide: BorderSide(color: Colors.black45,width: 1),
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(15.0),
+            
+          )
+      ),
+    disabledBorder: OutlineInputBorder(
+       borderSide: BorderSide(color: Colors.black45,width: 1),
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(15.0),
+            
+          )
+      ),
+    focusedBorder: OutlineInputBorder(
+      
+      borderSide: BorderSide(color: Colors.black45,width: 1),
+      borderRadius: const BorderRadius.all(
+            const Radius.circular(15.0),
+            
+          )
     ),
   );
 }

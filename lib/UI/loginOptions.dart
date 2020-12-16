@@ -131,7 +131,7 @@ void iOS_Permission() {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("RIGHT", style: TextStyle(fontWeight: FontWeight.w700,fontSize: 24,color: appThemeColor1, fontStyle: FontStyle.normal)),
+                          Text("RIGHT", style: TextStyle(fontWeight: FontWeight.w900,fontSize: 24,color: appThemeColor1, fontStyle: FontStyle.normal)),
                           Text("ACCESS", style: TextStyle(fontWeight: FontWeight.w500,fontSize: 24,color: Colors.black, fontStyle: FontStyle.normal)),
 
                         ],
@@ -217,7 +217,7 @@ void iOS_Permission() {
 
 
                            Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             height: 25,
@@ -225,7 +225,7 @@ void iOS_Permission() {
                                 "Powered By Right Access",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 18,
                                      color: Colors.black54),
                               ),
                           ),
@@ -234,7 +234,7 @@ void iOS_Permission() {
 
 
                          Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             height: 25,
@@ -242,7 +242,7 @@ void iOS_Permission() {
                                 "It is a long established fact that a reader",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     color: Colors.black54),
                               ),
                               alignment: Alignment.center,

@@ -15,6 +15,7 @@ import 'dart:convert' as JSON;
 
 
 TextEditingController mobileController = TextEditingController();
+bool isRemembered = false;
 
 
 class Login extends StatelessWidget {
@@ -206,16 +207,20 @@ getTheMobileNumber(String type) async
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     
-                  // Padding(
-                  //     padding: const EdgeInsets.fromLTRB(50, 40, 50, 20),
-                  //     child: Image.asset(
-                  //       "images/app-logo.png", height: 200,
-                  //       fit: BoxFit.fitWidth,
-                  //     ),
-                  //   ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("RIGHT", style: TextStyle(fontWeight: FontWeight.w900,fontSize: 24,color: appThemeColor1, fontStyle: FontStyle.normal)),
+                          Text("ACCESS", style: TextStyle(fontWeight: FontWeight.w500,fontSize: 24,color: Colors.black, fontStyle: FontStyle.normal)),
+
+                        ],
+                      ),
+                    ),
 
                     Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             height: 25,
@@ -224,22 +229,23 @@ getTheMobileNumber(String type) async
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 22,
-                                     color: appThemeColor1),
+                                     color: appThemeColor1,fontWeight: FontWeight.w600),
                               ),
                           ),
                         ),
 
 
                          Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
-                            height: 25,
+                            height: 70,
                             child: Text(
                                 "Request a call back regarding Together's B2B offerings using the form below.",
                                 textAlign: TextAlign.center,
+                                maxLines: 10,
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                     color: Colors.black54),
                               ),
                               alignment: Alignment.center,
@@ -250,15 +256,15 @@ getTheMobileNumber(String type) async
 
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 40, 10),
+                      padding: const EdgeInsets.fromLTRB(20, 40, 20, 10),
                       child: TextFormField(
                           focusNode: loginFocusNode,
                           style: TextStyle(color: Colors.black),
                           keyboardType: TextInputType.emailAddress,
                           textAlign: TextAlign.left,
                           decoration: setInputDecorationForEdit(
-                              "Please enter email",
-                              "Email",
+                              "Email or mobile phone  number",
+                              "Email or mobile phone  number",
                               Colors.yellow,
                               Colors.orange,
                               Colors.blueGrey,
@@ -266,7 +272,7 @@ getTheMobileNumber(String type) async
                               loginFocusNode),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "Please enter your email";
+                              return "Please enter your email or mobile";
                             } 
                             // else if (!checkValidEmail(value)) {
                             //   return "Please enter valid email";
@@ -278,15 +284,15 @@ getTheMobileNumber(String type) async
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
                           focusNode: passwordFocusNode,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.emailAddress,
                           decoration: setInputDecorationForEdit(
-                              "Please enter Password",
-                              "Password",
+                              "Email Password",
+                              "Email Password",
                               Colors.red,
                               Colors.red,
                               Colors.red,
@@ -302,21 +308,93 @@ getTheMobileNumber(String type) async
                           }),
                     ),
 
+
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
 
 
                        Container(
-                         width: 200,
-                         height: 50,
-                        //  decoration: setBoxDecoration(Colors.white),
-                        color: appThemeColor1,
+                         width: 30,
+                         height: 30,
+                         child: FlatButton(
+                           padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
+                           color: Colors.transparent,
+                           child: Icon(isRemembered?Icons.check_box:Icons.check_box_outline_blank,size: 30,color: Colors.black45,),
+                           onPressed: () {
+                             setState(() {
+                               isRemembered = !isRemembered;
+                             });
+                           },
+                         ),
+                       ),
+
+                       Padding(
+                         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                         child: Text(
+                                  "Remember Me",
+                                  textAlign: TextAlign.center,
+                                  maxLines: 10,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                ),
+                       ),
+
+
+
+
+                        ],
+                      ),
+                    ),
+
+
+
+
+
+
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+
+                          Container(
+                         width: 280,
+                         height: 40,
+                        alignment: Alignment.bottomRight,
                          child: FlatButton(
                            color: Colors.transparent,
-                           child: Text("LOGIN",
+                           child: Text("Forgot Password?",
+                               style: TextStyle(
+                                   fontWeight: FontWeight.w600,
+                                   fontSize: 15,
+                                   color: appThemeColor1,
+                                   fontStyle: FontStyle.normal)),
+                           onPressed: () {
+                             if (loginKey.currentState.validate()) {
+                                 ShowLoader(context);
+                                 SchedulerBinding.instance.addPostFrameCallback((_) => loginUser(loginObj, context, "password"));
+                               }
+                           },
+                         ),
+                       ),
+
+
+                       Container(
+                         width: 280,
+                         height: 50,
+                         decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(5),
+                           color: appThemeColor1,
+                         ),
+                        //  decoration: setBoxDecoration(Colors.white),
+                        
+                         child: FlatButton(
+                           color: Colors.transparent,
+                           child: Text("SIGN IN",
                                style: TextStyle(
                                    fontWeight: FontWeight.w600,
                                    fontSize: 18,
@@ -376,16 +454,16 @@ getTheMobileNumber(String type) async
                       //   ),
 
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
                           child: Container(
                             height: 30,
                             child: FlatButton(
                               child: Text(
-                                "Register",
+                                "REGISTER NOW",
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w700),
+                                    fontSize: 17, fontWeight: FontWeight.w500),
                               ),
-                              textColor: appThemeColor1,
+                              textColor: Colors.black,
                               onPressed: () {
                                 Navigator.push(
                                   context, setNavigationTransition(Register()));
@@ -395,27 +473,41 @@ getTheMobileNumber(String type) async
                         ),
 
                    
+ Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 25,
+                            child: Text(
+                                "Powered By Right Access",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                     color: Colors.black54),
+                              ),
+                          ),
+                        ),
+                        
 
 
-                    // Padding(
-                    //   padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
-                    //   child: Container(
-                    //     width: MediaQuery.of(context).size.width,
-                    //     alignment: Alignment.centerLeft,
-                    //     height: 30,
-                    //     child: FlatButton(
-                    //       child: Text(
-                    //         "Login Options",
-                    //         style: TextStyle(
-                    //             fontSize: 17, fontWeight: FontWeight.w700),
-                    //       ),
-                    //       textColor: appThemeColor1,
-                    //       onPressed: () {
-                    //         Navigator.pop(context);
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
+                         Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 25,
+                            child: Text(
+                                "It is a long established fact that a reader",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black54),
+                              ),
+                              alignment: Alignment.center,
+                          ),
+                        ),
+
+
+
                   ],
                 ),
               ),
