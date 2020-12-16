@@ -12,6 +12,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:right_access/Globals/globals.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
+import 'package:right_access/UI/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:right_access/Globals/globals.dart" as globals;
 import 'package:http/http.dart' as http;
@@ -452,7 +453,7 @@ SetHomePage(int index, String screenName) async {
                   //     fontFamily: defaultFontFamilyForAppBar,
                   //     fontStyle: FontStyle.normal)
                       ))),
-      home: screen
+      home: Login()
       // home: JoinMeet()
       // home: (check && globals.numberOfChildren > 0) ?  CustomDrawer(positionForDrawer = screenName) : LoginOptions()
       ));

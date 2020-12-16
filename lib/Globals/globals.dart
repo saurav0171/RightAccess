@@ -1,7 +1,7 @@
 library my_prj.globals;
 
 import 'dart:async';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
@@ -33,6 +33,7 @@ Function updateWidgetList;
 Function updateCart;
 Function updateGroupInfo;
 BuildContext notificationContext ;
+FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 Map notificationObject ;
 bool isAudioCallOnly = false;
 String globalGroupName ;
