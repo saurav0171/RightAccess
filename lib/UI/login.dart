@@ -215,6 +215,21 @@ getTheMobileNumber(String type) async
                   //   ),
 
                     Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 25,
+                            child: Text(
+                                "LOGIN WITH US",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 22,
+                                     color: appThemeColor1),
+                              ),
+                          ),
+                        ),
+
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(40, 0, 40, 10),
                       child: TextFormField(
                           focusNode: loginFocusNode,
