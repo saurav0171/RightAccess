@@ -290,7 +290,7 @@ showVersionAlertDialog(BuildContext context,String message) {
                       image: new DecorationImage(
                           // alignment: Alignment(0.0, 0.0),
                           fit: BoxFit.fitWidth,
-                          image: AssetImage("images/medit-launch.gif")))),
+                          image: AssetImage("images/image.png")))),
             ),
           ),
 

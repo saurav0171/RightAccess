@@ -32,36 +32,36 @@ class Login extends StatelessWidget {
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: appThemeColor1,
-              elevation: 0.0,
-              title: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Plasma Donor",style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              //  leading: Padding(
-              //   padding: const EdgeInsets.all(0.0),
-              //   child: InkWell(
-              //       child: Container(
-              //       decoration: BoxDecoration(
-              //         borderRadius: new BorderRadius.circular(5.0),
-              //         color: appThemeColor1
-              //       ),
-              //       child: Icon(Icons.arrow_back,color: Colors.white,)),
-              //       onTap: ()
-              //       {
-              //         Navigator.pop(context);
-              //       },
-              //   ),
-              // ),
-            ),
+            // appBar: AppBar(
+            //   automaticallyImplyLeading: false,
+            //   backgroundColor: appThemeColor1,
+            //   elevation: 0.0,
+            //   title: Padding(
+            //     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            //     child: Container(
+            //       width: MediaQuery.of(context).size.width,
+            //       alignment: Alignment.center,
+            //       // child: Text(
+            //       //   "Plasma Donor",style: TextStyle(color: Colors.white),
+            //       // ),
+            //     ),
+            //   ),
+            //   //  leading: Padding(
+            //   //   padding: const EdgeInsets.all(0.0),
+            //   //   child: InkWell(
+            //   //       child: Container(
+            //   //       decoration: BoxDecoration(
+            //   //         borderRadius: new BorderRadius.circular(5.0),
+            //   //         color: appThemeColor1
+            //   //       ),
+            //   //       child: Icon(Icons.arrow_back,color: Colors.white,)),
+            //   //       onTap: ()
+            //   //       {
+            //   //         Navigator.pop(context);
+            //   //       },
+            //   //   ),
+            //   // ),
+            // ),
             body: FormKeyboardActions(child: LoginExtension()),
           ),
         ],
@@ -206,13 +206,13 @@ getTheMobileNumber(String type) async
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(50, 40, 50, 20),
-                      child: Image.asset(
-                        "images/app-logo.png", height: 200,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
+                  // Padding(
+                  //     padding: const EdgeInsets.fromLTRB(50, 40, 50, 20),
+                  //     child: Image.asset(
+                  //       "images/app-logo.png", height: 200,
+                  //       fit: BoxFit.fitWidth,
+                  //     ),
+                  //   ),
 
                     Padding(
                       padding: const EdgeInsets.fromLTRB(40, 0, 40, 10),

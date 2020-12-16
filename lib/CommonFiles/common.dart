@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:right_access/Globals/globals.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/UI/login.dart';
+import 'package:right_access/UI/loginOptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:right_access/Globals/globals.dart" as globals;
 import 'package:http/http.dart' as http;
@@ -26,9 +27,11 @@ import 'package:path/path.dart';
 // ******Color Code********//
 
 final appBackgroundColor = Color(0xFFFFFFFF);
-final appThemeColor1 = Color(0xFF8c1515);
+final appThemeColor1 = Color(0xFFE0161D);
 final appThemeColor2 = Color(0xFF3885C6); 
 // final lightTheme2Color = Color(0xFF04A4FF);
+
+
 
 
 
@@ -453,7 +456,7 @@ SetHomePage(int index, String screenName) async {
                   //     fontFamily: defaultFontFamilyForAppBar,
                   //     fontStyle: FontStyle.normal)
                       ))),
-      home: Login()
+      home: LoginOptions()
       // home: JoinMeet()
       // home: (check && globals.numberOfChildren > 0) ?  CustomDrawer(positionForDrawer = screenName) : LoginOptions()
       ));

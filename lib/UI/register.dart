@@ -458,13 +458,13 @@ fetchZones() async
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(50, 30, 50, 20),
-                      child: Image.asset(
-                        "images/app-logo.png", height: 100,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(50, 30, 50, 20),
+                    //   child: Image.asset(
+                    //     "images/app-logo.png", height: 100,
+                    //     fit: BoxFit.fitWidth,
+                    //   ),
+                    // ),
 
                     Padding(
                       padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
