@@ -219,6 +219,9 @@ getTheMobileNumber(String type) async
                       ),
                     ),
 
+
+                    
+
                     Padding(
                           padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
                           child: Container(
@@ -473,7 +476,7 @@ getTheMobileNumber(String type) async
                         ),
 
                    
- Padding(
+                          Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Container(
                             width: MediaQuery.of(context).size.width,

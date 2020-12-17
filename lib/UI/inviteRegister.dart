@@ -42,7 +42,7 @@ bool isAdult = false;
 String locationError = "";
 LocationData currentLocation;
 
-class Register extends StatelessWidget {
+class InviteRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
@@ -82,7 +82,7 @@ class Register extends StatelessWidget {
                 ),
               ),
             ),
-            body: FormKeyboardActions(child: RegisterExtension()),
+            body: FormKeyboardActions(child: InviteRegisterExtension()),
           ),
         ],
       ),
@@ -90,12 +90,14 @@ class Register extends StatelessWidget {
   }
 }
 
-class RegisterExtension extends StatefulWidget {
+
+
+class InviteRegisterExtension extends StatefulWidget {
   @override
-  _RegisterExtensionState createState() => _RegisterExtensionState();
+  _InviteRegisterExtensionState createState() => _InviteRegisterExtensionState();
 }
 
-class _RegisterExtensionState extends State<RegisterExtension> {
+class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
   FocusNode firstNameFocusNode = new FocusNode();
   FocusNode mobileFocusNode = new FocusNode();
   FocusNode emailFocusNode = new FocusNode();
