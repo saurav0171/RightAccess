@@ -58,30 +58,30 @@ class Register extends StatelessWidget {
           ),
           Scaffold(
             // backgroundColor: appThemeColor1,
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: appThemeColor1,
-              elevation: 0.0,
-              title: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Text("REGISTER", style: TextStyle(color:Colors.white),),
-              ),
-              leading: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: InkWell(
-                    child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: new BorderRadius.circular(5.0),
-                      color: appThemeColor1
-                    ),
-                    child: Icon(Icons.arrow_back,color: Colors.white,)),
-                    onTap: ()
-                    {
-                      Navigator.pop(context);
-                    },
-                ),
-              ),
-            ),
+            // appBar: AppBar(
+            //   automaticallyImplyLeading: false,
+            //   backgroundColor: appThemeColor1,
+            //   elevation: 0.0,
+            //   title: Padding(
+            //     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            //     child: Text("REGISTER", style: TextStyle(color:Colors.white),),
+            //   ),
+            //   leading: Padding(
+            //     padding: const EdgeInsets.all(0.0),
+            //     child: InkWell(
+            //         child: Container(
+            //         decoration: BoxDecoration(
+            //           borderRadius: new BorderRadius.circular(5.0),
+            //           color: appThemeColor1
+            //         ),
+            //         child: Icon(Icons.arrow_back,color: Colors.white,)),
+            //         onTap: ()
+            //         {
+            //           Navigator.pop(context);
+            //         },
+            //     ),
+            //   ),
+            // ),
             body: FormKeyboardActions(child: RegisterExtension()),
           ),
         ],

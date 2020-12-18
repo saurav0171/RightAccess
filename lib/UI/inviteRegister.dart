@@ -58,30 +58,30 @@ class InviteRegister extends StatelessWidget {
           ),
           Scaffold(
             // backgroundColor: appThemeColor1,
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: appThemeColor1,
-              elevation: 0.0,
-              title: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Text("REGISTER", style: TextStyle(color:Colors.white),),
-              ),
-              leading: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: InkWell(
-                    child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: new BorderRadius.circular(5.0),
-                      color: appThemeColor1
-                    ),
-                    child: Icon(Icons.arrow_back,color: Colors.white,)),
-                    onTap: ()
-                    {
-                      Navigator.pop(context);
-                    },
-                ),
-              ),
-            ),
+            // appBar: AppBar(
+            //   automaticallyImplyLeading: false,
+            //   backgroundColor: appThemeColor1,
+            //   elevation: 0.0,
+            //   title: Padding(
+            //     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            //     child: Text("REGISTER", style: TextStyle(color:Colors.white),),
+            //   ),
+            //   leading: Padding(
+            //     padding: const EdgeInsets.all(0.0),
+            //     child: InkWell(
+            //         child: Container(
+            //         decoration: BoxDecoration(
+            //           borderRadius: new BorderRadius.circular(5.0),
+            //           color: appThemeColor1
+            //         ),
+            //         child: Icon(Icons.arrow_back,color: Colors.white,)),
+            //         onTap: ()
+            //         {
+            //           Navigator.pop(context);
+            //         },
+            //     ),
+            //   ),
+            // ),
             body: FormKeyboardActions(child: InviteRegisterExtension()),
           ),
         ],
@@ -352,7 +352,23 @@ fetchZones() async
                             width: MediaQuery.of(context).size.width,
                             height: 25,
                             child: Text(
-                                "REGISTRATION WITH US",
+                                "THANK YOU",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 22,
+                                     color: appThemeColor1,fontWeight: FontWeight.w600),
+                              ),
+                          ),
+                        ),
+
+
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 25,
+                            child: Text(
+                                "FOR REGISTRATION!",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 22,
@@ -363,13 +379,61 @@ fetchZones() async
 
 
 
-                         Padding(
+
+                        Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             height: 70,
                             child: Text(
-                                "Request a call back regarding Together's B2B offerings using the form below.",
+                                "We are verifying the details and will confirm you shortly",
+                                textAlign: TextAlign.center,
+                                maxLines: 10,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black54),
+                              ),
+                              alignment: Alignment.center,
+                          ),
+                        ),
+
+
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Container(
+                            height: 4,
+                            color: appThemeColor1,
+                          ),
+                        ),
+
+                        
+
+
+
+                         Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(
+                                "This program might allow professional only.",
+                                textAlign: TextAlign.center,
+                                maxLines: 10,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black54),
+                              ),
+                              alignment: Alignment.center,
+                          ),
+                        ),
+
+
+
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(
+                                "Kindly help us with below details.",
                                 textAlign: TextAlign.center,
                                 maxLines: 10,
                                 style: TextStyle(
@@ -639,34 +703,34 @@ fetchZones() async
 
 
 
-                      Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: TextFormField(
-                          focusNode: emailFocusNode,
-                          controller: confirmPasswordController,
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: setInputDecorationForEdit(
-                              "Enter Confirm Password",
-                              "Enter Confirm Password",
-                              appThemeColor1,
-                              appThemeColor1,
-                              appThemeColor1,
-                              Icons.lock,
-                              passwordFocusNode),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please enter Confirm Password";
-                            }
-                            else if(passwordController.text != confirmPasswordController.text)
-                            {
-                                 return "Password didn't match Confirm Password";
-                            }  else {
-                              loginObj.confirmPassword = value;
-                            }
-                          }),
-                    ),
+                    //   Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    //   child: TextFormField(
+                    //       focusNode: emailFocusNode,
+                    //       controller: confirmPasswordController,
+                    //       style: TextStyle(color: Colors.black),
+                    //       textAlign: TextAlign.left,
+                    //       keyboardType: TextInputType.emailAddress,
+                    //       decoration: setInputDecorationForEdit(
+                    //           "Enter Confirm Password",
+                    //           "Enter Confirm Password",
+                    //           appThemeColor1,
+                    //           appThemeColor1,
+                    //           appThemeColor1,
+                    //           Icons.lock,
+                    //           passwordFocusNode),
+                    //       validator: (value) {
+                    //         if (value.isEmpty) {
+                    //           return "Please enter Confirm Password";
+                    //         }
+                    //         else if(passwordController.text != confirmPasswordController.text)
+                    //         {
+                    //              return "Password didn't match Confirm Password";
+                    //         }  else {
+                    //           loginObj.confirmPassword = value;
+                    //         }
+                    //       }),
+                    // ),
 
 
 
@@ -726,12 +790,44 @@ fetchZones() async
                     children: <Widget>[
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                           child: Container(
                             // decoration: setBoxDecoration(Colors.white),
                             child: FlatButton(
                               color: appThemeColor1,
-                              child: Text("REGISTER",
+                              child: Text("SUBMIT",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.normal)),
+                              onPressed: () {
+                                if (loginKey.currentState.validate()) {
+                                    ShowLoader(context);
+                                    SchedulerBinding.instance.addPostFrameCallback((_) =>  createUser(loginObj, context));
+
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+
+
+
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
+                          child: Container(
+                            // decoration: setBoxDecoration(Colors.white),
+                            child: FlatButton(
+                              color: appThemeColor1,
+                              child: Text("Go Back",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 18,
