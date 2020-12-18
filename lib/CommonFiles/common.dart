@@ -42,9 +42,7 @@ final sideMenuColor = "#7CACAE";
 
 // Constants
 
-// final baseUrlLogin = "http://192.168.31.172/newlcrm/public/api";
-// final baseUrl = "http://dev.01s.in/groupchat/public/api";
-final baseUrl = "http://dev.01s.in/medit/public/api";
+final baseUrl = "http://www.togetherevent.tk/api/v1";
 
 
 final defaultFontFamily = "Comic Sans";
@@ -70,6 +68,7 @@ final kDataCreatedDate = "createddate";
 final kDataLastLoginDate = "lastlogindate";
 final kDataCode = "code";
 final kDataError = "error";
+final kDataErrors = "errors";
 final kDataSuccess = "success";
 final kDataAPS = "aps";
 final kDataMessage = "message";

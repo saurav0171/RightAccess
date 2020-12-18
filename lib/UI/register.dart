@@ -22,25 +22,12 @@ bool isRemembered = false;
 
 
 
-List stateList = [];
-List<String> stateListString = [];
-String selectedState ; 
-Map selectedStateObject = {};
-
-List zoneList = [];
-List<String> zoneListString = [];
-String selectedZone ; 
-Map selectedZoneObject = {};
+List countriesList = [];
+List<String> countriesListString = [];
+String selectedCountries ; 
+Map selectedCountriesObject = {};
 
 
-DateTime dob;
-TextEditingController dateController = TextEditingController();
-
-
-final dateFormat = DateFormat("dd/MM/yyyy");
-bool isAdult = false; 
-String locationError = "";
-LocationData currentLocation;
 
 class Register extends StatelessWidget {
   @override
@@ -172,8 +159,8 @@ class _RegisterExtensionState extends State<RegisterExtension> {
       setState(() {});
     });
     
-    // ShowLoader(context);
-    // fetchStates();
+    ShowLoader(context);
+    fetchCountries();
     // getUserLocation();
     
   }
@@ -183,101 +170,36 @@ class _RegisterExtensionState extends State<RegisterExtension> {
 
 
 
-  fetchStates() async 
+  fetchCountries() async 
   {
-    final url = "$baseUrl/state_list";
+    final url = "$baseUrl/countries";
     var result = await CallApi("GET", null, url);
     if (result[kDataCode] == "200") {
       
        setState(() {
-         stateList = result[kDataData];
-         stateListString = [];
-        for (var i = 0; i < stateList.length; i++) 
+         countriesList = result[kDataData];
+         countriesListString = [];
+        for (var i = 0; i < countriesList.length; i++) 
         {
-            stateListString.add(stateList[i][kDataStateName]);
+            countriesListString.add(countriesList[i][kDataAttributes][kDataName]);
         }
-        fetchZones();
+        
       });
+      HideLoader(context);
     } else if (result[kDataCode] == "401") {
       
       ShowErrorMessage(result[kDataResult], context);
        HideLoader(context);
+    } 
+    else if(result[kDataCode] == "422")
+    {
+        ShowErrorMessage(result[kDataMessage], context);
     } else {
       ShowErrorMessage(result[kDataError], context);
        HideLoader(context);
     }
    
   }
-
-
-fetchZones() async 
-  {
-    final url = "$baseUrl/getallzones/1";
-    var result = await CallApi("GET", null, url);
-    if (result[kDataCode] == "200") {
-      
-       setState(() {
-         zoneList = result[kDataData];
-         zoneListString = [];
-        for (var i = 0; i < zoneList.length; i++) 
-        {
-            zoneListString.add(zoneList[i][kDataZone]);
-        }
-      });
-    } else if (result[kDataCode] == "401") {
-      
-      ShowErrorMessage(result[kDataResult], context);
-    } else {
-      ShowErrorMessage(result[kDataError], context);
-    }
-    HideLoader(context);
-  }
-
-
- getUserLocation() async {//call this async method from whereever you need
-
-      LocationData myLocation;
-      
-      Location location = new Location();
-      try {
-        myLocation = await location.getLocation();
-        print("myLocation : $myLocation");
-      } on PlatformException catch (e) {
-        if (e.code == 'PERMISSION_DENIED') {
-          setState(() {
-            locationError = 'Please grant permission';
-          });
-          print(locationError);
-        }
-        if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-          setState(() {
-            locationError = 'Permission denied- Please enable it from app settings';
-          });
-          print(locationError);
-        }
-        if (e.code == 'SERVICE_STATUS_DISABLED') {
-          setState(() {
-            locationError = 'Location Service Disabled- Please enable it from app settings';
-          });
-          print(locationError);
-        }
-        // ShowErrorMessage(error, context);
-        showDialog(context: context, 
-        builder: (_) => new AlertDialog(
-            title: new Text("Location Service"),
-            content: new Text(locationError),
-            actions: <Widget>[
-              FlatButton(onPressed: ()
-              {
-                  Navigator.pop(context);
-              }, child: Text("OK"))
-            ],
-        )
-            );
-        myLocation = null;
-      }
-       currentLocation = myLocation;
-    }
 
 
 
@@ -607,6 +529,57 @@ fetchZones() async
 
 
 
+
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black45,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15.0),
+                                bottomLeft: Radius.circular(15.0),
+                                bottomRight: Radius.circular(15.0),
+                                topRight: Radius.circular(15.0))),
+                        child: DropdownButton<String>(
+                          value: selectedCountries,
+                          hint: Text("Choose country",style: TextStyle(color: Colors.black45,fontSize: 16),),
+                          isExpanded: true,
+                          iconSize: 24,
+                          iconEnabledColor: Colors.white,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.black,fontSize: 16),
+                          underline: Container(
+                            height: 0,
+                          ),
+                          onChanged: (String newValue) {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                            setState(() {
+                            selectedCountries = newValue;
+                            int index = countriesList.indexWhere((data) => data[kDataAttributes][kDataName] == newValue);
+                            selectedCountriesObject = countriesList[index];
+                         });
+                          },
+                          items: countriesListString
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+
+
+
+
+
+
                      Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
@@ -809,31 +782,6 @@ fetchZones() async
     param["mobile"] = register.mobileno;
     param["address"] = register.address;
     param["email"] = register.email;
-    param["state_id"] = selectedStateObject[kDataID].toString();
-    param["city"] = register.city;
-    param["zone_id"] = selectedZoneObject[kDataID].toString();
-    param["pan"] = register.panCard.toString();
-    param["front_aadhaar"] = register.idProofFront.toString();
-    param["back_aadhaar"] = register.idProofBack.toString();
-    if (selectedUser!="Delivery Boy") 
-    {
-      param["drug_lic"] = register.drugLicense.toString();
-    }
-    else
-    {
-       param["drug_lic"] =  "";
-    }
-
-    if (selectedUser!="Delivery Boy") 
-    {
-      param["gst"] = register.gstNo.toString();
-    }
-    else
-    {
-      param["gst"] = "";
-    }
-    param["device_type"] = globals.deviceType.toString();
-    param["device_token"] = globals.deviceToken;
 
 
     final url = "$baseUrl/signup";

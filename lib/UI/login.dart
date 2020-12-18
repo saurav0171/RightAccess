@@ -277,9 +277,9 @@ getTheMobileNumber(String type) async
                             if (value.isEmpty) {
                               return "Please enter your email or mobile";
                             } 
-                            // else if (!checkValidEmail(value)) {
-                            //   return "Please enter valid email";
-                            // } 
+                            else if (!checkValidEmail(value)) {
+                              return "Please enter valid email";
+                            } 
                             else {
                               loginObj.email = value;
                             }
@@ -377,10 +377,10 @@ getTheMobileNumber(String type) async
                                    color: appThemeColor1,
                                    fontStyle: FontStyle.normal)),
                            onPressed: () {
-                             if (loginKey.currentState.validate()) {
-                                 ShowLoader(context);
-                                 SchedulerBinding.instance.addPostFrameCallback((_) => loginUser(loginObj, context, "password"));
-                               }
+                            //  if (loginKey.currentState.validate()) {
+                            //      ShowLoader(context);
+                            //      SchedulerBinding.instance.addPostFrameCallback((_) => loginUser(loginObj, context, "password"));
+                            //    }
                            },
                          ),
                        ),
@@ -527,30 +527,12 @@ getTheMobileNumber(String type) async
 
      Map param = Map();
     // param["login_type"] = loginType;
-    if (loginType == "password") 
-    {
-      param["username"] = login.email;
-      param["password"] = login.password;
-      // param["device_type"] = globals.deviceType.toString();
-      // param["device_token"] = globals.deviceToken;
-      // param["company_id"] = "1";
-    }
-    else if (loginType == "facebook") 
-    {
-      param["facebook_token"] = login.facebookId;
-      param["email"] = login.email;
-      param["mobile"] = mobileController.text;
-    }
-    else
-    {
-      param["google_token"] = login.googleId;
-      param["email"] = login.email;
-      param["mobile"] = mobileController.text;
-    }
+    param["email"] = login.email;
+    param["password"] = login.password;
     
     
 
-    final url = "$baseUrl/login.json";
+    final url = "$baseUrl/login";
     var result = await CallApi("POST", param, url);
     // var result = await makePostRequest("POST", param, url) ;
     HideLoader(context);
@@ -565,6 +547,10 @@ getTheMobileNumber(String type) async
       } else {
         ShowErrorMessage(result[kDataMessage], context);
       }
+    }
+    else if(result[kDataCode] == "422")
+    {
+        ShowErrorMessage(result[kDataMessage], context);
     } else {
       ShowErrorMessage(result[kDataError], context);
     }

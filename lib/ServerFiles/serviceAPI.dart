@@ -73,18 +73,19 @@ if (connectivityResult == ConnectivityResult.none)
     var jsonResponse = convert.jsonDecode(response.body);
     jsonResponse[kDataCode] = "200";
     return jsonResponse;
-  } else if (response.statusCode == 401) {
+  }
+   else if (response.statusCode == 401) {
     var jsonResponse = convert.jsonDecode(response.body);
-    var jsonError = {"error": jsonResponse[kDataError], "code": "401"};
+    var jsonError = {"error": jsonResponse[kDataErrors], "code": response.statusCode.toString(),"message":jsonResponse[kDataMessage]};
+    return jsonError;
+  } else if (response.statusCode == 422) {
+    var jsonResponse = convert.jsonDecode(response.body);
+    var jsonError = {"error": jsonResponse[kDataErrors], "code": response.statusCode.toString(),"message":jsonResponse[kDataMessage]};
     return jsonError;
   } else if (response.statusCode == 500) {
-    var jsonResponse = convert.jsonDecode(response.body);
-    var jsonError = {"error": jsonResponse[kDataMessage], "code": "500"};
+   var jsonResponse = convert.jsonDecode(response.body);
+    var jsonError = {"error": jsonResponse[kDataErrors], "code": response.statusCode.toString(),"message":jsonResponse[kDataMessage]};
 
-    // Future.delayed(const Duration(milliseconds: 500), () {
-    // RemoveSharedPreference(kDataLoginUser);
-    // SetHomePage(0);
-    //   });
     return jsonError;
   } else {
     print("Request failed with status: ${response.statusCode}.");
