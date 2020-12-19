@@ -18,7 +18,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 TextEditingController mobileController = TextEditingController();
     String _pushToken = '';
-    List imagesList = ["images/login.png","images/login.png","images/image.png","images/login.png"];
+    List imagesList = ["images/login.png","images/login.png","images/login.png","images/login.png"];
 // FlutterVoipPushNotification _voipPush = FlutterVoipPushNotification();
 
 class LoginOptions extends StatelessWidget {
