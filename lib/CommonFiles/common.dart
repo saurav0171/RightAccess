@@ -104,6 +104,7 @@ final kDataStatus = "status";
 final kDataStatusCode = "status_code";
 final kDataOtp = "otp";
 final kDataIsAdmin = "is_admin";
+final kDataRemembered = "remembered";
 
 final kDataCustomerData = "customer_data";
 final kDataEntityId = "entityId";
@@ -442,7 +443,7 @@ SetHomePage(int index, String screenName) async {
                 //     fontFamily: defaultFontFamilyForAppBar,
                 //     fontStyle: FontStyle.normal)
               ))),
-      home: HomeScreen()
+      home: LoginOptions()
       // home: JoinMeet()
       // home: (check && globals.numberOfChildren > 0) ?  CustomDrawer(positionForDrawer = screenName) : LoginOptions()
       ));

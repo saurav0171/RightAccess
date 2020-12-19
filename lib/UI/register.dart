@@ -828,16 +828,12 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     HideLoader(context);
 
     if (result[kDataCode] == "200") {
-      if (result[kDataStatusCode] == 200) {
-        SetSharedPreference(kDataLoginUser, result[kDataData]);
+       SetSharedPreference(kDataLoginUser, result[kDataData]);
         globals.globalCurrentUser = result[kDataData];
-        
-      } else {
-        ShowErrorMessage(result[kDataResult], context);
-      }
     } else if(result[kDataCode] == "422")
     {
-        ShowErrorMessage(result[kDataMessage], context);
+      Map error = result[kDataError];
+      ShowErrorMessage(error.values.first[0], context);
     } else {
       ShowErrorMessage(result[kDataError], context);
     }

@@ -79,6 +79,8 @@ class LoginExtension extends StatefulWidget {
 class _LoginExtensionState extends State<LoginExtension> {
   FocusNode loginFocusNode = new FocusNode();
   FocusNode passwordFocusNode = new FocusNode();
+  TextEditingController loginController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
 //  static final FacebookLogin facebookSignIn = new FacebookLogin();
   Map userProfile;
@@ -110,6 +112,7 @@ class _LoginExtensionState extends State<LoginExtension> {
   void initState() {
     FormKeyboardActions.setKeyboardActions(context, _buildConfig(context));
     super.initState();
+
     loginFocusNode.addListener(() {
       setState(() {});
     });
@@ -117,9 +120,21 @@ class _LoginExtensionState extends State<LoginExtension> {
       setState(() {});
     });
 
+   
+  setValues();
     
   }
 
+setValues() async
+{
+    bool status = await sharedPreferenceContainsKey(kDataRemembered);
+    if (status) 
+    {
+      Map remember = GetSharedPreference(kDataRemembered);
+      loginController.text = remember[kDataEmail];
+      passwordController.text = remember[kDataPassword];
+    }
+}
 
 
   @override
@@ -262,6 +277,7 @@ getTheMobileNumber(String type) async
                       padding: const EdgeInsets.fromLTRB(20, 40, 20, 10),
                       child: TextFormField(
                           focusNode: loginFocusNode,
+                          controller: loginController,
                           style: TextStyle(color: Colors.black),
                           keyboardType: TextInputType.emailAddress,
                           textAlign: TextAlign.left,
@@ -277,9 +293,9 @@ getTheMobileNumber(String type) async
                             if (value.isEmpty) {
                               return "Please enter your email or mobile";
                             } 
-                            else if (!checkValidEmail(value)) {
-                              return "Please enter valid email";
-                            } 
+                            // else if (!checkValidEmail(value)) {
+                            //   return "Please enter valid email";
+                            // } 
                             else {
                               loginObj.email = value;
                             }
@@ -290,6 +306,7 @@ getTheMobileNumber(String type) async
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
                           focusNode: passwordFocusNode,
+                          controller: passwordController,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.emailAddress,
@@ -329,6 +346,7 @@ getTheMobileNumber(String type) async
                            onPressed: () {
                              setState(() {
                                isRemembered = !isRemembered;
+                               
                              });
                            },
                          ),
@@ -538,15 +556,20 @@ getTheMobileNumber(String type) async
     HideLoader(context);
 
     if (result[kDataCode] == "200") {
-      if (result[kDataSuccess] == "1") {
-        SetSharedPreference(kDataLoginUser, result[kDataData]);
+      SetSharedPreference(kDataLoginUser, result[kDataData]);
         globals.globalCurrentUser = result[kDataData];
+        if (isRemembered) {
+                                 
+        Map remember = {kDataEmail: login.email,kDataPassword:login.password};
+        SetSharedPreference(kDataRemembered, remember);
+        }
+        else
+        {
+          RemoveSharedPreference(kDataRemembered);
+        }
         // Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
         // builder: (context) => CustomDrawer(positionForDrawer = "other0")),   ModalRoute.withName("") );
-
-      } else {
-        ShowErrorMessage(result[kDataMessage], context);
-      }
+        
     }
     else if(result[kDataCode] == "422")
     {

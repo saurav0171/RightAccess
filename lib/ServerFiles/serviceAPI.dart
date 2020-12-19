@@ -23,6 +23,8 @@ if (connectivityResult == ConnectivityResult.none)
    return jsonError;
  }
 
+
+  var body = json.encode(params);
   var response;
   dynamic user = await GetSharedPreference(kDataLoginUser);
   try {
@@ -36,15 +38,15 @@ if (connectivityResult == ConnectivityResult.none)
     } else {
       if (user == null) {
         response = await http.post(url,
-            headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            body: params);
+            headers: {"Content-Type": "application/json","Accept":"application/json"},
+            body: body);
       } else {
         response = await http.post(url,
             headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
+              "Content-Type": "application/json",
               "Authorization": "Bearer ${user[kDataToken]}"
             },
-            body: params);
+            body: body);
       }
     }
   } on HandshakeException catch (_) {

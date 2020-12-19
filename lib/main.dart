@@ -241,7 +241,7 @@ showVersionAlertDialog(BuildContext context,String message) {
   );
 }
   startTime() {
-    Timer(Duration(seconds: 6), () {
+    Timer(Duration(seconds: 3), () {
       print("Yeah, this line is printed after 3 seconds");
       checkAuthorization();
      
@@ -302,14 +302,7 @@ showVersionAlertDialog(BuildContext context,String message) {
               duration: Duration(seconds: 2),
                           child: Container(
                 height: 70,
-                child: Text(
-                "MEDIT",style: GoogleFonts.rugeBoogie(
-    fontSize: 60,
-    color: appThemeColor1,
-    fontWeight: FontWeight.w300,
-    // fontStyle: FontStyle.italic,
-  ),
-                ),
+                child: logoText(),
               ),
             ),
           )
