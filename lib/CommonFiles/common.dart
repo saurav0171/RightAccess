@@ -12,6 +12,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:right_access/Globals/globals.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
+import 'package:right_access/UI/home.dart';
 import 'package:right_access/UI/login.dart';
 import 'package:right_access/UI/loginOptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,22 +29,16 @@ import 'package:path/path.dart';
 
 final appBackgroundColor = Color(0xFFFFFFFF);
 final appThemeColor1 = Color(0xFFE0161D);
-final appThemeColor2 = Color(0xFF3885C6); 
+final appThemeColor2 = Color(0xFF3885C6);
 // final lightTheme2Color = Color(0xFF04A4FF);
-
-
-
-
 
 final galleryBackgroundColor = "#202021";
 final greyShadeColor = "#434445";
 final sideMenuColor = "#7CACAE";
 
-
 // Constants
 
 final baseUrl = "http://www.togetherevent.tk/api/v1";
-
 
 final defaultFontFamily = "Comic Sans";
 final defaultFontFamilyForAppBar = "edmunds";
@@ -225,7 +220,6 @@ final kDataRating = "rating";
 final kDataComment = "comment";
 final kDataRate = "rate";
 
-
 final kDataOTT = "ott";
 final kDataRentPrice = "rent_price";
 final kDataBuyPrice = "buy_price";
@@ -278,13 +272,13 @@ final kDataDeliveryStatus = "delivery_status";
 final kDataSinglePrice = "single_price";
 final kDataCustomerName = "customer_name";
 final kDataCustomerAddress = "customer_address";
-final kDataDeliveredAt= "delivered_at";
+final kDataDeliveredAt = "delivered_at";
 final kDataTrackStatus = "track_status";
 final kDataAddresses = "addresses";
 final kDataShippingAddress = "shipping_address";
 final kDataCustomerFrontDoc = "customer_front_doc";
 final kDataCustomerBackDoc = "customer_back_doc";
-final kDataCustomerLatitude =  "customer_latitude";
+final kDataCustomerLatitude = "customer_latitude";
 final kDataCustomerLongitude = "customer_longitude";
 final kDataCustomerPhone = "customer_phone";
 final kDataAuthenticatedDocs = "authenticated_docs";
@@ -303,7 +297,7 @@ final kDataAdminId = "admin_id";
 // final kDataServerContacts = "ServerContacts";
 final kDataRemainingPhoneBookContacts = "remainingPhoneBookContacts";
 final kDataIsAudio = "is_audio";
-final kDataNonUsers ="non_users";
+final kDataNonUsers = "non_users";
 final kDataJwtToken = "jwt_token";
 final kDataDatetime = "datetime";
 final kDataTotalMembers = "total_members";
@@ -346,14 +340,8 @@ final kDataRetailerId = "ret_id";
 final kDataRetailerDetails = "retailer_details";
 final kDataRetailerAddress = "ret_address";
 
-
-
-
 final kDataItemOrder = "item_order";
 int selectedIndex = -1;
-
-
-
 
 /*
 
@@ -383,7 +371,8 @@ Navigator.push(context, PageTransition(type: PageTransitionType.leftToRightWithF
 
 */
 String shareSubject = "SHARE APP";
-String shareText = "Plasma Donation\niOS Version: https://apps.apple.com/us/app/id12356789\nAndroid Version: https://play.google.com/store/apps/details?id=com.plasma.synergy&hl=en";
+String shareText =
+    "Plasma Donation\niOS Version: https://apps.apple.com/us/app/id12356789\nAndroid Version: https://play.google.com/store/apps/details?id=com.plasma.synergy&hl=en";
 
 SetHomePage(int index, String screenName) async {
   dynamic user = await GetSharedPreference(kDataLoginUser);
@@ -395,26 +384,24 @@ SetHomePage(int index, String screenName) async {
     globals.globalCurrentUser = user;
   }
 
-
-
   // Widget screen;
   // if (check ) {
-  //   if (user[kDataRoleId] == "2") 
+  //   if (user[kDataRoleId] == "2")
   //   {
   //     screen = CustomDrawerWholesaler(positionForDrawerWholesaler = screenName);
   //   }
-  //   else if (user[kDataRoleId] == "4") 
+  //   else if (user[kDataRoleId] == "4")
   //   {
-  //      screen = CustomDrawerDelivery(positionForDrawerDelivery = screenName); 
-  //   } 
+  //      screen = CustomDrawerDelivery(positionForDrawerDelivery = screenName);
+  //   }
   //   else
   //   {
   //     screen = CustomDrawer(positionForDrawer = screenName);
   //   }
 
   //   // screen = CustomDrawerDelivery(positionForDrawerDelivery = screenName);
-    
-  // } 
+
+  // }
   // else {
   //   screen = LoginWithOTP();
   // }
@@ -422,7 +409,7 @@ SetHomePage(int index, String screenName) async {
       theme: ThemeData(
           tabBarTheme: TabBarTheme(
               labelColor: appThemeColor1, unselectedLabelColor: Colors.grey),
-          fontFamily:'Archivo-Regular',
+          fontFamily: 'Archivo-Regular',
           buttonTheme: ButtonThemeData(
               buttonColor: appThemeColor1,
               shape: RoundedRectangleBorder(
@@ -432,8 +419,8 @@ SetHomePage(int index, String screenName) async {
           appBarTheme: AppBarTheme(
               color: Colors.transparent,
               iconTheme: IconThemeData(
-                  color: Colors.black, //change your color here
-                ),
+                color: Colors.black, //change your color here
+              ),
               textTheme: TextTheme(
                 bodyText1: TextStyle(fontSize: 18.0),
                 bodyText2: TextStyle(fontSize: 18.0),
@@ -449,20 +436,19 @@ SetHomePage(int index, String screenName) async {
                 button: TextStyle(fontSize: 18.0),
                 overline: TextStyle(fontSize: 18.0),
 
-                  // title: TextStyle(
-                  //     color: Colors.black,
-                  //     fontSize: 25,
-                  //     fontFamily: defaultFontFamilyForAppBar,
-                  //     fontStyle: FontStyle.normal)
-                      ))),
-      home: LoginOptions()
+                // title: TextStyle(
+                //     color: Colors.black,
+                //     fontSize: 25,
+                //     fontFamily: defaultFontFamilyForAppBar,
+                //     fontStyle: FontStyle.normal)
+              ))),
+      home: HomeScreen()
       // home: JoinMeet()
       // home: (check && globals.numberOfChildren > 0) ?  CustomDrawer(positionForDrawer = screenName) : LoginOptions()
       ));
 }
 
-getfirebaseSubscription(Map user) async
-{
+getfirebaseSubscription(Map user) async {
   // String qvicUserId = "qvic~${user[kDataMobile].toString()}" ;       uncomment for firebase chat
 
   // final QuerySnapshot result =
@@ -477,20 +463,19 @@ getfirebaseSubscription(Map user) async
   //         'id': qvicUserId,
   //         'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
   //         'chattingWith': null
-  //       });       
-  //     } 
+  //       });
+  //     }
   //     return documents;
-
 }
 
 // Future <DocumentSnapshot>getfirebaseUserDetails(Map user) async      uncomment for firebase chat
 // {
-  // String qvicUserId = "qvic~${user[kDataPhone].toString()}" ;
-  // final QuerySnapshot result =
-  //         await Firestore.instance.collection('users').where('id', isEqualTo: qvicUserId).getDocuments();
-  //     final List<DocumentSnapshot> documents = result.documents;
-  //     return documents[0];
-// 
+// String qvicUserId = "qvic~${user[kDataPhone].toString()}" ;
+// final QuerySnapshot result =
+//         await Firestore.instance.collection('users').where('id', isEqualTo: qvicUserId).getDocuments();
+//     final List<DocumentSnapshot> documents = result.documents;
+//     return documents[0];
+//
 // }
 
 Color hexToColor(String code) {
@@ -544,7 +529,7 @@ void HideLoader(BuildContext context) {
 void ShowSuccessMessage(String message, BuildContext context) {
   SchedulerBinding.instance
       .addPostFrameCallback((_) => Scaffold.of(context).showSnackBar(SnackBar(
-        duration: Duration(seconds: 2),
+            duration: Duration(seconds: 2),
             content: Text(
               message,
               style: TextStyle(
@@ -559,7 +544,7 @@ void ShowSuccessMessage(String message, BuildContext context) {
 void ShowErrorMessage(String message, BuildContext context) {
   SchedulerBinding.instance
       .addPostFrameCallback((_) => Scaffold.of(context).showSnackBar(SnackBar(
-        duration: Duration(seconds: 2),
+            duration: Duration(seconds: 2),
             content: Text(
               message,
               style: TextStyle(
@@ -571,19 +556,17 @@ void ShowErrorMessage(String message, BuildContext context) {
           )));
 }
 
-
- Future <bool>sharedPreferenceContainsKey(String key) async {
+Future<bool> sharedPreferenceContainsKey(String key) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  
- bool result = prefs.containsKey(key);
- return result;
-}
 
+  bool result = prefs.containsKey(key);
+  return result;
+}
 
 void SetSharedPreference(String key, dynamic value) async {
   var str = convert.json.encode(value);
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  
+
   prefs.setString(key, str);
 }
 
@@ -615,38 +598,34 @@ BoxDecoration SetBackgroundImage(String image) {
 //     }
 // }
 
-
-
-BoxDecoration setBoxDecoration(Color color)
-{
+BoxDecoration setBoxDecoration(Color color) {
   return BoxDecoration(
-          borderRadius: new BorderRadius.circular(10.0),
-          border: Border.all(color:appThemeColor1.withAlpha(50),width: 1),
-          color: color,
-           boxShadow: [
-          // BoxShadow(
-          // color: color.withAlpha(100),
-          // offset: Offset(1, 2),
-          // blurRadius: 1.5,
-          // spreadRadius: 2
-          // ),
-          ]);
+      borderRadius: new BorderRadius.circular(10.0),
+      border: Border.all(color: appThemeColor1.withAlpha(50), width: 1),
+      color: color,
+      boxShadow: [
+        // BoxShadow(
+        // color: color.withAlpha(100),
+        // offset: Offset(1, 2),
+        // blurRadius: 1.5,
+        // spreadRadius: 2
+        // ),
+      ]);
 }
 
-
-BoxDecoration setBoxDecorationForUpperCorners(Color color, Color shadowColor)
-{
+BoxDecoration setBoxDecorationForUpperCorners(Color color, Color shadowColor) {
   return BoxDecoration(
-          borderRadius: new BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
-          color: color, boxShadow: [
-          // BoxShadow(
-          // color: shadowColor,
-          // offset: Offset(1, 2),
-          // blurRadius: 1.5,
-          // spreadRadius: 2
-          // ),
-          ]
-          );
+      borderRadius: new BorderRadius.only(
+          topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+      color: color,
+      boxShadow: [
+        // BoxShadow(
+        // color: shadowColor,
+        // offset: Offset(1, 2),
+        // blurRadius: 1.5,
+        // spreadRadius: 2
+        // ),
+      ]);
 }
 
 InputDecoration setInputDecoration(
@@ -658,9 +637,7 @@ InputDecoration setInputDecoration(
     IconData prefix,
     FocusNode myFocusNode) {
   return InputDecoration(
-    labelStyle: TextStyle(
-        color:Colors.black
-        ),
+    labelStyle: TextStyle(color: Colors.black),
     fillColor: Colors.transparent,
     filled: true,
     errorStyle: TextStyle(color: Colors.black),
@@ -670,18 +647,17 @@ InputDecoration setInputDecoration(
         ? null
         : Icon(
             prefix,
-            color:appThemeColor1,
+            color: appThemeColor1,
           ),
     focusColor: Colors.black,
     // enabledBorder: UnderlineInputBorder(
     // borderSide: BorderSide(color: Colors.red),
     // ),
     focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: appThemeColor1,width: 1),
+      borderSide: BorderSide(color: appThemeColor1, width: 1),
     ),
   );
 }
-
 
 InputDecoration setInputDecorationForEdit(
     String labelText,
@@ -693,8 +669,8 @@ InputDecoration setInputDecorationForEdit(
     FocusNode myFocusNode) {
   return InputDecoration(
     labelStyle: TextStyle(
-        color:myFocusNode.hasFocus?appThemeColor1:Colors.black,
-        ),
+      color: myFocusNode.hasFocus ? appThemeColor1 : Colors.black,
+    ),
     // fillColor: Colors.transparent,
     // filled: true,
     errorStyle: TextStyle(color: Colors.black),
@@ -704,36 +680,26 @@ InputDecoration setInputDecorationForEdit(
         ? null
         : Icon(
             prefix,
-            color:appThemeColor1,
+            color: appThemeColor1,
           ),
-    focusColor: myFocusNode.hasFocus?appThemeColor1:Colors.black,
+    focusColor: myFocusNode.hasFocus ? appThemeColor1 : Colors.black,
     enabledBorder: OutlineInputBorder(
-       borderSide: BorderSide(color: Colors.black45,width: 1),
-          borderRadius: const BorderRadius.all(
-            const Radius.circular(15.0),
-            
-          )
-      ),
+        borderSide: BorderSide(color: Colors.black45, width: 1),
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(15.0),
+        )),
     disabledBorder: OutlineInputBorder(
-       borderSide: BorderSide(color: Colors.black45,width: 1),
-          borderRadius: const BorderRadius.all(
-            const Radius.circular(15.0),
-            
-          )
-      ),
+        borderSide: BorderSide(color: Colors.black45, width: 1),
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(15.0),
+        )),
     focusedBorder: OutlineInputBorder(
-      
-      borderSide: BorderSide(color: Colors.black45,width: 1),
-      borderRadius: const BorderRadius.all(
-            const Radius.circular(15.0),
-            
-          )
-    ),
+        borderSide: BorderSide(color: Colors.black45, width: 1),
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(15.0),
+        )),
   );
 }
-
-
-
 
 setNavigationTransition(Widget targetWidget) {
   return PageTransition(
@@ -757,7 +723,7 @@ LinearGradient setGradientColor() {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     // Add one stop for each color. Stops should increase from 0 to 1
-    stops: [0.1,0.4, 0.7, 0.9],
+    stops: [0.1, 0.4, 0.7, 0.9],
     colors: [
       // Colors are easy thanks to Flutter's Colors class.
       hexToColor("#031396"),
@@ -793,6 +759,41 @@ LinearGradient setGradientColorHorizontalAxis() {
     ],
   );
 }
+
+// Widget setBottomMenu(TabController tabcontrol)
+// {
+//   return Container(
+//   color: Colors.white,
+//   child: TabBar(
+//     controller: tabcontrol,
+//     labelColor: Colors.black45,
+//     labelStyle: TextStyle(fontSize: 11),
+//     unselectedLabelColor: Colors.grey,
+//     indicatorSize: TabBarIndicatorSize.tab,
+//     indicatorPadding: EdgeInsets.all(5.0),
+//     indicatorColor: Colors.blue,
+//     tabs: [
+//       Tab(
+//         text: "Home",
+//         icon: Image.asset(tabcontrol.index!= 0?"images/Home-Gray.png":"images/Home-Red.png",width: 30,height: 30,)
+//       ),
+//       Tab(
+//         text: "Notification",
+//         icon: Image.asset(tabcontrol.index!= 1?"images/Notification-Gray.png":"images/Notification-red.png",width: 30,height: 30,)
+//       ),
+//       Tab(
+//         text: "History",
+//         icon: Image.asset(tabcontrol.index!= 2?"images/History-gray.png":"images/History-Red.png",width: 30,height: 30,)
+//       ),
+//       Tab(
+//         text: "Profile",
+//         icon: Image.asset(tabcontrol.index!= 3?"images/profile-gray.png":"images/profile-Red.png",width: 30,height: 30,)
+//       ),
+//     ],
+//   ),
+// );
+// }
+
 class customBottomNavigationBarExtension extends StatefulWidget {
   @override
   _customBottomNavigationBarExtensionState createState() =>
@@ -801,8 +802,6 @@ class customBottomNavigationBarExtension extends StatefulWidget {
 
 class _customBottomNavigationBarExtensionState
     extends State<customBottomNavigationBarExtension> {
-
-
   @override
   Widget build(BuildContext context) {
     double myHeight =
@@ -810,7 +809,7 @@ class _customBottomNavigationBarExtensionState
     globals.bottomBarHeight = myHeight;
     return AbsorbPointer(
       absorbing: false,
-          child: SizedBox(
+      child: SizedBox(
         height: myHeight,
         width: MediaQuery.of(context).size.width,
         child: Container(
@@ -826,12 +825,16 @@ class _customBottomNavigationBarExtensionState
           child: TabBar(
             tabs: [
               Tab(
-                  icon: Icon(Icons.list,size: 25,),
-                  text: "User List",
+                icon: Icon(
+                  Icons.list,
+                  size: 25,
+                ),
+                text: "User List",
               ),
               Tab(
-                   icon: Icon(Icons.edit),
-                  text: "Edit Profile",),
+                icon: Icon(Icons.edit),
+                text: "Edit Profile",
+              ),
             ],
             labelStyle: TextStyle(fontSize: 17.0),
             labelColor: Colors.white,
@@ -840,7 +843,7 @@ class _customBottomNavigationBarExtensionState
             indicatorColor: Colors.black,
             onTap: (value) {
               print("Pressed tab : $value");
-               setState(() {
+              setState(() {
                 selectedIndex = value;
               });
               Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
@@ -871,18 +874,15 @@ class _customBottomNavigationBarExtensionState
   }
 }
 
-Widget customBottomNavigationBar(BuildContext context, int index) 
-{
-  if(index != -1)
-  {
+Widget customBottomNavigationBar(BuildContext context, int index) {
+  if (index != -1) {
     selectedIndex = index;
   }
-  
+
   return customBottomNavigationBarExtension();
 }
 
 tabBarNavigation(int index) {
-  
   switch (index) {
     case 0:
       {
@@ -891,57 +891,56 @@ tabBarNavigation(int index) {
       }
       break;
     case 1:
-      { 
+      {
         // return EditProfile();
       }
       break;
   }
 }
 
-showCartButton(BuildContext context, )
-{
+showCartButton(
+  BuildContext context,
+) {
   return Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-          child: GestureDetector(
-            child: Stack(
-                      children: <Widget>[
-                        
-                        new Icon(Icons.shopping_cart,size: 40,),
-                        new Positioned(
-                            top: 0.0,
-                            right: 1.0,
-                            child: Container(
-                              width: 20.0,
-                              height: 20.0,
-                              decoration: new BoxDecoration(
-                                color: appThemeColor2,
-                                shape: BoxShape.circle,
-                              ),
-                              child: new Center(
-                                child: new Text(
-                                  globals.cartCount.toString(),
-                                  style: new TextStyle(
-                                    // backgroundColor: Colors.black,
-                                      color: Colors.white,
-                                      fontSize: 10.0,
-                                  ),
-                                ),
-                              ),
-                            )),
-
-
-                      ],
+    padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+    child: GestureDetector(
+      child: Stack(
+        children: <Widget>[
+          new Icon(
+            Icons.shopping_cart,
+            size: 40,
+          ),
+          new Positioned(
+              top: 0.0,
+              right: 1.0,
+              child: Container(
+                width: 20.0,
+                height: 20.0,
+                decoration: new BoxDecoration(
+                  color: appThemeColor2,
+                  shape: BoxShape.circle,
+                ),
+                child: new Center(
+                  child: new Text(
+                    globals.cartCount.toString(),
+                    style: new TextStyle(
+                      // backgroundColor: Colors.black,
+                      color: Colors.white,
+                      fontSize: 10.0,
                     ),
-            onTap: ()
-            {
-              //  Navigator.push(context, setNavigationTransition(Cart(isFromSideMenu = false,isFromSideMenuCart = 0, updateCartCountFromCommon)));
-            },
-            ),
-        );
+                  ),
+                ),
+              )),
+        ],
+      ),
+      onTap: () {
+        //  Navigator.push(context, setNavigationTransition(Cart(isFromSideMenu = false,isFromSideMenuCart = 0, updateCartCountFromCommon)));
+      },
+    ),
+  );
 }
 
-updateCartCountFromCommon()
-{
+updateCartCountFromCommon() {
   return globals.cartCount.toString();
 }
 
@@ -980,35 +979,32 @@ launchURL(String contct) async {
   }
 }
 
-launchEmail(String emaill) async 
-{
+launchEmail(String emaill) async {
   final Uri _emailLaunchUri = Uri(
-  scheme: 'mailto',
-  path: emaill,
-  queryParameters: {
-    'subject': 'Plasma Donation'
-  }
-  );
+      scheme: 'mailto',
+      path: emaill,
+      queryParameters: {'subject': 'Plasma Donation'});
   launch(_emailLaunchUri.toString());
 }
 
-
-
-showAlert(BuildContext context, String message)
-{
-
+showAlert(BuildContext context, String message) {
   // set up the button
   Widget okButton = FlatButton(
-    child: Text("OK",style: TextStyle(color: appThemeColor1),),
-    onPressed: () 
-    {
-       Navigator.pop(context);
+    child: Text(
+      "OK",
+      style: TextStyle(color: appThemeColor1),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
     },
   );
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: Text("MEDIT",style: TextStyle(color: appThemeColor1),),
+    title: Text(
+      "MEDIT",
+      style: TextStyle(color: appThemeColor1),
+    ),
     content: Text(message),
     actions: [
       okButton,
@@ -1024,74 +1020,86 @@ showAlert(BuildContext context, String message)
   );
 }
 
- rotatePersonImage(BuildContext context,File image3) async {
-
-  //  if (Platform.isIOS) 
+rotatePersonImage(BuildContext context, File image3) async {
+  //  if (Platform.isIOS)
   //  {
-    //  final dir = await path_provider.getTemporaryDirectory();
-    //   final targetPath = dir.absolute.path + "/"+basename(image3.path);
-    //   image3 = await testCompressAndGetFile(image3, targetPath);
+  //  final dir = await path_provider.getTemporaryDirectory();
+  //   final targetPath = dir.absolute.path + "/"+basename(image3.path);
+  //   image3 = await testCompressAndGetFile(image3, targetPath);
   //  }
-    
 
-    List<int> imageBytes1 = await image3.readAsBytes();
+  List<int> imageBytes1 = await image3.readAsBytes();
 
-    final originalImage = img.decodeImage(imageBytes1);
+  final originalImage = img.decodeImage(imageBytes1);
 
-    final exifData = await readExifFromBytes(imageBytes1);
+  final exifData = await readExifFromBytes(imageBytes1);
 
-    img.Image fixedImage;
+  img.Image fixedImage;
 
-    if (exifData['Image Orientation'].printable.contains('90 CW')) {
-      fixedImage = img.copyRotate(originalImage, 90);
-    } else if (exifData['Image Orientation']
-        .printable
-        .contains('90 CCW')) {
-      fixedImage = img.copyRotate(originalImage, -90);
-    } else {
-      fixedImage = img.copyRotate(originalImage, 0);
-    }
-
-    final fixedFile = await image3.writeAsBytes(img.encodeJpg(fixedImage,quality: 90));
-    final bytes = fixedFile.readAsBytesSync();
-    String imageB642 = base64Encode(bytes);
-    return imageB642;
+  if (exifData['Image Orientation'].printable.contains('90 CW')) {
+    fixedImage = img.copyRotate(originalImage, 90);
+  } else if (exifData['Image Orientation'].printable.contains('90 CCW')) {
+    fixedImage = img.copyRotate(originalImage, -90);
+  } else {
+    fixedImage = img.copyRotate(originalImage, 0);
   }
 
-  Future<dynamic> compressImageFunction(File image) async
-{
-  if (image.path.contains(".JPG")||image.path.contains(".jpg")||image.path.contains(".jpeg")||image.path.contains(".JPEG")) 
-    {
-       final dir = await path_provider.getTemporaryDirectory();
-       final targetPath = dir.absolute.path + "/"+basename(image.path);
-       image = await testCompressAndGetFile(image, targetPath,false);
-    }
-    else if (image.path.contains(".PNG")||image.path.contains(".png"))
-    {
-       final dir = await path_provider.getTemporaryDirectory();
-       final targetPath = dir.absolute.path + "/"+basename(image.path);
-       image = await testCompressAndGetFile(image, targetPath,true);
-    }
-    return image ;
+  final fixedFile =
+      await image3.writeAsBytes(img.encodeJpg(fixedImage, quality: 90));
+  final bytes = fixedFile.readAsBytesSync();
+  String imageB642 = base64Encode(bytes);
+  return imageB642;
 }
 
-Future<File> testCompressAndGetFile(File file, String targetPath, bool isPNG) async {
-    print("testCompressAndGetFile");
-    final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: isPNG?70:90,
+Future<dynamic> compressImageFunction(File image) async {
+  if (image.path.contains(".JPG") ||
+      image.path.contains(".jpg") ||
+      image.path.contains(".jpeg") ||
+      image.path.contains(".JPEG")) {
+    final dir = await path_provider.getTemporaryDirectory();
+    final targetPath = dir.absolute.path + "/" + basename(image.path);
+    image = await testCompressAndGetFile(image, targetPath, false);
+  } else if (image.path.contains(".PNG") || image.path.contains(".png")) {
+    final dir = await path_provider.getTemporaryDirectory();
+    final targetPath = dir.absolute.path + "/" + basename(image.path);
+    image = await testCompressAndGetFile(image, targetPath, true);
+  }
+  return image;
+}
+
+Future<File> testCompressAndGetFile(
+    File file, String targetPath, bool isPNG) async {
+  print("testCompressAndGetFile");
+  final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path, targetPath,
+      quality: isPNG ? 70 : 90,
       minWidth: 1024,
       minHeight: 1024,
       rotate: 360,
-      format: isPNG?CompressFormat.png:CompressFormat.jpeg
+      format: isPNG ? CompressFormat.png : CompressFormat.jpeg);
 
-    );
+  print(file.lengthSync());
+  print(result.lengthSync());
 
-    print(file.lengthSync());
-    print(result.lengthSync());
+  return result;
+}
 
-    return result;
-  }
-
-
+Widget logoText() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      Text("RIGHT",
+          style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 20,
+              color: appThemeColor1,
+              fontStyle: FontStyle.normal)),
+      Text("ACCESS",
+          style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+              color: Colors.black,
+              fontStyle: FontStyle.normal)),
+    ],
+  );
+}
