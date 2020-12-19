@@ -16,9 +16,14 @@ import 'package:right_access/Globals/globals.dart' as globals;
 
 
 
-List<String> usersList = ["Mr","Mrs", "Miss"];
-String selectedUser ;
 bool isRemembered = false;
+
+
+List salutationList = [];
+List<String> salutationListString = [];
+String selectedSalutation ; 
+Map selectedSalutationObject = {};
+
 
 
 
@@ -84,9 +89,9 @@ class RegisterExtension extends StatefulWidget {
 
 class _RegisterExtensionState extends State<RegisterExtension> {
   FocusNode firstNameFocusNode = new FocusNode();
-  FocusNode mobileFocusNode = new FocusNode();
+  FocusNode lastNameFocusNode = new FocusNode();
   FocusNode emailFocusNode = new FocusNode();
-  FocusNode addressFocusNode = new FocusNode();
+  FocusNode mobileFocusNode = new FocusNode();
   FocusNode passwordFocusNode = new FocusNode();
   // FocusNode passwordFocusNode = new FocusNode();
   FocusNode confirmPasswordFocusNode = new FocusNode();
@@ -107,20 +112,17 @@ class _RegisterExtensionState extends State<RegisterExtension> {
           focusNode: firstNameFocusNode,
         ),
         KeyboardAction(
-          focusNode: mobileFocusNode,
+          focusNode: lastNameFocusNode,
         ),
         KeyboardAction(
           focusNode: emailFocusNode,
         ),
         KeyboardAction(
-          focusNode: addressFocusNode,
+          focusNode: mobileFocusNode,
         ),
         KeyboardAction(
           focusNode: passwordFocusNode,
         ),
-        // KeyboardAction(
-        //   focusNode: passwordFocusNode,
-        // ),
         KeyboardAction(
           focusNode: confirmPasswordFocusNode,
         ),
@@ -140,21 +142,18 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     firstNameFocusNode.addListener(() {
       setState(() {});
     });
-    mobileFocusNode.addListener(() {
+    lastNameFocusNode.addListener(() {
       setState(() {});
     });
     emailFocusNode.addListener(() {
       setState(() {});
     });
-    addressFocusNode.addListener(() {
+    mobileFocusNode.addListener(() {
       setState(() {});
     });
     passwordFocusNode.addListener(() {
       setState(() {});
     });
-    // passwordFocusNode.addListener(() {
-    //   setState(() {});
-    // });
     confirmPasswordFocusNode.addListener(() {
       setState(() {});
     });
@@ -185,7 +184,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
         }
         
       });
-      HideLoader(context);
+      fetchSalutations();
     } else if (result[kDataCode] == "401") {
       
       ShowErrorMessage(result[kDataResult], context);
@@ -194,11 +193,46 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     else if(result[kDataCode] == "422")
     {
         ShowErrorMessage(result[kDataMessage], context);
+         HideLoader(context);
     } else {
       ShowErrorMessage(result[kDataError], context);
        HideLoader(context);
     }
    
+  }
+
+
+  fetchSalutations() async 
+  {
+    final url = "$baseUrl/salutations";
+    var result = await CallApi("GET", null, url);
+     HideLoader(context);
+    if (result[kDataCode] == "200") {
+      
+       setState(() {
+         salutationList = result[kDataData];
+         salutationListString = [];
+        for (var i = 0; i < salutationList.length; i++) 
+        {
+            salutationListString.add(salutationList[i][kDataName]);
+        }
+        selectedSalutationObject = salutationList[0];
+        selectedSalutation =  salutationListString[0];
+        
+      });
+      
+    } else if (result[kDataCode] == "401") {
+      
+      ShowErrorMessage(result[kDataResult], context);
+    } 
+    else if(result[kDataCode] == "422")
+    {
+        ShowErrorMessage(result[kDataMessage], context);
+      
+    } else {
+      ShowErrorMessage(result[kDataError], context);
+    }
+  
   }
 
 
@@ -209,21 +243,18 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     firstNameFocusNode?.removeListener(() {
       setState(() {});
     });
-    mobileFocusNode?.removeListener(() {
+    lastNameFocusNode.removeListener(() {
       setState(() {});
     });
     emailFocusNode.removeListener(() {
       setState(() {});
     });
-    addressFocusNode.removeListener(() {
+    mobileFocusNode?.removeListener(() {
       setState(() {});
     });
     passwordFocusNode.removeListener(() {
       setState(() {});
     });
-    // passwordFocusNode.removeListener(() {
-    //   setState(() {});
-    // });
     confirmPasswordFocusNode.removeListener(() {
       setState(() {});
     });
@@ -312,7 +343,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
 
 
                             Container(
-                              width: 70,
+                              constraints: BoxConstraints(maxWidth: 80),
                               height: 60,
                               decoration: BoxDecoration(
                                   border: Border.all(
@@ -327,7 +358,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 child: DropdownButton<String>(
-                                  value: selectedUser,
+                                  value: selectedSalutation,
                                   hint: Text("Mr",style: TextStyle(color: Colors.black,fontSize: 18),textAlign: TextAlign.center,),
                                   isExpanded: true,
                                   iconSize: 24,
@@ -340,10 +371,12 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                   onChanged: (String newValue) {
                                     FocusScope.of(context).requestFocus(new FocusNode());
                                     setState(() {
-                                      selectedUser = newValue;
+                                      selectedSalutation = newValue;
+                                      int index = salutationList.indexWhere((data) => data[kDataName] == newValue);
+                                      selectedSalutationObject = salutationList[index];
                                     });
                                   },
-                                  items: usersList
+                                  items: salutationListString
                                       .map<DropdownMenuItem<String>>((String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
@@ -432,7 +465,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
-                          focusNode: addressFocusNode,
+                          focusNode: lastNameFocusNode,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.multiline,
@@ -443,7 +476,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                               appThemeColor1,
                               appThemeColor1,
                               Icons.person,
-                              addressFocusNode),
+                              lastNameFocusNode),
                           validator: (value) {
                             if (value.isEmpty) {
                               return "Please enter your Last Name";
@@ -583,10 +616,11 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                      Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
-                          focusNode: emailFocusNode,
+                          focusNode: passwordFocusNode,
                           controller: passwordController,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
+                          obscureText: true,
                           keyboardType: TextInputType.emailAddress,
                           decoration: setInputDecorationForEdit(
                               "Enter your Password",
@@ -613,10 +647,11 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                       Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
-                          focusNode: emailFocusNode,
+                          focusNode: confirmPasswordFocusNode,
                           controller: confirmPasswordController,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
+                          obscureText: true,
                           keyboardType: TextInputType.emailAddress,
                           decoration: setInputDecorationForEdit(
                               "Enter Confirm Password",
@@ -625,7 +660,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                               appThemeColor1,
                               appThemeColor1,
                               Icons.lock,
-                              passwordFocusNode),
+                              confirmPasswordFocusNode),
                           validator: (value) {
                             if (value.isEmpty) {
                               return "Please enter Confirm Password";
@@ -777,14 +812,17 @@ class _RegisterExtensionState extends State<RegisterExtension> {
   {
     // await fetchCoordinates(register.address);
     Map param = Map();
-    param["name"] = register.firstName;
-    param["role_id"] = selectedUser=="Retailer"?"3":selectedUser=="Wholesaler"?"2":"4";
-    param["mobile"] = register.mobileno;
-    param["address"] = register.address;
+     param["salutation_id"] = selectedSalutationObject[kDataID].toString();
+    param["first_name"] = register.firstName;
+    param["last_name"] =  register.lastName;
+    param["mobile_number"] = register.mobileno;
+    param["password"] = register.password;
     param["email"] = register.email;
+    param["country_code"] = selectedCountriesObject[kDataID].toString();
+    param["terms_and_conditions"] = isRemembered?"1":"0";
 
 
-    final url = "$baseUrl/signup";
+    final url = "$baseUrl/register";
     var result = await CallApi("POST", param, url);
     // var result = await makePostRequest("POST", param, url) ;
     HideLoader(context);
@@ -794,26 +832,12 @@ class _RegisterExtensionState extends State<RegisterExtension> {
         SetSharedPreference(kDataLoginUser, result[kDataData]);
         globals.globalCurrentUser = result[kDataData];
         
-        // if (selectedUser == "Retailer") 
-        // {
-        //     Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-        //     builder: (context) => CustomDrawer(positionForDrawer = "other0")),   ModalRoute.withName(""));  
-        // }
-        // else  if (selectedUser == "Delivery Boy") 
-        // {
-        //     Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-        //     builder: (context) => CustomDrawerDelivery(positionForDrawerDelivery = "other0")),   ModalRoute.withName(""));  
-        // }
-        // else
-        // {
-        //     Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-        //     builder: (context) => CustomDrawerWholesaler(positionForDrawerWholesaler = "other0")),   ModalRoute.withName(""));
-        // } 
-       
-
       } else {
         ShowErrorMessage(result[kDataResult], context);
       }
+    } else if(result[kDataCode] == "422")
+    {
+        ShowErrorMessage(result[kDataMessage], context);
     } else {
       ShowErrorMessage(result[kDataError], context);
     }
