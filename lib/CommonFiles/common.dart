@@ -410,7 +410,7 @@ SetHomePage(int index, String screenName) async {
       theme: ThemeData(
           tabBarTheme: TabBarTheme(
               labelColor: appThemeColor1, unselectedLabelColor: Colors.grey),
-          fontFamily: 'Archivo-Regular',
+          fontFamily: 'OpenSans-Regular',
           buttonTheme: ButtonThemeData(
               buttonColor: appThemeColor1,
               shape: RoundedRectangleBorder(
@@ -443,7 +443,7 @@ SetHomePage(int index, String screenName) async {
                 //     fontFamily: defaultFontFamilyForAppBar,
                 //     fontStyle: FontStyle.normal)
               ))),
-      home: LoginOptions()
+      home: HomeScreen()
       // home: JoinMeet()
       // home: (check && globals.numberOfChildren > 0) ?  CustomDrawer(positionForDrawer = screenName) : LoginOptions()
       ));
