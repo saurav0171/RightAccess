@@ -557,7 +557,7 @@ getTheMobileNumber(String type) async
 
     if (result[kDataCode] == "200") {
       SetSharedPreference(kDataLoginUser, result[kDataData]);
-        globals.globalCurrentUser = result[kDataData];
+        globals.globalCurrentUser = result[kDataData][kDataUser];
         if (isRemembered) {
                                  
         Map remember = {kDataEmail: login.email,kDataPassword:login.password};

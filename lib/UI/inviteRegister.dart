@@ -185,55 +185,55 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
 
 
 
-  fetchStates() async 
-  {
-    final url = "$baseUrl/state_list";
-    var result = await CallApi("GET", null, url);
-    if (result[kDataCode] == "200") {
+  // fetchStates() async 
+  // {
+  //   final url = "$baseUrl/state_list";
+  //   var result = await CallApi("GET", null, url);
+  //   if (result[kDataCode] == "200") {
       
-       setState(() {
-         stateList = result[kDataData];
-         stateListString = [];
-        for (var i = 0; i < stateList.length; i++) 
-        {
-            stateListString.add(stateList[i][kDataStateName]);
-        }
-        fetchZones();
-      });
-    } else if (result[kDataCode] == "401") {
+  //      setState(() {
+  //        stateList = result[kDataData];
+  //        stateListString = [];
+  //       for (var i = 0; i < stateList.length; i++) 
+  //       {
+  //           stateListString.add(stateList[i][kDataStateName]);
+  //       }
+  //       fetchZones();
+  //     });
+  //   } else if (result[kDataCode] == "401") {
       
-      ShowErrorMessage(result[kDataResult], context);
-       HideLoader(context);
-    } else {
-      ShowErrorMessage(result[kDataError], context);
-       HideLoader(context);
-    }
+  //     ShowErrorMessage(result[kDataResult], context);
+  //      HideLoader(context);
+  //   } else {
+  //     ShowErrorMessage(result[kDataError], context);
+  //      HideLoader(context);
+  //   }
    
-  }
+  // }
 
 
-fetchZones() async 
-  {
-    final url = "$baseUrl/getallzones/1";
-    var result = await CallApi("GET", null, url);
-    if (result[kDataCode] == "200") {
+// fetchZones() async 
+//   {
+//     final url = "$baseUrl/getallzones/1";
+//     var result = await CallApi("GET", null, url);
+//     if (result[kDataCode] == "200") {
       
-       setState(() {
-         zoneList = result[kDataData];
-         zoneListString = [];
-        for (var i = 0; i < zoneList.length; i++) 
-        {
-            zoneListString.add(zoneList[i][kDataZone]);
-        }
-      });
-    } else if (result[kDataCode] == "401") {
+//        setState(() {
+//          zoneList = result[kDataData];
+//          zoneListString = [];
+//         for (var i = 0; i < zoneList.length; i++) 
+//         {
+//             zoneListString.add(zoneList[i][kDataZone]);
+//         }
+//       });
+//     } else if (result[kDataCode] == "401") {
       
-      ShowErrorMessage(result[kDataResult], context);
-    } else {
-      ShowErrorMessage(result[kDataError], context);
-    }
-    HideLoader(context);
-  }
+//       ShowErrorMessage(result[kDataResult], context);
+//     } else {
+//       ShowErrorMessage(result[kDataError], context);
+//     }
+//     HideLoader(context);
+//   }
 
 
  getUserLocation() async {//call this async method from whereever you need

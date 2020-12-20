@@ -4,6 +4,7 @@ import 'package:right_access/CommonFiles/common.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/UI/history.dart';
 import 'package:right_access/UI/notifications.dart';
+import 'package:right_access/UI/videoPlayer.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -181,12 +182,29 @@ class HomeScreenExtension extends StatefulWidget {
 }
 
 class _HomeScreenExtensionState extends State<HomeScreenExtension> {
+ 
+ 
+   @override
+  void initState() {
+    super.initState();
+
+    ShowLoader(context);
+    fetchCurrentEvents();
+  }
+
+ 
+ 
   fetchCurrentEvents() async {
     final url =
         "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules";
     var result = await CallApi("GET", null, url);
     if (result[kDataCode] == "200") {
-      setState(() {});
+      setState(() {
+
+        currentEvents = result[kDataData];
+      });
+
+      fetchUpcomingEvents();
     } else if (result[kDataCode] == "401") {
       ShowErrorMessage(result[kDataResult], context);
       HideLoader(context);
@@ -199,21 +217,26 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
     }
   }
 
-  fetchPastEvents() async {
-    final url =
-        "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules&type=past";
+  fetchUpcomingEvents() async {
+    final url = "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules&type=upcoming";
     var result = await CallApi("GET", null, url);
+    HideLoader(context);
+
+
     if (result[kDataCode] == "200") {
-      setState(() {});
+      setState(() {
+        
+        upcomingEvents = result[kDataData];
+
+      });
+       
     } else if (result[kDataCode] == "401") {
       ShowErrorMessage(result[kDataResult], context);
-      HideLoader(context);
+     
     } else if (result[kDataCode] == "422") {
       ShowErrorMessage(result[kDataMessage], context);
-      HideLoader(context);
     } else {
       ShowErrorMessage(result[kDataError], context);
-      HideLoader(context);
     }
   }
 
@@ -221,120 +244,296 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          Container(
-            color: Colors.black,
-            height: 200,
-            child: PageIndicatorContainer(
-                child: PageView.builder(
-                  itemCount: imagesList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    String image = imagesList[index];
-                    // return Image.network(image,
-                    //     fit: BoxFit.contain);
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Center(child: Image.asset(image)),
-                    );
-                  },
-                ),
-                align: IndicatorAlign.bottom,
-                length: imagesList.length,
-                indicatorSpace: 5.0,
-                padding: const EdgeInsets.all(5),
-                indicatorColor: Colors.grey.shade300,
-                indicatorSelectorColor: appThemeColor1,
-                shape: IndicatorShape.circle(size: 10)),
-          ),
-
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 40,
-            color: Colors.white,
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-              child: Text(
-                              "Active Events",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: appThemeColor1,
-                                  fontWeight: FontWeight.w700),
-                            ),
-            ),
-          ),
-          Container(
-            height: 300,
-            color: Colors.white,
-            child: ListView.separated(
-              itemCount: 6,
-              padding: EdgeInsets.symmetric(horizontal: 0.0),
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                          child: Container(
-                              height: 100,
-                              width: MediaQuery.of(context).size.width,
-                              child: Image.asset(
-                                "images/banner.png",
-                                fit: BoxFit.fill,
-                              )),
-                        ),
-                        Container(
-                          wi
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                            "New Scientish Events",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            "Location: Playground, Sector 17, Chandigarh",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w300),
-                          ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                        // Navigator.push( context, setNavigationTransition(OrderDetails(orderDetailsObject = order)));
-                      });
+      child: Container(
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            Container(
+              color: Colors.black,
+              height: 200,
+              child: PageIndicatorContainer(
+                  child: PageView.builder(
+                    itemCount: imagesList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String image = imagesList[index];
+                      // return Image.network(image,
+                      //     fit: BoxFit.contain);
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Center(child: Image.asset(image)),
+                      );
                     },
                   ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                  child: Divider(
-                    color: Colors.black26,
-                    height: 2,
-                    thickness: 2,
-                  ),
-                );
-              },
+                  align: IndicatorAlign.bottom,
+                  length: imagesList.length,
+                  indicatorSpace: 5.0,
+                  padding: const EdgeInsets.all(5),
+                  indicatorColor: Colors.grey.shade300,
+                  indicatorSelectorColor: appThemeColor1,
+                  shape: IndicatorShape.circle(size: 10)),
             ),
-          ),
-        ],
+
+           currentEvents.length>0? Container(
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              color: Colors.white,
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                child: Text(
+                                "Active Events",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: appThemeColor1,
+                                    fontWeight: FontWeight.w700),
+                              ),
+              ),
+            ):Container(),
+           currentEvents.length>0? Container(
+              height: 300,
+              color: Colors.white,
+              child: ListView.separated(
+                itemCount: currentEvents.length,
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                itemBuilder: (BuildContext context, int index) {
+
+                  Map current = currentEvents[index];
+                  String name = current[kDataTitle];
+                  String description = current[kDataShortDescription];
+
+
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            child: Container(
+                                height: 100,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.asset(
+                                  "images/banner.png",
+                                  fit: BoxFit.fill,
+                                )),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                              name,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - 120,
+                              child: Text(
+                                description,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w300),
+                                    maxLines: 10,
+                              ),
+                            ),
+                                  ],
+                                ),
+                                Expanded(child: Container()),
+
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color:Color(0xFF3EC433),
+                                      borderRadius: BorderRadius.circular(5)
+                                    ),
+                                    height: 25,
+                                    width:  80,
+                                    child: FlatButton(onPressed: ()
+                                    {
+
+                                    }, child: Text(
+                                      "WATCH",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w300),
+                                    )),
+                                  ),
+                                )
+
+
+
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen()));
+                        });
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                    child: Divider(
+                      color: Colors.black26,
+                      height: 2,
+                      thickness: 2,
+                    ),
+                  );
+                },
+              ),
+            ):Container(),
+
+            upcomingEvents.length>0 ?Container(
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              color: Colors.white,
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                child: Text(
+                                "Upcoming Events",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: appThemeColor1,
+                                    fontWeight: FontWeight.w700),
+                              ),
+              
+              ),
+            ):Container(),
+
+
+             upcomingEvents.length>0? Container(
+              height: 300,
+              color: Colors.white,
+              child: ListView.separated(
+                itemCount: upcomingEvents.length,
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                itemBuilder: (BuildContext context, int index) {
+
+                   Map upcoming = upcomingEvents[index];
+                  String name = upcoming[kDataTitle];
+                  String description = upcoming[kDataShortDescription];
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            child: Container(
+                                height: 100,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.asset(
+                                  "images/banner.png",
+                                  fit: BoxFit.fill,
+                                )),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                              name,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - 120,
+                              child: Text(
+                                description,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w300),
+                                    maxLines: 10,
+                              ),
+                            ),
+                                  ],
+                                ),
+                                Expanded(child: Container()),
+
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color:appThemeColor1,
+                                      borderRadius: BorderRadius.circular(5)
+                                    ),
+                                    height: 25,
+                                    width:  90,
+                                    child: FlatButton(onPressed: ()
+                                    {
+
+                                    }, child: Text(
+                                      "REGISTER",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w300),
+                                    )),
+                                  ),
+                                )
+
+
+
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen()));
+                        });
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                    child: Divider(
+                      color: Colors.black26,
+                      height: 2,
+                      thickness: 2,
+                    ),
+                  );
+                },
+              ),
+            ):Container(),
+          ],
+        ),
       ),
     );
   }

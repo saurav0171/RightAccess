@@ -221,127 +221,6 @@ final kDataRating = "rating";
 final kDataComment = "comment";
 final kDataRate = "rate";
 
-final kDataOTT = "ott";
-final kDataRentPrice = "rent_price";
-final kDataBuyPrice = "buy_price";
-final kDataPurchaseStatus = "purchase_status";
-final kDataActivity = "activity";
-final kDataBalance = "balance";
-final kDataAddedOn = "added_on";
-final kDataOttType = "ott_type";
-final kDataOrderStatus = "order_status";
-final kDataStartDatetime = "start_datetime";
-final kDataEndDatetime = "end_datetime";
-final kDataIsMobileProvided = "is_mobile_provided";
-final kDataUpRating = "up_rating";
-final kDataDownRating = "down_rating";
-final kDataErrorBalance = "error_balance";
-final kDataSavedAddress = "savedAddress";
-final kDataCurrentAddress = "currentAddress";
-final kDataCoordinates = "coordinates";
-final kDataLatitude = "latitude";
-final kDataLongitude = "longitude";
-final kDataSelectedShippingAddress = "selectedShippingAddress";
-final kDataShopImage = "shop_image";
-final kDataShopAddress = "shop_address";
-final kDataPhoto = "photo";
-final kDataUserType = "user_type";
-final kDataRole = "role";
-final kDataUserRole = "user_role";
-final kDataCartItems = "cartitems";
-final kDataCartId = "cart_id";
-final kDataUserLatitude = "user_latitude";
-final kDataUserLongitude = "user_longitude";
-final kDataUserLat = "user_lat";
-final kDataUserLong = "user_long";
-final kDataIsTermsConditionsAccepted = "isterms";
-final kDataBasePrice = "base_price";
-final kDataIsIncart = "is_in_cart";
-final kDataIsAuthorized = "isAuthorized";
-final kDataOrderNumber = "order_number";
-final kDataCreatedAt = "created_at";
-final kDataCustomerDetail = "customer_detail";
-final kDataFrontDoc = "front_doc";
-final kDataBackDoc = "back_doc";
-final kDataProductsQuantity = "products_quantity";
-final kDataDeliveryGuyId = "delivery_guy_id";
-final kDataVendorId = "vendor_id";
-final kDataProductsList = "products_list";
-final kDataTotalPaidAmount = "total paid amount";
-final kDataDateOrdered = "date_ordered";
-final kDataDeliveryStatus = "delivery_status";
-final kDataSinglePrice = "single_price";
-final kDataCustomerName = "customer_name";
-final kDataCustomerAddress = "customer_address";
-final kDataDeliveredAt = "delivered_at";
-final kDataTrackStatus = "track_status";
-final kDataAddresses = "addresses";
-final kDataShippingAddress = "shipping_address";
-final kDataCustomerFrontDoc = "customer_front_doc";
-final kDataCustomerBackDoc = "customer_back_doc";
-final kDataCustomerLatitude = "customer_latitude";
-final kDataCustomerLongitude = "customer_longitude";
-final kDataCustomerPhone = "customer_phone";
-final kDataAuthenticatedDocs = "authenticated_docs";
-final kDataIsAuthenticateDocs = "is_authenticated_docs";
-final kDataVerifyFrontDoc = "verify_front_doc";
-final kDataVerifyBackDoc = "verify_back_doc";
-final kDataTimeInterval = "time_interval";
-final kDataMinutesLeft = "minutes_left";
-final kDataTotalOrdersCount = "total_orders_count";
-final kDataGroupName = "group_name";
-final kDataGroupId = "group_id";
-final kDataGroupDetails = "group_details";
-final kDataGroupMembers = "group_members";
-final kDataGroup = "group";
-final kDataAdminId = "admin_id";
-// final kDataServerContacts = "ServerContacts";
-final kDataRemainingPhoneBookContacts = "remainingPhoneBookContacts";
-final kDataIsAudio = "is_audio";
-final kDataNonUsers = "non_users";
-final kDataJwtToken = "jwt_token";
-final kDataDatetime = "datetime";
-final kDataTotalMembers = "total_members";
-final kDataStartTime = "start_time";
-final kDataEndTime = "end_time";
-final kDataMeetingData = "meeting_data";
-final kDataIsCall = "is_call";
-final kDataMembers = "members";
-final kDataMeetingId = "meeting_id";
-final kDataFilePath = "file_path";
-final kDataFileName = "file_name";
-final kDataBgroups = "bgroups";
-final kDataUpImage = "upimage";
-final kDataStreet = "street";
-final kDataCity = "city";
-final kDataState = "state";
-final kDataZipcode = "zipcode";
-final kDataProductName = "p_name";
-final kDataWholesalerName = "whl_name";
-final kDataOutstanding = "outstanding";
-final kDataPaid = "paid";
-final kDataRoleId = "role_id";
-final kDataRetailerName = "ret_name";
-final kDataRetailerMobile = "ret_mobile";
-final kDataTotalOutstanding = "total_outstanding";
-final kDataOutstandingBal = "outstanding_bal";
-final kDataOutstandingBalance = "outsatanding_balance";
-final kDataLastTxn = "last_txn";
-final kDataLastPayment = "last_payment";
-final kDataInOut = "in_out";
-final kDataWholesalerMobile = "whl_mobile";
-final kDataZone = "zone";
-final kDataDistrictName = "district_name";
-final kDataRetailerData = "retailer_data";
-final kDataWholesalerData = "whl_data";
-final kDataPickupTime = "pickup_time";
-final kDataProductDetails = "product_details";
-final kDataWholesalerId = "whl_id";
-final kDataRetailerId = "ret_id";
-final kDataRetailerDetails = "retailer_details";
-final kDataRetailerAddress = "ret_address";
-
-final kDataItemOrder = "item_order";
 int selectedIndex = -1;
 
 /*
@@ -382,30 +261,18 @@ SetHomePage(int index, String screenName) async {
     check = user[kDataID].toString().length > 0 ? true : false;
     // globals.userType = user[kDataUserType];
     // getfirebaseSubscription(user[kDataResult]);
-    globals.globalCurrentUser = user;
+    globals.globalCurrentUser = user[kDataUser];
   }
 
-  // Widget screen;
-  // if (check ) {
-  //   if (user[kDataRoleId] == "2")
-  //   {
-  //     screen = CustomDrawerWholesaler(positionForDrawerWholesaler = screenName);
-  //   }
-  //   else if (user[kDataRoleId] == "4")
-  //   {
-  //      screen = CustomDrawerDelivery(positionForDrawerDelivery = screenName);
-  //   }
-  //   else
-  //   {
-  //     screen = CustomDrawer(positionForDrawer = screenName);
-  //   }
+  Widget screen;
+  if (check ) {
+    
+    screen = HomeScreen();
 
-  //   // screen = CustomDrawerDelivery(positionForDrawerDelivery = screenName);
-
-  // }
-  // else {
-  //   screen = LoginWithOTP();
-  // }
+  }
+  else {
+    screen = LoginOptions();
+  }
   runApp(MaterialApp(
       theme: ThemeData(
           tabBarTheme: TabBarTheme(
@@ -443,7 +310,7 @@ SetHomePage(int index, String screenName) async {
                 //     fontFamily: defaultFontFamilyForAppBar,
                 //     fontStyle: FontStyle.normal)
               ))),
-      home: HomeScreen()
+      home: screen
       // home: JoinMeet()
       // home: (check && globals.numberOfChildren > 0) ?  CustomDrawer(positionForDrawer = screenName) : LoginOptions()
       ));
