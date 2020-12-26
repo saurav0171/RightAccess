@@ -116,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen>
       setState(() {
         result = qrResult;
 
-        print(qrResult); // ShowLoader(context);
-        // postAttendence(qrResult);
+        print(qrResult);
+        ShowLoader(context);
+        postAttendence(qrResult);
       });
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
@@ -141,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   postAttendence(String code) async {
-    final url = "$baseUrl/attendance/mark/XRBpxbIa6V";
+    final url = "$baseUrl/attendance/mark/$code";
 
     var param = {};
 
@@ -549,60 +550,58 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                       ),
                                       Expanded(child: Container()),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 5, 0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: appThemeColor1,
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          height: 25,
-                                          width: 90,
-                                          child: FlatButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                context,
-                                                setNavigationTransition(InviteRegister(
-                                                )));
-                                              },
-                                              child: Text(
-                                                "REGISTER",
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w300),
-                                              )),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 5, 5, 0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: appThemeColor1,
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          height: 25,
-                                          width: 90,
-                                          child: FlatButton(
-                                              onPressed: () {
-
-
-                                              },
-                                              child: Text(
-                                                "VIEW",
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w300),
-                                              )),
-                                        ),
-                                      )
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 5, 0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: appThemeColor1,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              height: 25,
+                                              width: 90,
+                                              child: FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        setNavigationTransition(
+                                                            InviteRegister()));
+                                                  },
+                                                  child: Text(
+                                                    "REGISTER",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  )),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 5, 5, 0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: appThemeColor1,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              height: 25,
+                                              width: 90,
+                                              child: FlatButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    "VIEW",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  )),
+                                            ),
+                                          )
                                         ],
                                       )
                                     ],
