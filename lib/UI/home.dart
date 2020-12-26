@@ -5,6 +5,7 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:right_access/CommonFiles/common.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/UI/history.dart';
+import 'package:right_access/UI/inviteRegister.dart';
 import 'package:right_access/UI/notifications.dart';
 import 'package:right_access/UI/videoPlayer.dart';
 
@@ -561,7 +562,12 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                           height: 25,
                                           width: 90,
                                           child: FlatButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                    context,
+                                    setNavigationTransition(InviteRegister(
+                                    )));
+                                              },
                                               child: Text(
                                                 "REGISTER",
                                                 style: TextStyle(
@@ -583,7 +589,9 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                           height: 25,
                                           width: 90,
                                           child: FlatButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+
+                                              },
                                               child: Text(
                                                 "VIEW",
                                                 style: TextStyle(
