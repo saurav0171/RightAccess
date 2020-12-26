@@ -591,6 +591,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                           child: FlatButton(
                                               onPressed: () {
 
+
                                               },
                                               child: Text(
                                                 "VIEW",
