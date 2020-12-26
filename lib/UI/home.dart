@@ -114,8 +114,9 @@ class _HomeScreenState extends State<HomeScreen>
       String qrResult = await BarcodeScanner.scan();
       setState(() {
         result = qrResult;
-        // ShowLoader(context);
-        // attendance(qrResult, context);
+
+        print(qrResult); // ShowLoader(context);
+        // postAttendence(qrResult);
       });
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
@@ -135,6 +136,29 @@ class _HomeScreenState extends State<HomeScreen>
       setState(() {
         result = "Unknown Error $ex";
       });
+    }
+  }
+
+  postAttendence(String code) async {
+    final url = "$baseUrl/attendance/mark/XRBpxbIa6V";
+
+    var param = {};
+
+    var result = await CallApi("POST", param, url);
+    if (result[kDataCode] == "200") {
+      setState(() {
+        currentEvents = result[kDataData];
+      });
+      HideLoader(context);
+    } else if (result[kDataCode] == "401") {
+      ShowErrorMessage(result[kDataResult], context);
+      HideLoader(context);
+    } else if (result[kDataCode] == "422") {
+      ShowErrorMessage(result[kDataMessage], context);
+      HideLoader(context);
+    } else {
+      ShowErrorMessage(result[kDataError], context);
+      HideLoader(context);
     }
   }
 
