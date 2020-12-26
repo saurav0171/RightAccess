@@ -564,9 +564,9 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                           child: FlatButton(
                                               onPressed: () {
                                                 Navigator.push(
-                                    context,
-                                    setNavigationTransition(InviteRegister(
-                                    )));
+                                                context,
+                                                setNavigationTransition(InviteRegister(
+                                                )));
                                               },
                                               child: Text(
                                                 "REGISTER",
