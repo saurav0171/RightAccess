@@ -72,6 +72,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       String qrResult = await BarcodeScanner.scan();
       setState(() {
         result = qrResult;
+        // new changes........
 
         print(qrResult);
         ShowLoader(context);
