@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:dio/dio.dart';
 import 'package:right_access/CommonFiles/common.dart';
 import 'dart:convert' as convert;
 import 'package:path/path.dart';
@@ -146,43 +145,6 @@ void makePostRequest(String httpType, dynamic params, String url) async {
 
 //     return result;
 //   }
-
-Future<dynamic> CallUploadImag2e(File image) async {
-  var response;
-
-  try {
-    Dio dio = new Dio();
-    dio.options.baseUrl = baseUrl;
-    FormData formData = FormData.fromMap({
-      "profession": "android",
-      "organization_name": "ludhiaa",
-      "city": "Ludhiana",
-      "terms_and_conditions": 1,
-      "document": await MultipartFile.fromFile(image.path,
-          filename: basename(image.path))
-    });
-    response = await dio.post("/events/2/register", data: formData);
-  } on DioError catch (e) {
-    if (e.response != null) {
-      print(e.response.data);
-      print(e.response.headers);
-      print(e.response.request);
-    } else {
-      print(e.request);
-      print(e.message);
-    }
-  }
-  var jsonResponse;
-  try {
-    jsonResponse = convert.jsonDecode(response);
-  } on Exception catch (_) {
-    var jsonError = {
-      kDataResult: "Something went wrong. Please try again later.",
-      kDataCode: "500"
-    };
-    return jsonError;
-  }
-}
 
 Future<dynamic> inviteRegistration(File image, String profession, String city,
     String organ, bool isTerm) async {

@@ -147,20 +147,23 @@ class _HomeScreenState extends State<HomeScreen>
     var param = {};
 
     var result = await CallApi("POST", param, url);
+    HideLoader(context);
     if (result[kDataCode] == "200") {
       setState(() {
-        currentEvents = result[kDataData];
+        var eventData = result[kDataData];
+        Navigator.push(
+            context,
+            setNavigationTransition(VideoPlayerScreen(
+              eventData: eventData,
+              isRegister: true,
+            )));
       });
-      HideLoader(context);
     } else if (result[kDataCode] == "401") {
-      ShowErrorMessage(result[kDataResult], context);
-      HideLoader(context);
+      showAlertDialog(result[kDataResult], context);
     } else if (result[kDataCode] == "422") {
-      ShowErrorMessage(result[kDataMessage], context);
-      HideLoader(context);
+      showAlertDialog(result[kDataMessage], context);
     } else {
-      ShowErrorMessage(result[kDataError], context);
-      HideLoader(context);
+      showAlertDialog(result[kDataError], context);
     }
   }
 

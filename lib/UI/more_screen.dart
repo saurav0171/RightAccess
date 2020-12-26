@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:right_access/CommonFiles/common.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
 
 import 'package:right_access/ServerFiles/serviceAPI.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 List notificationsList = [];
 
 class MoreScreen extends StatelessWidget {
+  var aboutData;
+
+  MoreScreen({Key key, this.aboutData}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -28,42 +34,51 @@ class MoreScreen extends StatelessWidget {
 }
 
 class NotificationsExtension extends StatefulWidget {
+  NotificationsExtension({Key key}) : super(key: key);
+
   @override
   _NotificationsExtensionState createState() => _NotificationsExtensionState();
 }
 
 class _NotificationsExtensionState extends State<NotificationsExtension> {
+  Map resultData = {};
   @override
   void initState() {
     super.initState();
-
-    // ShowLoader(context);
-    // fetchNotification();
+    ShowLoader(context);
+    fetchNotification();
   }
 
   fetchNotification() async {
-    Map param = Map();
-    // param["login_type"] = loginType;
-    param["limit"] = "10";
-    // param["page"] = pageNumber.toString();
-    param["title"] = "";
-    param["includes"] = "organization,event_sponsors,event_modules";
-    param["type"] = "past";
-
-    final url = "$baseUrl/my-events";
-    var result = await CallApi("POST", param, url);
-    // var result = await makePostRequest("POST", param, url) ;
+    final url = "$baseUrl/events/2/pre-event?includes=event,event_stage_media";
+    var result = await CallApi("GET", null,
+        url); // var result = await makePostRequest("POST", param, url) ;
     HideLoader(context);
-
     if (result[kDataCode] == "200") {
-      if (result[kDataSuccess] == "1") {
-      } else {
-        ShowErrorMessage(result[kDataMessage], context);
-      }
+      resultData = result[kDataData];
+      setState(() {});
     } else if (result[kDataCode] == "422") {
-      ShowErrorMessage(result[kDataMessage], context);
+      showAlertDialog(result[kDataMessage], context);
     } else {
-      ShowErrorMessage(result[kDataError], context);
+      showAlertDialog(result[kDataError], context);
+    }
+  }
+
+  Future<void> share() async {
+    await FlutterShare.share(
+        title: 'Event Name',
+        text: 'Event description',
+        linkUrl: 'https://event.com',
+        chooserTitle: 'Chooser To Share');
+  }
+
+  Future<void> openMap(double latitude, double longitude) async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
     }
   }
 
@@ -91,6 +106,7 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                     .copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
                   trailing: IconButton(
+                    onPressed: () {},
                     icon: new Stack(
                       children: <Widget>[
                         new Icon(
@@ -128,7 +144,7 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                         child: Text(
-                          "It is used for managing the state of the tab bar, the length which we mentioned in TabController should not be null or negative, otherwise you will put yourself in endless debugging.",
+                          resultData["long_description"].toString(),
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
@@ -151,6 +167,9 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                   borderRadius: BorderRadius.circular(0)),
               child: ListTile(
                 leading: IconButton(
+                  onPressed: () {
+                    share();
+                  },
                   icon: new Stack(
                     children: <Widget>[
                       new Icon(
@@ -302,6 +321,9 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                   color: Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(0)),
               child: ListTile(
+                onTap: () {
+                  openMap(30.9010, 75.8573);
+                },
                 leading: IconButton(
                   icon: new Stack(
                     children: <Widget>[

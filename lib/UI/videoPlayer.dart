@@ -12,8 +12,10 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   bool isRegister = false;
+  var eventData;
 
-  VideoPlayerScreen({Key key, this.isRegister}) : super(key: key);
+  VideoPlayerScreen({Key key, this.isRegister, this.eventData})
+      : super(key: key);
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
 }
@@ -24,14 +26,22 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   FlickManager flickManager;
   String result = "Hey there!";
   int _pageIndex = 0;
-  List<Widget> tabPages = [
-    CoursesScreen(),
-    MoreScreen(),
-  ];
+
   PageController _pageController;
+
+  static var events;
+  List<Widget> tabPages = [];
 
   @override
   void initState() {
+    events = widget.eventData;
+    tabPages = [
+      CoursesScreen(),
+      MoreScreen(
+        aboutData: events,
+      ),
+    ];
+    setState(() {});
     flickManager = FlickManager(
       videoPlayerController: VideoPlayerController.network(
           'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
@@ -106,20 +116,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     var param = {};
 
     var result = await CallApi("POST", param, url);
+    HideLoader(context);
     if (result[kDataCode] == "200") {
       setState(() {
         var currentEvents = result[kDataData];
       });
-      HideLoader(context);
     } else if (result[kDataCode] == "401") {
-      ShowErrorMessage(result[kDataResult], context);
-      HideLoader(context);
+      showAlertDialog(result[kDataResult], context);
     } else if (result[kDataCode] == "422") {
-      ShowErrorMessage(result[kDataMessage], context);
-      HideLoader(context);
+      showAlertDialog(result[kDataMessage], context);
     } else {
-      ShowErrorMessage(result[kDataError], context);
-      HideLoader(context);
+      showAlertDialog(result[kDataError], context);
     }
   }
 

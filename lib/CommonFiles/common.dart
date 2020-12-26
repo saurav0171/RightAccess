@@ -358,6 +358,30 @@ Spin kit Source : https://flutterappdev.com/2019/01/29/a-collection-of-loading-i
 ====================================================================================
 */
 
+showAlertDialog(String msg, BuildContext context) {
+  // set up the AlertDialog
+  final AlertDialog alert = AlertDialog(
+    title: Text("Alert!"),
+    content: Text(msg),
+    actions: [
+      FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
 void ShowLoader(BuildContext context) {
   SchedulerBinding.instance.addPostFrameCallback((_) => showDialog(
       context: context,
