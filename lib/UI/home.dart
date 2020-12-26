@@ -335,7 +335,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                 : Container(),
             currentEvents.length > 0
                 ? Container(
-                    height: 300,
+                    height: 200,
                     color: Colors.white,
                     child: ListView.separated(
                       itemCount: currentEvents.length,
@@ -375,12 +375,18 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            name,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                120,
+                                            child: Text(
+                                              name,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context)
@@ -472,7 +478,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                 : Container(),
             upcomingEvents.length > 0
                 ? Container(
-                    height: 300,
+                    height: MediaQuery.of(context).size.height - 500,
                     color: Colors.white,
                     child: ListView.separated(
                       itemCount: upcomingEvents.length,
@@ -511,12 +517,18 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            name,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                120,
+                                            child: Text(
+                                              name,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context)
@@ -535,7 +547,10 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                         ],
                                       ),
                                       Expanded(child: Container()),
-                                      Padding(
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             0, 0, 5, 0),
                                         child: Container(
@@ -556,6 +571,30 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                                         FontWeight.w300),
                                               )),
                                         ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 5, 5, 0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: appThemeColor1,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          height: 25,
+                                          width: 90,
+                                          child: FlatButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                "VIEW",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                              )),
+                                        ),
+                                      )
+                                        ],
                                       )
                                     ],
                                   ),
