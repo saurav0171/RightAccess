@@ -44,10 +44,9 @@ class _CourseExtensionState extends State<CourseExtension> {
   @override
   void initState() {
     super.initState();
-    if (widget.eventData == null) {
-      ShowLoader(context);
-      fetchNotification();
-    }
+
+    ShowLoader(context);
+    fetchNotification();
   }
 
   fetchNotification() async {
