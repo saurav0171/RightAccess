@@ -67,6 +67,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
 
+  //lovepreet s
   Future _scanQR() async {
     try {
       String qrResult = await BarcodeScanner.scan();
