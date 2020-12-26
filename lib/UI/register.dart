@@ -1,79 +1,40 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:location/location.dart';
 import 'package:right_access/CommonFiles/common.dart';
+import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/data/loginData.dart';
-import 'package:right_access/Globals/globals.dart' as globals;
-
-
 
 bool isRemembered = false;
 
-
 List salutationList = [];
 List<String> salutationListString = [];
-String selectedSalutation ; 
+String selectedSalutation;
+
 Map selectedSalutationObject = {};
-
-
-
 
 List countriesList = [];
 List<String> countriesListString = [];
-String selectedCountries ; 
+String selectedCountries;
+
 Map selectedCountriesObject = {};
-
-
 
 class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: Stack(
+      child: Stack(
         children: <Widget>[
           new Container(
-            height: double.infinity,
-            width: double.infinity,
-            // color: appThemeColor1,
-            decoration: BoxDecoration(color: appBackgroundColor)
-            // decoration: setBackgroundImage(),
-          ),
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(color: appBackgroundColor)
+              ),
           Scaffold(
-            // backgroundColor: appThemeColor1,
-            // appBar: AppBar(
-            //   automaticallyImplyLeading: false,
-            //   backgroundColor: appThemeColor1,
-            //   elevation: 0.0,
-            //   title: Padding(
-            //     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-            //     child: Text("REGISTER", style: TextStyle(color:Colors.white),),
-            //   ),
-            //   leading: Padding(
-            //     padding: const EdgeInsets.all(0.0),
-            //     child: InkWell(
-            //         child: Container(
-            //         decoration: BoxDecoration(
-            //           borderRadius: new BorderRadius.circular(5.0),
-            //           color: appThemeColor1
-            //         ),
-            //         child: Icon(Icons.arrow_back,color: Colors.white,)),
-            //         onTap: ()
-            //         {
-            //           Navigator.pop(context);
-            //         },
-            //     ),
-            //   ),
-            // ),
             body: FormKeyboardActions(child: RegisterExtension()),
           ),
         ],
@@ -93,12 +54,12 @@ class _RegisterExtensionState extends State<RegisterExtension> {
   FocusNode emailFocusNode = new FocusNode();
   FocusNode mobileFocusNode = new FocusNode();
   FocusNode passwordFocusNode = new FocusNode();
+
   // FocusNode passwordFocusNode = new FocusNode();
   FocusNode confirmPasswordFocusNode = new FocusNode();
 
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  
 
   /// Creates the [KeyboardActionsConfig] to hook up the fields
   /// and their focus nodes to our [FormKeyboardActions].
@@ -126,8 +87,6 @@ class _RegisterExtensionState extends State<RegisterExtension> {
         KeyboardAction(
           focusNode: confirmPasswordFocusNode,
         ),
-       
-
       ],
     );
   }
@@ -157,85 +116,58 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     confirmPasswordFocusNode.addListener(() {
       setState(() {});
     });
-    
+
     ShowLoader(context);
     fetchCountries();
     // getUserLocation();
-    
   }
 
-
-
-
-
-
-  fetchCountries() async 
-  {
+  fetchCountries() async {
     final url = "$baseUrl/countries";
     var result = await CallApi("GET", null, url);
     if (result[kDataCode] == "200") {
-      
-       setState(() {
-         countriesList = result[kDataData];
-         countriesListString = [];
-        for (var i = 0; i < countriesList.length; i++) 
-        {
-            countriesListString.add(countriesList[i][kDataAttributes][kDataName]);
+      setState(() {
+        countriesList = result[kDataData];
+        countriesListString = [];
+        for (var i = 0; i < countriesList.length; i++) {
+          countriesListString.add(countriesList[i][kDataAttributes][kDataName]);
         }
-        
       });
       fetchSalutations();
     } else if (result[kDataCode] == "401") {
-      
       ShowErrorMessage(result[kDataResult], context);
-       HideLoader(context);
-    } 
-    else if(result[kDataCode] == "422")
-    {
-        ShowErrorMessage(result[kDataMessage], context);
-         HideLoader(context);
+      HideLoader(context);
+    } else if (result[kDataCode] == "422") {
+      ShowErrorMessage(result[kDataMessage], context);
+      HideLoader(context);
     } else {
       ShowErrorMessage(result[kDataError], context);
-       HideLoader(context);
+      HideLoader(context);
     }
-   
   }
 
-
-  fetchSalutations() async 
-  {
+  fetchSalutations() async {
     final url = "$baseUrl/salutations";
     var result = await CallApi("GET", null, url);
-     HideLoader(context);
+    HideLoader(context);
     if (result[kDataCode] == "200") {
-      
-       setState(() {
-         salutationList = result[kDataData];
-         salutationListString = [];
-        for (var i = 0; i < salutationList.length; i++) 
-        {
-            salutationListString.add(salutationList[i][kDataName]);
+      setState(() {
+        salutationList = result[kDataData];
+        salutationListString = [];
+        for (var i = 0; i < salutationList.length; i++) {
+          salutationListString.add(salutationList[i][kDataName]);
         }
         selectedSalutationObject = salutationList[0];
-        selectedSalutation =  salutationListString[0];
-        
+        selectedSalutation = salutationListString[0];
       });
-      
     } else if (result[kDataCode] == "401") {
-      
       ShowErrorMessage(result[kDataResult], context);
-    } 
-    else if(result[kDataCode] == "422")
-    {
-        ShowErrorMessage(result[kDataMessage], context);
-      
+    } else if (result[kDataCode] == "422") {
+      ShowErrorMessage(result[kDataMessage], context);
     } else {
       ShowErrorMessage(result[kDataError], context);
     }
-  
   }
-
-
 
   @override
   void dispose() {
@@ -258,12 +190,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     confirmPasswordFocusNode.removeListener(() {
       setState(() {});
     });
-    
-    
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -283,65 +210,61 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("RIGHT", style: TextStyle(fontWeight: FontWeight.w900,fontSize: 24,color: appThemeColor1, fontStyle: FontStyle.normal)),
-                          Text("ACCESS", style: TextStyle(fontWeight: FontWeight.w500,fontSize: 24,color: Colors.black, fontStyle: FontStyle.normal)),
-
+                          Text("RIGHT",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 24,
+                                  color: appThemeColor1,
+                                  fontStyle: FontStyle.normal)),
+                          Text("ACCESS",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24,
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.normal)),
                         ],
                       ),
                     ),
-
-
                     Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 25,
-                            child: Text(
-                                "REGISTRATION WITH US",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 22,
-                                     color: appThemeColor1,fontWeight: FontWeight.w600),
-                              ),
-                          ),
+                      padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "REGISTRATION WITH US",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 22,
+                              color: appThemeColor1,
+                              fontWeight: FontWeight.w600),
                         ),
-
-
-
-                         Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 70,
-                            child: Text(
-                                "Request a call back regarding Together's B2B offerings using the form below.",
-                                textAlign: TextAlign.center,
-                                maxLines: 10,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black54),
-                              ),
-                              alignment: Alignment.center,
-                          ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        child: Text(
+                          "Request a call back regarding Together's B2B offerings using the form below.",
+                          textAlign: TextAlign.center,
+                          maxLines: 10,
+                          style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),
-
-
-
-
+                        alignment: Alignment.center,
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Container(
                         height: 100,
                         child: Row(
                           children: [
-
-
                             Container(
                               constraints: BoxConstraints(maxWidth: 80),
                               height: 60,
@@ -359,25 +282,36 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                 padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 child: DropdownButton<String>(
                                   value: selectedSalutation,
-                                  hint: Text("Mr",style: TextStyle(color: Colors.black,fontSize: 18),textAlign: TextAlign.center,),
+                                  hint: Text(
+                                    "Mr",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                    textAlign: TextAlign.center,
+                                  ),
                                   isExpanded: true,
                                   iconSize: 24,
                                   iconEnabledColor: Colors.black,
                                   elevation: 16,
-                                  style: TextStyle(color: Colors.black,fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
                                   underline: Container(
                                     height: 0,
                                   ),
                                   onChanged: (String newValue) {
-                                    FocusScope.of(context).requestFocus(new FocusNode());
+                                    FocusScope.of(context)
+                                        .requestFocus(new FocusNode());
                                     setState(() {
                                       selectedSalutation = newValue;
-                                      int index = salutationList.indexWhere((data) => data[kDataName] == newValue);
-                                      selectedSalutationObject = salutationList[index];
+                                      int index = salutationList.indexWhere(
+                                          (data) =>
+                                              data[kDataName] == newValue);
+                                      selectedSalutationObject =
+                                          salutationList[index];
                                     });
                                   },
                                   items: salutationListString
-                                      .map<DropdownMenuItem<String>>((String value) {
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Text(value),
@@ -386,82 +320,77 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                 ),
                               ),
                             ),
-
-
-
                             Expanded(
-                                  child: Container(
-                                  // decoration: BoxDecoration(
-                                  // border: Border.all(
-                                  //   color: Colors.black45,
-                                  //   width: 1.0,
-                                  // ),
-                                  // borderRadius: BorderRadius.only(
-                                  //     topLeft: Radius.circular(0.0),
-                                  //     bottomLeft: Radius.circular(0.0),
-                                  //     bottomRight: Radius.circular(15.0),
-                                  //     topRight: Radius.circular(15.0))
-                                      // ),
-                                                            child: TextFormField(
-                                  focusNode: firstNameFocusNode,
-                                  style: TextStyle(color: Colors.black),
-                                  textAlign: TextAlign.left,
-                                  decoration: InputDecoration(
-                                    labelStyle: TextStyle(
-                                        color:firstNameFocusNode.hasFocus?appThemeColor1:Colors.black,
-                                        ),
-                                    // fillColor: Colors.transparent,
-                                    // filled: true,
-                                    errorStyle: TextStyle(color: Colors.black),
-                                    labelText: "Enter your First Name",
-                                    hintText: "Enter your First Name",
-                                    prefixIcon: Icon(
-                                            Icons.person,
-                                            color:appThemeColor1,
-                                          ),
-                                    focusColor: firstNameFocusNode.hasFocus?appThemeColor1:Colors.black,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black45,width: 1),
-                                      borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(15.0),bottomRight: Radius.circular(15.0),
-                                        
-                                      )
-                                          
+                              child: Container(
+                                // decoration: BoxDecoration(
+                                // border: Border.all(
+                                //   color: Colors.black45,
+                                //   width: 1.0,
+                                // ),
+                                // borderRadius: BorderRadius.only(
+                                //     topLeft: Radius.circular(0.0),
+                                //     bottomLeft: Radius.circular(0.0),
+                                //     bottomRight: Radius.circular(15.0),
+                                //     topRight: Radius.circular(15.0))
+                                // ),
+                                child: TextFormField(
+                                    focusNode: firstNameFocusNode,
+                                    style: TextStyle(color: Colors.black),
+                                    textAlign: TextAlign.left,
+                                    decoration: InputDecoration(
+                                      labelStyle: TextStyle(
+                                        color: firstNameFocusNode.hasFocus
+                                            ? appThemeColor1
+                                            : Colors.black,
                                       ),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black45,width: 1),
-                                      borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(15.0),bottomRight: Radius.circular(15.0),
-                                        
-                                      )
-                                          
+                                      // fillColor: Colors.transparent,
+                                      // filled: true,
+                                      errorStyle:
+                                          TextStyle(color: Colors.black),
+                                      labelText: "Enter your First Name",
+                                      hintText: "Enter your First Name",
+                                      prefixIcon: Icon(
+                                        Icons.person,
+                                        color: appThemeColor1,
                                       ),
-                                    focusedBorder: OutlineInputBorder(
-                                      
-                                      borderSide: BorderSide(color: Colors.black45,width: 1),
-                                      borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(15.0),bottomRight: Radius.circular(15.0),
-                                        
-                                      )
-                                      
+                                      focusColor: firstNameFocusNode.hasFocus
+                                          ? appThemeColor1
+                                          : Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
                                     ),
-                                  ),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return "Please enter your First Name";
-                                    } else {
-                                      loginObj.firstName = value;
-                                    }
-                                  }),
-                                                          ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return "Please enter your First Name";
+                                      } else {
+                                        loginObj.firstName = value;
+                                      }
+                                    }),
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
-
-
-
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
@@ -485,12 +414,6 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             }
                           }),
                     ),
-
-
-
-
-
-
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
@@ -516,17 +439,6 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             }
                           }),
                     ),
-
-
-
-                    
-
-
-
-
-
-
-
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
@@ -547,22 +459,14 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
                             RegExp regExp = new RegExp(patttern);
                             if (value.length == 0) {
-                                  return 'Please enter Phone Number';
-                            }
-                            else if (!regExp.hasMatch(value)) {
-                                  return 'Please enter valid Phone Number';
-                            }
-                            else {
+                              return 'Please enter Phone Number';
+                            } else if (!regExp.hasMatch(value)) {
+                              return 'Please enter valid Phone Number';
+                            } else {
                               loginObj.mobileno = value;
                             }
-                            
-                            
                           }),
                     ),
-
-
-
-
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                       child: Container(
@@ -579,12 +483,16 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                 topRight: Radius.circular(15.0))),
                         child: DropdownButton<String>(
                           value: selectedCountries,
-                          hint: Text("Choose country",style: TextStyle(color: Colors.black45,fontSize: 16),),
+                          hint: Text(
+                            "Choose country",
+                            style:
+                                TextStyle(color: Colors.black45, fontSize: 16),
+                          ),
                           isExpanded: true,
                           iconSize: 24,
                           iconEnabledColor: Colors.white,
                           elevation: 16,
-                          style: TextStyle(color: Colors.black,fontSize: 16),
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                           underline: Container(
                             height: 0,
                           ),
@@ -592,10 +500,11 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             FocusScope.of(context)
                                 .requestFocus(new FocusNode());
                             setState(() {
-                            selectedCountries = newValue;
-                            int index = countriesList.indexWhere((data) => data[kDataAttributes][kDataName] == newValue);
-                            selectedCountriesObject = countriesList[index];
-                         });
+                              selectedCountries = newValue;
+                              int index = countriesList.indexWhere((data) =>
+                                  data[kDataAttributes][kDataName] == newValue);
+                              selectedCountriesObject = countriesList[index];
+                            });
                           },
                           items: countriesListString
                               .map<DropdownMenuItem<String>>((String value) {
@@ -607,13 +516,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                         ),
                       ),
                     ),
-
-
-
-
-
-
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
                           focusNode: passwordFocusNode,
@@ -633,18 +536,12 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                           validator: (value) {
                             if (value.isEmpty) {
                               return "Please enter Password";
-                            }  else {
+                            } else {
                               loginObj.password = value;
                             }
                           }),
                     ),
-
-
-
-
-
-
-                      Padding(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
                           focusNode: confirmPasswordFocusNode,
@@ -664,140 +561,111 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                           validator: (value) {
                             if (value.isEmpty) {
                               return "Please enter Confirm Password";
-                            }
-                            else if(passwordController.text != confirmPasswordController.text)
-                            {
-                                 return "Password didn't match Confirm Password";
-                            }  else {
+                            } else if (passwordController.text !=
+                                confirmPasswordController.text) {
+                              return "Password didn't match Confirm Password";
+                            } else {
                               loginObj.confirmPassword = value;
                             }
                           }),
                     ),
-
-
-
-
-
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-
-
-                       Container(
-                         width: 30,
-                         height: 30,
-                         child: FlatButton(
-                           padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-                           color: Colors.transparent,
-                           child: Icon(isRemembered?Icons.check_box:Icons.check_box_outline_blank,size: 30,color: Colors.black45,),
-                           onPressed: () {
-                             setState(() {
-                               isRemembered = !isRemembered;
-                             });
-                           },
-                         ),
-                       ),
-
-                       Padding(
-                         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                         child: Container(
-                           width: MediaQuery.of(context).size.width - 80,
-                                   child: Text(
-                                    "I Accept Terms & Conditions and Privacy Policy",
-                                    textAlign: TextAlign.start,
-                                    maxLines: 10,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black),
-                                  ),
-                         ),
-                       ),
-
-
-
-
-                        ],
-                      ),
-                    ),
-
-
-
-
-
-
-                    Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
-                          child: Container(
-                            // decoration: setBoxDecoration(Colors.white),
+                          Container(
+                            width: 30,
+                            height: 30,
                             child: FlatButton(
-                              color: appThemeColor1,
-                              child: Text("REGISTER",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontStyle: FontStyle.normal)),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 0.0, horizontal: 0.0),
+                              color: Colors.transparent,
+                              child: Icon(
+                                isRemembered
+                                    ? Icons.check_box
+                                    : Icons.check_box_outline_blank,
+                                size: 30,
+                                color: Colors.black45,
+                              ),
                               onPressed: () {
-                                if (loginKey.currentState.validate()) {
-                                    ShowLoader(context);
-                                    SchedulerBinding.instance.addPostFrameCallback((_) =>  createUser(loginObj, context));
-
-                                }
+                                setState(() {
+                                  isRemembered = !isRemembered;
+                                });
                               },
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width - 80,
+                              child: Text(
+                                "I Accept Terms & Conditions and Privacy Policy",
+                                textAlign: TextAlign.start,
+                                maxLines: 10,
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                            child: Container(
+                              // decoration: setBoxDecoration(Colors.white),
+                              child: FlatButton(
+                                color: appThemeColor1,
+                                child: Text("REGISTER",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontStyle: FontStyle.normal)),
+                                onPressed: () {
+                                  if (loginKey.currentState.validate()) {
+                                    ShowLoader(context);
+                                    SchedulerBinding.instance
+                                        .addPostFrameCallback((_) =>
+                                            createUser(loginObj, context));
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "Powered By Right Access",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
                         ),
                       ),
-                    ],
-                  ),
-
-
-
-
-
-
-                   Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 25,
-                            child: Text(
-                                "Powered By Right Access",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                     color: Colors.black54),
-                              ),
-                          ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "It is a long established fact that a reader",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
                         ),
-                        
-
-
-
-                         Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 25,
-                            child: Text(
-                                "It is a long established fact that a reader",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black54),
-                              ),
-                              alignment: Alignment.center,
-                          ),
-                        ),
-
-
-
+                        alignment: Alignment.center,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -808,19 +676,17 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     );
   }
 
-  void createUser(LoginData register, BuildContext context) async 
-  {
+  void createUser(LoginData register, BuildContext context) async {
     // await fetchCoordinates(register.address);
     Map param = Map();
-     param["salutation_id"] = selectedSalutationObject[kDataID].toString();
+    param["salutation_id"] = selectedSalutationObject[kDataID].toString();
     param["first_name"] = register.firstName;
-    param["last_name"] =  register.lastName;
+    param["last_name"] = register.lastName;
     param["mobile_number"] = register.mobileno;
     param["password"] = register.password;
     param["email"] = register.email;
     param["country_code"] = selectedCountriesObject[kDataID].toString();
-    param["terms_and_conditions"] = isRemembered?"1":"0";
-
+    param["terms_and_conditions"] = isRemembered ? "1" : "0";
 
     final url = "$baseUrl/register";
     var result = await CallApi("POST", param, url);
@@ -828,10 +694,9 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     HideLoader(context);
 
     if (result[kDataCode] == "200") {
-       SetSharedPreference(kDataLoginUser, result[kDataData]);
-        globals.globalCurrentUser = result[kDataData];
-    } else if(result[kDataCode] == "422")
-    {
+      SetSharedPreference(kDataLoginUser, result[kDataData]);
+      globals.globalCurrentUser = result[kDataData];
+    } else if (result[kDataCode] == "422") {
       Map error = result[kDataError];
       ShowErrorMessage(error.values.first[0], context);
     } else {

@@ -1,21 +1,20 @@
+
+
 import 'dart:async';
-import 'dart:convert' as convert;
-import 'dart:io';
-import 'package:connectivity/connectivity.dart';
-// import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:http/http.dart' as http;
-import 'package:async/async.dart';
-import 'package:http/http.dart';
-import 'package:image/image.dart';
-import 'package:right_access/CommonFiles/common.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:async/async.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:dio/dio.dart';
+import 'package:right_access/CommonFiles/common.dart';
+import 'dart:convert' as convert;
 import 'package:path/path.dart';
-import 'package:right_access/Globals/globals.dart';
+import 'package:http/http.Dart' as http;
 
 Future<dynamic> CallApi(String httpType, dynamic params, String url) async {
 
-var connectivityResult = await (new 
+var connectivityResult = await (new
   Connectivity().checkConnectivity());
 if (connectivityResult == ConnectivityResult.none)
  {
@@ -102,16 +101,16 @@ if (connectivityResult == ConnectivityResult.none)
 void makePostRequest(String httpType, dynamic params, String url) async {
   // set up POST request arguments
 
-  Map<String, String> headers = {
-    "Content-type": "application/x-www-form-urlencoded"
-  };
-
-  Response response = await http.post(url, headers: headers, body: params);
-  // check the status code for the result
-  int statusCode = response.statusCode;
-  // this API passes back the id of the new item added to the body
-  String body = response.body;
-  print("Output is : $body");
+  // Map<String, String> headers = {
+  //   "Content-type": "application/x-www-form-urlencoded"
+  // };
+  //
+  // Response response = await http.post(url, headers: headers, body: params);
+  // // check the status code for the result
+  // int statusCode = response.statusCode;
+  // // this API passes back the id of the new item added to the body
+  // String body = response.body;
+  // print("Output is : $body");
   // {
   //   "title": "Hello",
   //   "body": "body text",
@@ -138,41 +137,85 @@ void makePostRequest(String httpType, dynamic params, String url) async {
 //     return result;
 //   }
 
-Future<dynamic> CallUploadImage(File image, String groupId, String mobileList) async {
+
+Future<dynamic> CallUploadImag2e(File image) async {
+  var response;
+
+  try {
+    Dio dio = new Dio();
+    dio.options.baseUrl = baseUrl;
+    FormData formData = FormData.fromMap({
+      "profession": "android",
+      "organization_name": "ludhiaa",
+      "city": "Ludhiana",
+      "terms_and_conditions": 1,
+      "document": await MultipartFile.fromFile(image.path,filename: basename(image.path))
+    });
+    response= await dio.post("/events/2/register", data: formData);
+  } on DioError catch(e) {
+    if(e.response != null) {
+      print(e.response.data);
+      print(e.response.headers);
+      print(e.response.request);
+    } else{
+      print(e.request);
+      print(e.message);
+    }
+  }
+  var jsonResponse;
+  try {
+    jsonResponse = convert.jsonDecode(response);
+  } on Exception catch (_) {
+    var jsonError = {
+      kDataResult: "Something went wrong. Please try again later.",
+      kDataCode: "500"
+    };
+    return jsonError;
+  }
+
+}
+
+
+
+Future<dynamic> CallUploadImage(File image) async {
   var response;
 
   try {
     
     // open a byteStream
     // ignore: deprecated_member_use
-    if (image.path.contains(".JPG")||image.path.contains(".PNG")||image.path.contains(".jpg")||image.path.contains(".png")||image.path.contains(".jpeg")||image.path.contains(".JPEG")) 
-    {
-       final dir = await path_provider.getTemporaryDirectory();
-      final targetPath = dir.absolute.path + "/"+basename(image.path);
-      // image = await testCompressAndGetFile(image, targetPath);
-    }
-   
-
+    // if (image.path.contains(".JPG")||image.path.contains(".PNG")||image.path.contains(".jpg")||image.path.contains(".png")||image.path.contains(".jpeg")||image.path.contains(".JPEG"))
+    // {
+    //    final dir = await path_provider.getTemporaryDirectory();
+    //   // image = await testCompressAndGetFile(image, targetPath);
+    // }
+    dynamic user = await GetSharedPreference(kDataLoginUser);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer ${user[kDataToken].toString()}",
+      "Content-Type": "multipart/form-data"
+    };
 
     var stream = new http.ByteStream(DelegatingStream.typed(image.openRead()));
     // get file length
     var length = await image.length();
 
     // string to uri
-    var uri = Uri.parse('http://ws.qvic.in/api/fileshare');
+    var uri = Uri.parse(baseUrl+'/events/2/register');
 
     // create multipart request
     var request = new http.MultipartRequest("POST", uri);
 
+    request.headers.addAll(headers);
+    request.fields['profession'] = "test";
+    request.fields['organization_name'] = "love";
+    request.fields['city'] = "Ludhiana";
+    request.fields['terms_and_conditions'] = "1";
 
-    request.fields['admin_id'] = globalCurrentUser[kDataID].toString();
-    request.fields['group_id'] = groupId;
-    request.fields['mobile_list'] = mobileList;
-    request.fields['company_id'] = '1';
 
 
     // multipart that takes file.. here this "image_file" is a key of the API request
-    var multipartFile = new http.MultipartFile('upload', stream, length, filename: basename(image.path));
+    var multipartFile = new http.MultipartFile('document', stream, length, filename: basename(image.path));
 
     // add file to multipart
     request.files.add(multipartFile);

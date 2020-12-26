@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:right_access/Globals/globals.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/UI/home.dart';
+import 'package:right_access/UI/inviteRegister.dart';
 import 'package:right_access/UI/login.dart';
 import 'package:right_access/UI/loginOptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,7 @@ import 'package:path/path.dart';
 
 // ******Color Code********//
 
+final primaryColor = Color(0xFF3885C6);
 final appBackgroundColor = Color(0xFFFFFFFF);
 final appThemeColor1 = Color(0xFFE0161D);
 final appThemeColor2 = Color(0xFF3885C6);
@@ -105,6 +107,7 @@ final kDataStatusCode = "status_code";
 final kDataOtp = "otp";
 final kDataIsAdmin = "is_admin";
 final kDataRemembered = "remembered";
+final kIsRemembered = "is_remembered";
 
 final kDataCustomerData = "customer_data";
 final kDataEntityId = "entityId";
@@ -267,7 +270,8 @@ SetHomePage(int index, String screenName) async {
   Widget screen;
   if (check ) {
     
-    screen = HomeScreen();
+    // screen = HomeScreen();
+    screen = InviteRegister();
 
   }
   else {
@@ -434,7 +438,6 @@ Future<bool> sharedPreferenceContainsKey(String key) async {
 void SetSharedPreference(String key, dynamic value) async {
   var str = convert.json.encode(value);
   SharedPreferences prefs = await SharedPreferences.getInstance();
-
   prefs.setString(key, str);
 }
 
@@ -598,32 +601,6 @@ LinearGradient setGradientColor() {
       hexToColor("#0627A6"),
       hexToColor("#0740B6"),
       hexToColor("#0965CC"),
-    ],
-  );
-}
-
-final Shader linearGradientForText = LinearGradient(
-  colors: <Color>[
-    hexToColor("#DC973D"),
-    hexToColor("#CC8A33"),
-    hexToColor("#AD6D23"),
-    hexToColor("#975A19")
-  ],
-).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
-
-LinearGradient setGradientColorHorizontalAxis() {
-  return LinearGradient(
-    // Where the linear gradient begins and ends
-    begin: Alignment.centerRight,
-    end: Alignment.centerLeft,
-    // Add one stop for each color. Stops should increase from 0 to 1
-    stops: [0.1, 0.5, 0.7, 0.9],
-    colors: [
-      // Colors are easy thanks to Flutter's Colors class.
-      hexToColor("#DC973D"),
-      hexToColor("#CC8A33"),
-      hexToColor("#AD6D23"),
-      hexToColor("#975A19"),
     ],
   );
 }

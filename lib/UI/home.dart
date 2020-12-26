@@ -1,4 +1,6 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:right_access/CommonFiles/common.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
@@ -13,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  String result = "Hey there!";
   int _pageIndex = 0;
   PageController _pageController;
   List<Widget> tabPages = [
@@ -27,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-
     _pageController = PageController(initialPage: _pageIndex);
   }
 
@@ -40,8 +42,6 @@ class _HomeScreenState extends State<HomeScreen>
   Widget setBottomMenu() {
     return BottomNavigationBar(
         currentIndex: _pageIndex,
-        // selectedLabelStyle: TextStyle(color: Colors.black45),
-        // unselectedLabelStyle: TextStyle(color: Colors.grey),
         onTap: onTabTapped,
         backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
@@ -109,6 +109,36 @@ class _HomeScreenState extends State<HomeScreen>
         duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
 
+  Future _scanQR() async {
+    try {
+      String qrResult = await BarcodeScanner.scan();
+      setState(() {
+        result = qrResult;
+        // ShowLoader(context);
+        // attendance(qrResult, context);
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          result = "Camera permission was denied";
+        });
+      } else {
+        setState(() {
+          result = "Unknown Error $ex";
+        });
+      }
+    } on FormatException {
+      setState(() {
+        result = "You pressed the back button before scanning anything";
+      });
+    } catch (ex) {
+      setState(() {
+        result = "Unknown Error $ex";
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
             onTap: () {
-              print("BARCODE Scanner Pressed");
+              _scanQR();
             },
           )
         ],
@@ -192,18 +222,14 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
     fetchCurrentEvents();
   }
 
- 
- 
   fetchCurrentEvents() async {
     final url =
         "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules";
     var result = await CallApi("GET", null, url);
     if (result[kDataCode] == "200") {
       setState(() {
-
         currentEvents = result[kDataData];
       });
-
       fetchUpcomingEvents();
     } else if (result[kDataCode] == "401") {
       ShowErrorMessage(result[kDataResult], context);
@@ -218,18 +244,13 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
   }
 
   fetchUpcomingEvents() async {
-    final url = "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules&type=upcoming";
+    final url = "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules,event_stage_media&type=upcoming";
     var result = await CallApi("GET", null, url);
     HideLoader(context);
-
-
     if (result[kDataCode] == "200") {
       setState(() {
-        
         upcomingEvents = result[kDataData];
-
       });
-       
     } else if (result[kDataCode] == "401") {
       ShowErrorMessage(result[kDataResult], context);
      
@@ -373,9 +394,6 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                     )),
                                   ),
                                 )
-
-
-
                               ],
                             ),
                           )
@@ -384,7 +402,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                       onTap: () {
                         setState(() {
                           selectedIndex = index;
-                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen()));
+                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen(isRegister: true,)));
                         });
                       },
                     ),
@@ -503,9 +521,6 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                     )),
                                   ),
                                 )
-
-
-
                               ],
                             ),
                           )
@@ -514,7 +529,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                       onTap: () {
                         setState(() {
                           selectedIndex = index;
-                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen()));
+                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen(isRegister: true,)));
                         });
                       },
                     ),

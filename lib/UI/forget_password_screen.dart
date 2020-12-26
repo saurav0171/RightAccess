@@ -6,14 +6,13 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:right_access/CommonFiles/common.dart';
 import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
-import 'package:right_access/UI/forget_password_screen.dart';
 import 'package:right_access/UI/register.dart';
 import 'package:right_access/data/loginData.dart';
 
 TextEditingController mobileController = TextEditingController();
 bool isRemembered = false;
 
-class Login extends StatelessWidget {
+class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
@@ -24,10 +23,10 @@ class Login extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               decoration: BoxDecoration(color: appBackgroundColor)
-              ),
+          ),
           Scaffold(
             backgroundColor: Colors.transparent,
-            body: FormKeyboardActions(child: LoginExtension()),
+            body: FormKeyboardActions(child: ForgetPasswordExtension()),
           ),
         ],
       ),
@@ -35,70 +34,32 @@ class Login extends StatelessWidget {
   }
 }
 
-class LoginExtension extends StatefulWidget {
+class ForgetPasswordExtension extends StatefulWidget {
   @override
-  _LoginExtensionState createState() => _LoginExtensionState();
+  _ForgetPasswordExtensionState createState() => _ForgetPasswordExtensionState();
 }
 
-class _LoginExtensionState extends State<LoginExtension> {
+class _ForgetPasswordExtensionState extends State<ForgetPasswordExtension> {
   FocusNode loginFocusNode = new FocusNode();
-  FocusNode passwordFocusNode = new FocusNode();
   TextEditingController loginController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   Map userProfile;
-
-  /// Creates the [KeyboardActionsConfig] to hook up the fields
-  /// and their focus nodes to our [FormKeyboardActions].
-  KeyboardActionsConfig _buildConfig(BuildContext context) {
-    return KeyboardActionsConfig(
-      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-      keyboardBarColor: Colors.grey[200],
-      nextFocus: true,
-      actions: [
-        KeyboardAction(
-          focusNode: loginFocusNode,
-        ),
-        KeyboardAction(
-          focusNode: passwordFocusNode,
-        ),
-      ],
-    );
-  }
-
   final loginKey = GlobalKey<FormState>();
   LoginData loginObj = new LoginData();
 
   @override
   void initState() {
-    FormKeyboardActions.setKeyboardActions(context, _buildConfig(context));
     super.initState();
-
     loginFocusNode.addListener(() {
       setState(() {});
     });
-    passwordFocusNode.addListener(() {
-      setState(() {});
-    });
-
-    setValues();
   }
 
-  setValues() async {
-    bool status = await sharedPreferenceContainsKey(kDataRemembered);
-    if (status) {
-      Map remember = GetSharedPreference(kDataRemembered);
-      loginController.text = remember[kDataEmail];
-      passwordController.text = remember[kDataPassword];
-    }
-  }
+
 
   @override
   void dispose() {
     super.dispose();
     loginFocusNode?.removeListener(() {
-      setState(() {});
-    });
-    passwordFocusNode.removeListener(() {
       setState(() {});
     });
   }
@@ -252,32 +213,6 @@ class _LoginExtensionState extends State<LoginExtension> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: TextFormField(
-                          focusNode: passwordFocusNode,
-                          controller: passwordController,
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: setInputDecorationForEdit(
-                              "Email Password",
-                              "Email Password",
-                              Colors.red,
-                              Colors.red,
-                              Colors.red,
-                              Icons.lock,
-                              passwordFocusNode),
-                          obscureText: true,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please enter your password";
-                            } else {
-                              loginObj.password = value;
-                            }
-                          }),
-                    ),
-
-                    Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -310,7 +245,7 @@ class _LoginExtensionState extends State<LoginExtension> {
                               textAlign: TextAlign.center,
                               maxLines: 10,
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
+                              TextStyle(fontSize: 16, color: Colors.black),
                             ),
                           ),
                         ],
@@ -318,28 +253,10 @@ class _LoginExtensionState extends State<LoginExtension> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Container(
-                            width: 280,
-                            height: 40,
-                            alignment: Alignment.bottomRight,
-                            child: FlatButton(
-                              color: Colors.transparent,
-                              child: Text("Forgot Password?",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                      color: appThemeColor1,
-                                      fontStyle: FontStyle.normal)),
-                              onPressed: () {
-                                Navigator.push(
-                                              context, setNavigationTransition(ForgotPassword()));
-                              },
-                            ),
-                          ),
                           Container(
                             width: 280,
                             height: 50,
@@ -347,11 +264,9 @@ class _LoginExtensionState extends State<LoginExtension> {
                               borderRadius: BorderRadius.circular(5),
                               color: appThemeColor1,
                             ),
-                            //  decoration: setBoxDecoration(Colors.white),
-
                             child: FlatButton(
                               color: Colors.transparent,
-                              child: Text("SIGN IN",
+                              child: Text("Change Password",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 18,
@@ -362,7 +277,7 @@ class _LoginExtensionState extends State<LoginExtension> {
                                   ShowLoader(context);
                                   SchedulerBinding.instance
                                       .addPostFrameCallback((_) => loginUser(
-                                          loginObj, context, "password"));
+                                      loginObj, context, "password"));
                                 }
                               },
                             ),
@@ -372,26 +287,7 @@ class _LoginExtensionState extends State<LoginExtension> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
-                      child: Container(
-                        height: 30,
-                        child: FlatButton(
-                          child: Text(
-                            "REGISTER NOW",
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w500),
-                          ),
-                          textColor: Colors.black,
-                          onPressed: () {
-                            Navigator.push(
-                                context, setNavigationTransition(Register()));
-                          },
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: 25,
@@ -429,13 +325,11 @@ class _LoginExtensionState extends State<LoginExtension> {
   void loginUser(
       LoginData login, BuildContext context, String loginType) async {
     Map param = Map();
-    // param["login_type"] = loginType;
     param["email"] = login.email;
     param["password"] = login.password;
 
     final url = "$baseUrl/login";
     var result = await CallApi("POST", param, url);
-    // var result = await makePostRequest("POST", param, url) ;
     HideLoader(context);
 
     if (result[kDataCode] == "200") {
@@ -447,8 +341,6 @@ class _LoginExtensionState extends State<LoginExtension> {
       } else {
         RemoveSharedPreference(kDataRemembered);
       }
-      // Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-      // builder: (context) => CustomDrawer(positionForDrawer = "other0")),   ModalRoute.withName("") );
 
     } else if (result[kDataCode] == "422") {
       ShowErrorMessage(result[kDataMessage], context);

@@ -1,44 +1,37 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:location/location.dart';
 import 'package:right_access/CommonFiles/common.dart';
+import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/data/loginData.dart';
-import 'package:right_access/Globals/globals.dart' as globals;
 
+List<String> usersList = ["Mr", "Mrs"];
+String selectedUser;
 
-
-List<String> usersList = ["Mr","Mrs"];
-String selectedUser ;
 bool isRemembered = false;
-
-
 
 List stateList = [];
 List<String> stateListString = [];
-String selectedState ; 
+String selectedState;
+
 Map selectedStateObject = {};
 
 List zoneList = [];
 List<String> zoneListString = [];
-String selectedZone ; 
-Map selectedZoneObject = {};
+String selectedZone;
 
+Map selectedZoneObject = {};
 
 DateTime dob;
 TextEditingController dateController = TextEditingController();
 
-
 final dateFormat = DateFormat("dd/MM/yyyy");
-bool isAdult = false; 
+bool isAdult = false;
 String locationError = "";
 LocationData currentLocation;
 
@@ -47,41 +40,13 @@ class InviteRegister extends StatelessWidget {
   Widget build(BuildContext context) {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: Stack(
+      child: Stack(
         children: <Widget>[
           new Container(
-            height: double.infinity,
-            width: double.infinity,
-            // color: appThemeColor1,
-            decoration: BoxDecoration(color: appBackgroundColor)
-            // decoration: setBackgroundImage(),
-          ),
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(color: appBackgroundColor)),
           Scaffold(
-            // backgroundColor: appThemeColor1,
-            // appBar: AppBar(
-            //   automaticallyImplyLeading: false,
-            //   backgroundColor: appThemeColor1,
-            //   elevation: 0.0,
-            //   title: Padding(
-            //     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-            //     child: Text("REGISTER", style: TextStyle(color:Colors.white),),
-            //   ),
-            //   leading: Padding(
-            //     padding: const EdgeInsets.all(0.0),
-            //     child: InkWell(
-            //         child: Container(
-            //         decoration: BoxDecoration(
-            //           borderRadius: new BorderRadius.circular(5.0),
-            //           color: appThemeColor1
-            //         ),
-            //         child: Icon(Icons.arrow_back,color: Colors.white,)),
-            //         onTap: ()
-            //         {
-            //           Navigator.pop(context);
-            //         },
-            //     ),
-            //   ),
-            // ),
             body: FormKeyboardActions(child: InviteRegisterExtension()),
           ),
         ],
@@ -90,25 +55,22 @@ class InviteRegister extends StatelessWidget {
   }
 }
 
-
-
 class InviteRegisterExtension extends StatefulWidget {
   @override
-  _InviteRegisterExtensionState createState() => _InviteRegisterExtensionState();
+  _InviteRegisterExtensionState createState() =>
+      _InviteRegisterExtensionState();
 }
 
 class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
-  FocusNode firstNameFocusNode = new FocusNode();
-  FocusNode mobileFocusNode = new FocusNode();
-  FocusNode emailFocusNode = new FocusNode();
-  FocusNode addressFocusNode = new FocusNode();
-  FocusNode passwordFocusNode = new FocusNode();
-  // FocusNode passwordFocusNode = new FocusNode();
-  FocusNode confirmPasswordFocusNode = new FocusNode();
+  FocusNode professionFocusNode = new FocusNode();
+  FocusNode organizationNameFocusNode = new FocusNode();
+  FocusNode cityFocusNode = new FocusNode();
 
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  
+  TextEditingController professionController = TextEditingController();
+  TextEditingController organizationNameController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+
+  var image;
 
   /// Creates the [KeyboardActionsConfig] to hook up the fields
   /// and their focus nodes to our [FormKeyboardActions].
@@ -119,28 +81,14 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
       nextFocus: true,
       actions: [
         KeyboardAction(
-          focusNode: firstNameFocusNode,
+          focusNode: professionFocusNode,
         ),
         KeyboardAction(
-          focusNode: mobileFocusNode,
+          focusNode: organizationNameFocusNode,
         ),
         KeyboardAction(
-          focusNode: emailFocusNode,
+          focusNode: cityFocusNode,
         ),
-        KeyboardAction(
-          focusNode: addressFocusNode,
-        ),
-        KeyboardAction(
-          focusNode: passwordFocusNode,
-        ),
-        // KeyboardAction(
-        //   focusNode: passwordFocusNode,
-        // ),
-        KeyboardAction(
-          focusNode: confirmPasswordFocusNode,
-        ),
-       
-
       ],
     );
   }
@@ -152,173 +100,124 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
   void initState() {
     FormKeyboardActions.setKeyboardActions(context, _buildConfig(context));
     super.initState();
-    firstNameFocusNode.addListener(() {
+    professionFocusNode.addListener(() {
       setState(() {});
     });
-    mobileFocusNode.addListener(() {
+    organizationNameFocusNode.addListener(() {
       setState(() {});
     });
-    emailFocusNode.addListener(() {
+    cityFocusNode.addListener(() {
       setState(() {});
     });
-    addressFocusNode.addListener(() {
-      setState(() {});
-    });
-    passwordFocusNode.addListener(() {
-      setState(() {});
-    });
-    // passwordFocusNode.addListener(() {
-    //   setState(() {});
-    // });
-    confirmPasswordFocusNode.addListener(() {
-      setState(() {});
-    });
-    
-    // ShowLoader(context);
-    // fetchStates();
-    // getUserLocation();
-    
   }
 
-
-
-
-
-
-  // fetchStates() async 
-  // {
-  //   final url = "$baseUrl/state_list";
-  //   var result = await CallApi("GET", null, url);
-  //   if (result[kDataCode] == "200") {
-      
-  //      setState(() {
-  //        stateList = result[kDataData];
-  //        stateListString = [];
-  //       for (var i = 0; i < stateList.length; i++) 
-  //       {
-  //           stateListString.add(stateList[i][kDataStateName]);
-  //       }
-  //       fetchZones();
-  //     });
-  //   } else if (result[kDataCode] == "401") {
-      
-  //     ShowErrorMessage(result[kDataResult], context);
-  //      HideLoader(context);
-  //   } else {
-  //     ShowErrorMessage(result[kDataError], context);
-  //      HideLoader(context);
-  //   }
-   
-  // }
-
-
-// fetchZones() async 
-//   {
-//     final url = "$baseUrl/getallzones/1";
-//     var result = await CallApi("GET", null, url);
-//     if (result[kDataCode] == "200") {
-      
-//        setState(() {
-//          zoneList = result[kDataData];
-//          zoneListString = [];
-//         for (var i = 0; i < zoneList.length; i++) 
-//         {
-//             zoneListString.add(zoneList[i][kDataZone]);
-//         }
-//       });
-//     } else if (result[kDataCode] == "401") {
-      
-//       ShowErrorMessage(result[kDataResult], context);
-//     } else {
-//       ShowErrorMessage(result[kDataError], context);
-//     }
-//     HideLoader(context);
-//   }
-
-
- getUserLocation() async {//call this async method from whereever you need
-
-      LocationData myLocation;
-      
-      Location location = new Location();
-      try {
-        myLocation = await location.getLocation();
-        print("myLocation : $myLocation");
-      } on PlatformException catch (e) {
-        if (e.code == 'PERMISSION_DENIED') {
-          setState(() {
-            locationError = 'Please grant permission';
-          });
-          print(locationError);
-        }
-        if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-          setState(() {
-            locationError = 'Permission denied- Please enable it from app settings';
-          });
-          print(locationError);
-        }
-        if (e.code == 'SERVICE_STATUS_DISABLED') {
-          setState(() {
-            locationError = 'Location Service Disabled- Please enable it from app settings';
-          });
-          print(locationError);
-        }
-        // ShowErrorMessage(error, context);
-        showDialog(context: context, 
-        builder: (_) => new AlertDialog(
-            title: new Text("Location Service"),
-            content: new Text(locationError),
-            actions: <Widget>[
-              FlatButton(onPressed: ()
-              {
-                  Navigator.pop(context);
-              }, child: Text("OK"))
-            ],
-        )
-            );
-        myLocation = null;
+  getUserLocation() async {
+    //call this async method from whereever you need
+    LocationData myLocation;
+    Location location = new Location();
+    try {
+      myLocation = await location.getLocation();
+      print("myLocation : $myLocation");
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        setState(() {
+          locationError = 'Please grant permission';
+        });
+        print(locationError);
       }
-       currentLocation = myLocation;
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        setState(() {
+          locationError =
+              'Permission denied- Please enable it from app settings';
+        });
+        print(locationError);
+      }
+      if (e.code == 'SERVICE_STATUS_DISABLED') {
+        setState(() {
+          locationError =
+              'Location Service Disabled- Please enable it from app settings';
+        });
+        print(locationError);
+      }
+      showDialog(
+          context: context,
+          builder: (_) => new AlertDialog(
+                title: new Text("Location Service"),
+                content: new Text(locationError),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+      myLocation = null;
     }
-
-
+    currentLocation = myLocation;
+  }
 
   @override
   void dispose() {
     super.dispose();
-    firstNameFocusNode?.removeListener(() {
+    professionFocusNode?.removeListener(() {
       setState(() {});
     });
-    mobileFocusNode?.removeListener(() {
+    organizationNameFocusNode.removeListener(() {
       setState(() {});
     });
-    emailFocusNode.removeListener(() {
+    cityFocusNode.removeListener(() {
       setState(() {});
     });
-    addressFocusNode.removeListener(() {
-      setState(() {});
-    });
-    passwordFocusNode.removeListener(() {
-      setState(() {});
-    });
-    // passwordFocusNode.removeListener(() {
-    //   setState(() {});
-    // });
-    confirmPasswordFocusNode.removeListener(() {
-      setState(() {});
-    });
-    
-    
   }
 
+  Future<void> _optionsDialogBox() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: new SingleChildScrollView(
+              child: new ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                    child: new Text('Take a picture'),
+                    onTap: getCameraImage,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  GestureDetector(
+                    child: new Text('Select from gallery'),
+                    onTap: getGalleryImage,
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 
+  Future getGalleryImage() async {
+    Navigator.pop(context);
+    image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 700);
+    setState(() {
+      if (image != null) {}
+    });
+  }
 
+  Future getCameraImage() async {
+    Navigator.pop(context);
+    image =
+        await ImagePicker.pickImage(source: ImageSource.camera, maxHeight: 700);
+    setState(() {
+      if (image != null) {}
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // alignment: Alignment.bottomCenter,
-      // height: MediaQuery.of(context).size.height - 80,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Form(
@@ -326,568 +225,353 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Container(
-              // decoration: setBoxDecorationForUpperCorners(Colors.white, Colors.transparent),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("RIGHT", style: TextStyle(fontWeight: FontWeight.w900,fontSize: 24,color: appThemeColor1, fontStyle: FontStyle.normal)),
-                          Text("ACCESS", style: TextStyle(fontWeight: FontWeight.w500,fontSize: 24,color: Colors.black, fontStyle: FontStyle.normal)),
-
+                          Text("RIGHT",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 24,
+                                  color: appThemeColor1,
+                                  fontStyle: FontStyle.normal)),
+                          Text("ACCESS",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24,
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.normal)),
                         ],
                       ),
                     ),
-
-
                     Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 25,
-                            child: Text(
-                                "THANK YOU",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 22,
-                                     color: appThemeColor1,fontWeight: FontWeight.w600),
-                              ),
-                          ),
-                        ),
-
-
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 25,
-                            child: Text(
-                                "FOR REGISTRATION!",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 22,
-                                     color: appThemeColor1,fontWeight: FontWeight.w600),
-                              ),
-                          ),
-                        ),
-
-
-
-
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 70,
-                            child: Text(
-                                "We are verifying the details and will confirm you shortly",
-                                textAlign: TextAlign.center,
-                                maxLines: 10,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black54),
-                              ),
-                              alignment: Alignment.center,
-                          ),
-                        ),
-
-
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Container(
-                            height: 4,
-                            color: appThemeColor1,
-                          ),
-                        ),
-
-                        
-
-
-
-                         Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                                "This program might allow professional only.",
-                                textAlign: TextAlign.center,
-                                maxLines: 10,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black54),
-                              ),
-                              alignment: Alignment.center,
-                          ),
-                        ),
-
-
-
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                                "Kindly help us with below details.",
-                                textAlign: TextAlign.center,
-                                maxLines: 10,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black54),
-                              ),
-                              alignment: Alignment.center,
-                          ),
-                        ),
-
-
-
-
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
                       child: Container(
-                        height: 100,
-                        child: Row(
-                          children: [
-
-
-                            Container(
-                              width: 70,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black45,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(15.0),
-                                      bottomLeft: Radius.circular(15.0),
-                                      bottomRight: Radius.circular(0.0),
-                                      topRight: Radius.circular(0.0))),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: DropdownButton<String>(
-                                  value: selectedUser,
-                                  hint: Text("Mr",style: TextStyle(color: Colors.black,fontSize: 18),textAlign: TextAlign.center,),
-                                  isExpanded: true,
-                                  iconSize: 24,
-                                  iconEnabledColor: Colors.black,
-                                  elevation: 16,
-                                  style: TextStyle(color: Colors.black,fontSize: 16),
-                                  underline: Container(
-                                    height: 0,
-                                  ),
-                                  onChanged: (String newValue) {
-                                    FocusScope.of(context).requestFocus(new FocusNode());
-                                    setState(() {
-                                      selectedUser = newValue;
-                                    });
-                                  },
-                                  items: usersList
-                                      .map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-
-
-
-                            Expanded(
-                                  child: Container(
-                                  // decoration: BoxDecoration(
-                                  // border: Border.all(
-                                  //   color: Colors.black45,
-                                  //   width: 1.0,
-                                  // ),
-                                  // borderRadius: BorderRadius.only(
-                                  //     topLeft: Radius.circular(0.0),
-                                  //     bottomLeft: Radius.circular(0.0),
-                                  //     bottomRight: Radius.circular(15.0),
-                                  //     topRight: Radius.circular(15.0))
-                                      // ),
-                                                            child: TextFormField(
-                                  focusNode: firstNameFocusNode,
-                                  style: TextStyle(color: Colors.black),
-                                  textAlign: TextAlign.left,
-                                  decoration: InputDecoration(
-                                    labelStyle: TextStyle(
-                                        color:firstNameFocusNode.hasFocus?appThemeColor1:Colors.black,
-                                        ),
-                                    // fillColor: Colors.transparent,
-                                    // filled: true,
-                                    errorStyle: TextStyle(color: Colors.black),
-                                    labelText: "Enter your First Name",
-                                    hintText: "Enter your First Name",
-                                    prefixIcon: Icon(
-                                            Icons.person,
-                                            color:appThemeColor1,
-                                          ),
-                                    focusColor: firstNameFocusNode.hasFocus?appThemeColor1:Colors.black,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black45,width: 1),
-                                      borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(15.0),bottomRight: Radius.circular(15.0),
-                                        
-                                      )
-                                          
-                                      ),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black45,width: 1),
-                                      borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(15.0),bottomRight: Radius.circular(15.0),
-                                        
-                                      )
-                                          
-                                      ),
-                                    focusedBorder: OutlineInputBorder(
-                                      
-                                      borderSide: BorderSide(color: Colors.black45,width: 1),
-                                      borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(15.0),bottomRight: Radius.circular(15.0),
-                                        
-                                      )
-                                      
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return "Please enter your First Name";
-                                    } else {
-                                      loginObj.firstName = value;
-                                    }
-                                  }),
-                                                          ),
-                            ),
-                          ],
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "THANK YOU",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 22,
+                              color: appThemeColor1,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
-
-
-
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "REGISTER WITH US",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 22,
+                              color: appThemeColor1,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        child: Text(
+                          "Request a call back regarding Together's B2B\nofferings Using the form below.",
+                          textAlign: TextAlign.center,
+                          maxLines: 10,
+                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                        ),
+                        alignment: Alignment.center,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: Container(
+                        height: 4,
+                        color: appThemeColor1,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                       child: TextFormField(
-                          focusNode: addressFocusNode,
+                          focusNode: professionFocusNode,
+                          controller: professionController,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
-                          keyboardType: TextInputType.multiline,
+                          keyboardType: TextInputType.text,
                           decoration: setInputDecorationForEdit(
-                              "Enter your Last Name",
-                              "Enter your Last Name",
+                              "Please enter your Profession",
+                              "Please enter your Profession",
                               appThemeColor1,
                               appThemeColor1,
                               appThemeColor1,
-                              Icons.person,
-                              addressFocusNode),
+                              Icons.account_circle_rounded,
+                              professionFocusNode),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "Please enter your Last Name";
-                            } else {
-                              loginObj.lastName = value;
+                              return "Please enter City";
                             }
                           }),
                     ),
-
-
-
-
-
-
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                       child: TextFormField(
-                          focusNode: emailFocusNode,
+                          focusNode: organizationNameFocusNode,
+                          controller: organizationNameController,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
                           decoration: setInputDecorationForEdit(
-                              "Please enter your Email Address",
-                              "Please enter your Email Address",
+                              "Please enter Organization Name",
+                              "Please enter Organization Name",
                               appThemeColor1,
                               appThemeColor1,
                               appThemeColor1,
-                              Icons.email,
-                              emailFocusNode),
+                              Icons.location_city,
+                              organizationNameFocusNode),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "Please enter email";
-                            } else if (!checkValidEmail(value)) {
-                              return "Please enter valid email";
-                            } else {
-                              loginObj.email = value;
+                              return "Please enter Organization Name";
                             }
                           }),
                     ),
-
-
-
-                    
-
-
-
-
-
-
-
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                       child: TextFormField(
-                          focusNode: mobileFocusNode,
+                          focusNode: cityFocusNode,
+                          controller: cityController,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
-                          keyboardType: TextInputType.phone,
-                          maxLength: 10,
+                          keyboardType: TextInputType.text,
                           decoration: setInputDecorationForEdit(
-                              "Enter your Phone Number",
-                              "Enter your Phone Number",
+                              "Please enter City",
+                              "Please enter City",
                               appThemeColor1,
                               appThemeColor1,
                               appThemeColor1,
-                              Icons.mobile_screen_share,
-                              mobileFocusNode),
-                          validator: (value) {
-                            String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                            RegExp regExp = new RegExp(patttern);
-                            if (value.length == 0) {
-                                  return 'Please enter Phone Number';
-                            }
-                            else if (!regExp.hasMatch(value)) {
-                                  return 'Please enter valid Phone Number';
-                            }
-                            else {
-                              loginObj.mobileno = value;
-                            }
-                            
-                            
-                          }),
-                    ),
-
-
-
-                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      child: TextFormField(
-                          focusNode: emailFocusNode,
-                          controller: passwordController,
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: setInputDecorationForEdit(
-                              "Enter your Password",
-                              "Enter your Password",
-                              appThemeColor1,
-                              appThemeColor1,
-                              appThemeColor1,
-                              Icons.lock,
-                              passwordFocusNode),
+                              Icons.add_location,
+                              cityFocusNode),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "Please enter Password";
-                            }  else {
-                              loginObj.password = value;
+                              return "Please enter City";
                             }
                           }),
                     ),
-
-
-
-
-
-
-                    //   Padding(
-                    //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    //   child: TextFormField(
-                    //       focusNode: emailFocusNode,
-                    //       controller: confirmPasswordController,
-                    //       style: TextStyle(color: Colors.black),
-                    //       textAlign: TextAlign.left,
-                    //       keyboardType: TextInputType.emailAddress,
-                    //       decoration: setInputDecorationForEdit(
-                    //           "Enter Confirm Password",
-                    //           "Enter Confirm Password",
-                    //           appThemeColor1,
-                    //           appThemeColor1,
-                    //           appThemeColor1,
-                    //           Icons.lock,
-                    //           passwordFocusNode),
-                    //       validator: (value) {
-                    //         if (value.isEmpty) {
-                    //           return "Please enter Confirm Password";
-                    //         }
-                    //         else if(passwordController.text != confirmPasswordController.text)
-                    //         {
-                    //              return "Password didn't match Confirm Password";
-                    //         }  else {
-                    //           loginObj.confirmPassword = value;
-                    //         }
-                    //       }),
-                    // ),
-
-
-
-
-
+                    GestureDetector(
+                      onTap: () {
+                        if (image == null) {
+                          _optionsDialogBox();
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 16.0),
+                        height: 180,
+                        child: GestureDetector(
+                          child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              width: 150,
+                              height: 150,
+                              child: Stack(
+                                children: <Widget>[
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.all(0.0),
+                                        height: 120,
+                                        width: 200,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.black,
+                                              width: 1.0,
+                                            ),
+                                            color: Colors.grey.withAlpha(30),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10.0),
+                                                bottomLeft:
+                                                    Radius.circular(10.0),
+                                                bottomRight:
+                                                    Radius.circular(10.0),
+                                                topRight:
+                                                    Radius.circular(10.0))),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                new BorderRadius.circular(8.0),
+                                            child: image == null
+                                                ? Icon(
+                                                    Icons.add_a_photo,
+                                                    color: appThemeColor1,
+                                                    size: 80,
+                                                  )
+                                                : Image.file(
+                                                    image,
+                                                    fit: BoxFit.cover,
+                                                  )),
+                                      ),
+                                    ],
+                                  ),
+                                  Visibility(
+                                      visible: image != null,
+                                      child: Container(
+                                        height: 30,
+                                        alignment: Alignment.topRight,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (image != null) {
+                                              image = null;
+                                            }
+                                            setState(() {});
+                                          },
+                                          child: Icon(
+                                            Icons.clear,
+                                            color: Colors.black,
+                                            size: 30,
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              )),
+                          onTap: _optionsDialogBox,
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-
-
-                       Container(
-                         width: 30,
-                         height: 30,
-                         child: FlatButton(
-                           padding: EdgeInsets.symmetric(vertical: 0.0,horizontal: 0.0),
-                           color: Colors.transparent,
-                           child: Icon(isRemembered?Icons.check_box:Icons.check_box_outline_blank,size: 30,color: Colors.black45,),
-                           onPressed: () {
-                             setState(() {
-                               isRemembered = !isRemembered;
-                             });
-                           },
-                         ),
-                       ),
-
-                       Padding(
-                         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                         child: Container(
-                           width: MediaQuery.of(context).size.width - 80,
-                                   child: Text(
-                                    "I Accept Terms & Conditions and Privacy Policy",
-                                    textAlign: TextAlign.start,
-                                    maxLines: 10,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black),
-                                  ),
-                         ),
-                       ),
-
-
-
-
+                          Container(
+                            width: 30,
+                            height: 30,
+                            child: FlatButton(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 0.0, horizontal: 0.0),
+                              color: Colors.transparent,
+                              child: Icon(
+                                isRemembered
+                                    ? Icons.check_box
+                                    : Icons.check_box_outline_blank,
+                                size: 30,
+                                color: Colors.black45,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isRemembered = !isRemembered;
+                                });
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width - 80,
+                              child: Text(
+                                "I Accept Terms & Conditions and Privacy Policy",
+                                textAlign: TextAlign.start,
+                                maxLines: 10,
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-
-
-
-
-
-
                     Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                          child: Container(
-                            // decoration: setBoxDecoration(Colors.white),
-                            child: FlatButton(
-                              color: appThemeColor1,
-                              child: Text("SUBMIT",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontStyle: FontStyle.normal)),
-                              onPressed: () {
-                                if (loginKey.currentState.validate()) {
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                            child: Container(
+                              // decoration: setBoxDecoration(Colors.white),
+                              child: FlatButton(
+                                color: appThemeColor1,
+                                child: Text("SUBMIT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontStyle: FontStyle.normal)),
+                                onPressed: () {
+                                  if (loginKey.currentState.validate()) {
                                     ShowLoader(context);
-                                    SchedulerBinding.instance.addPostFrameCallback((_) =>  createUser(loginObj, context));
-
-                                }
-                              },
+                                    SchedulerBinding.instance
+                                        .addPostFrameCallback((_) =>
+                                            createUser(loginObj, context));
+                                  }
+                                },
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-
-
-
-
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
-                          child: Container(
-                            // decoration: setBoxDecoration(Colors.white),
-                            child: FlatButton(
-                              color: appThemeColor1,
-                              child: Text("Go Back",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontStyle: FontStyle.normal)),
-                              onPressed: () {
-                                if (loginKey.currentState.validate()) {
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
+                            child: Container(
+                              // decoration: setBoxDecoration(Colors.white),
+                              child: FlatButton(
+                                color: appThemeColor1,
+                                child: Text("Go Back",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontStyle: FontStyle.normal)),
+                                onPressed: () {
+                                  if (loginKey.currentState.validate()) {
                                     ShowLoader(context);
-                                    SchedulerBinding.instance.addPostFrameCallback((_) =>  createUser(loginObj, context));
-
-                                }
-                              },
+                                    SchedulerBinding.instance
+                                        .addPostFrameCallback((_) =>
+                                            createUser(loginObj, context));
+                                  }
+                                },
+                              ),
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "Powered By Right Access",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
+                        ),
                       ),
-                    ],
-                  ),
-
-
-
-
-
-
-                   Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 25,
-                            child: Text(
-                                "Powered By Right Access",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                     color: Colors.black54),
-                              ),
-                          ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "It is a long established fact that a reader",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
                         ),
-                        
-
-
-
-                         Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 25,
-                            child: Text(
-                                "It is a long established fact that a reader",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black54),
-                              ),
-                              alignment: Alignment.center,
-                          ),
-                        ),
-
-
-
+                        alignment: Alignment.center,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -898,68 +582,15 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
     );
   }
 
-  void createUser(LoginData register, BuildContext context) async 
-  {
-    // await fetchCoordinates(register.address);
-    Map param = Map();
-    param["name"] = register.firstName;
-    param["role_id"] = selectedUser=="Retailer"?"3":selectedUser=="Wholesaler"?"2":"4";
-    param["mobile"] = register.mobileno;
-    param["address"] = register.address;
-    param["email"] = register.email;
-    param["state_id"] = selectedStateObject[kDataID].toString();
-    param["city"] = register.city;
-    param["zone_id"] = selectedZoneObject[kDataID].toString();
-    param["pan"] = register.panCard.toString();
-    param["front_aadhaar"] = register.idProofFront.toString();
-    param["back_aadhaar"] = register.idProofBack.toString();
-    if (selectedUser!="Delivery Boy") 
-    {
-      param["drug_lic"] = register.drugLicense.toString();
-    }
-    else
-    {
-       param["drug_lic"] =  "";
-    }
-
-    if (selectedUser!="Delivery Boy") 
-    {
-      param["gst"] = register.gstNo.toString();
-    }
-    else
-    {
-      param["gst"] = "";
-    }
-    param["device_type"] = globals.deviceType.toString();
-    param["device_token"] = globals.deviceToken;
-
-
+  void createUser(LoginData register, BuildContext context) async {
     final url = "$baseUrl/signup";
-    var result = await CallApi("POST", param, url);
+    var result = await CallUploadImage(image);
     // var result = await makePostRequest("POST", param, url) ;
     HideLoader(context);
-
     if (result[kDataCode] == "200") {
       if (result[kDataStatusCode] == 200) {
         SetSharedPreference(kDataLoginUser, result[kDataData]);
         globals.globalCurrentUser = result[kDataData];
-        
-        // if (selectedUser == "Retailer") 
-        // {
-        //     Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-        //     builder: (context) => CustomDrawer(positionForDrawer = "other0")),   ModalRoute.withName(""));  
-        // }
-        // else  if (selectedUser == "Delivery Boy") 
-        // {
-        //     Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-        //     builder: (context) => CustomDrawerDelivery(positionForDrawerDelivery = "other0")),   ModalRoute.withName(""));  
-        // }
-        // else
-        // {
-        //     Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-        //     builder: (context) => CustomDrawerWholesaler(positionForDrawerWholesaler = "other0")),   ModalRoute.withName(""));
-        // } 
-       
 
       } else {
         ShowErrorMessage(result[kDataResult], context);
