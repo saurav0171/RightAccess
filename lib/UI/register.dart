@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -32,8 +31,7 @@ class Register extends StatelessWidget {
           new Container(
               height: double.infinity,
               width: double.infinity,
-              decoration: BoxDecoration(color: appBackgroundColor)
-              ),
+              decoration: BoxDecoration(color: appBackgroundColor)),
           Scaffold(
             body: FormKeyboardActions(child: RegisterExtension()),
           ),
@@ -123,7 +121,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
   }
 
   fetchCountries() async {
-    final url = "$baseUrl/countries";
+    final url = "$baseUrl/countries?limit=290&page=1";
     var result = await CallApi("GET", null, url);
     if (result[kDataCode] == "200") {
       setState(() {
@@ -322,17 +320,6 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             ),
                             Expanded(
                               child: Container(
-                                // decoration: BoxDecoration(
-                                // border: Border.all(
-                                //   color: Colors.black45,
-                                //   width: 1.0,
-                                // ),
-                                // borderRadius: BorderRadius.only(
-                                //     topLeft: Radius.circular(0.0),
-                                //     bottomLeft: Radius.circular(0.0),
-                                //     bottomRight: Radius.circular(15.0),
-                                //     topRight: Radius.circular(15.0))
-                                // ),
                                 child: TextFormField(
                                     focusNode: firstNameFocusNode,
                                     style: TextStyle(color: Colors.black),

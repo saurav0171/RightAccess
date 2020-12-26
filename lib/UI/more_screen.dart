@@ -7,7 +7,6 @@ import 'package:right_access/ServerFiles/serviceAPI.dart';
 
 List notificationsList = [];
 
-
 class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,14 +17,15 @@ class MoreScreen extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(color: appBackgroundColor)
-          // decoration: setBackgroundImage(),
-        ),
-        Scaffold(backgroundColor: Colors.transparent, body: NotificationsExtension()),
+            // decoration: setBackgroundImage(),
+            ),
+        Scaffold(
+            backgroundColor: Colors.transparent,
+            body: NotificationsExtension()),
       ],
     );
   }
 }
-
 
 class NotificationsExtension extends StatefulWidget {
   @override
@@ -42,8 +42,6 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
   }
 
   fetchNotification() async {
-
-
     Map param = Map();
     // param["login_type"] = loginType;
     param["limit"] = "10";
@@ -52,8 +50,6 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
     param["includes"] = "organization,event_sponsors,event_modules";
     param["type"] = "past";
 
-
-
     final url = "$baseUrl/my-events";
     var result = await CallApi("POST", param, url);
     // var result = await makePostRequest("POST", param, url) ;
@@ -61,13 +57,10 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
 
     if (result[kDataCode] == "200") {
       if (result[kDataSuccess] == "1") {
-
       } else {
         ShowErrorMessage(result[kDataMessage], context);
       }
-    }
-    else if(result[kDataCode] == "422")
-    {
+    } else if (result[kDataCode] == "422") {
       ShowErrorMessage(result[kDataMessage], context);
     } else {
       ShowErrorMessage(result[kDataError], context);
@@ -78,19 +71,21 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-      child: Expanded(child: SingleChildScrollView(
+      child: Expanded(
+          child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
               ),
             ),
+            //saurabh
             Theme(
                 data: Theme.of(context)
                     .copyWith(dividerColor: Colors.transparent),
@@ -104,7 +99,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                           size: 20,
                         ),
                       ],
-                    ),),
+                    ),
+                  ),
                   leading: IconButton(
                     icon: new Stack(
                       children: <Widget>[
@@ -114,7 +110,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                           size: 24,
                         ),
                       ],
-                    ),),
+                    ),
+                  ),
                   title: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -142,7 +139,7 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                   ],
                 )),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -150,9 +147,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
             ),
             Container(
               decoration: BoxDecoration(
-                  color:Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(0)
-              ),
+                  color: Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(0)),
               child: ListTile(
                 leading: IconButton(
                   icon: new Stack(
@@ -163,12 +159,13 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 24,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
                 title: Text(
                   "Share this course",
                   style: TextStyle(color: Colors.grey),
                 ),
-                trailing:  IconButton(
+                trailing: IconButton(
                   icon: new Stack(
                     children: <Widget>[
                       new Icon(
@@ -177,11 +174,12 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 20,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -189,9 +187,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
             ),
             Container(
               decoration: BoxDecoration(
-                  color:Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(0)
-              ),
+                  color: Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(0)),
               child: ListTile(
                 leading: IconButton(
                   icon: new Stack(
@@ -202,12 +199,13 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 24,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
                 title: Text(
                   "Download Resourses",
                   style: TextStyle(color: Colors.grey),
                 ),
-                trailing:  IconButton(
+                trailing: IconButton(
                   icon: new Stack(
                     children: <Widget>[
                       new Icon(
@@ -216,11 +214,12 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 20,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -239,7 +238,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                           size: 20,
                         ),
                       ],
-                    ),),
+                    ),
+                  ),
                   leading: IconButton(
                     icon: new Stack(
                       children: <Widget>[
@@ -249,7 +249,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                           size: 24,
                         ),
                       ],
-                    ),),
+                    ),
+                  ),
                   title: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -290,7 +291,7 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                   ],
                 )),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -298,9 +299,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
             ),
             Container(
               decoration: BoxDecoration(
-                  color:Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(0)
-              ),
+                  color: Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(0)),
               child: ListTile(
                 leading: IconButton(
                   icon: new Stack(
@@ -311,12 +311,13 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 24,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
                 title: Text(
                   "Location / Direction",
                   style: TextStyle(color: Colors.grey),
                 ),
-                trailing:  IconButton(
+                trailing: IconButton(
                   icon: new Stack(
                     children: <Widget>[
                       new Icon(
@@ -325,11 +326,12 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 20,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -337,9 +339,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
             ),
             Container(
               decoration: BoxDecoration(
-                  color:Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(0)
-              ),
+                  color: Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(0)),
               child: ListTile(
                 leading: IconButton(
                   icon: new Stack(
@@ -350,12 +351,13 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 24,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
                 title: Text(
                   "Sponsors",
                   style: TextStyle(color: Colors.grey),
                 ),
-                trailing:  IconButton(
+                trailing: IconButton(
                   icon: new Stack(
                     children: <Widget>[
                       new Icon(
@@ -364,11 +366,12 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 20,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -376,9 +379,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
             ),
             Container(
               decoration: BoxDecoration(
-                  color:Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(0)
-              ),
+                  color: Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(0)),
               child: ListTile(
                 leading: IconButton(
                   icon: new Stack(
@@ -389,12 +391,13 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 24,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
                 title: Text(
                   "Support",
                   style: TextStyle(color: Colors.grey),
                 ),
-                trailing:  IconButton(
+                trailing: IconButton(
                   icon: new Stack(
                     children: <Widget>[
                       new Icon(
@@ -403,11 +406,12 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 20,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -415,9 +419,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
             ),
             Container(
               decoration: BoxDecoration(
-                  color:Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(0)
-              ),
+                  color: Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(0)),
               child: ListTile(
                 leading: IconButton(
                   icon: new Stack(
@@ -428,12 +431,13 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 24,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
                 title: Text(
                   "Help",
                   style: TextStyle(color: Colors.grey),
                 ),
-                trailing:  IconButton(
+                trailing: IconButton(
                   icon: new Stack(
                     children: <Widget>[
                       new Icon(
@@ -442,11 +446,12 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
                         size: 20,
                       ),
                     ],
-                  ),),
+                  ),
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10,right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,

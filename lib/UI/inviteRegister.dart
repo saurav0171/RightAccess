@@ -10,26 +10,7 @@ import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/data/loginData.dart';
 
-List<String> usersList = ["Mr", "Mrs"];
-String selectedUser;
-
 bool isRemembered = false;
-
-List stateList = [];
-List<String> stateListString = [];
-String selectedState;
-
-Map selectedStateObject = {};
-
-List zoneList = [];
-List<String> zoneListString = [];
-String selectedZone;
-
-Map selectedZoneObject = {};
-
-DateTime dob;
-TextEditingController dateController = TextEditingController();
-
 final dateFormat = DateFormat("dd/MM/yyyy");
 bool isAdult = false;
 String locationError = "";
@@ -47,6 +28,13 @@ class InviteRegister extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(color: appBackgroundColor)),
           Scaffold(
+            appBar: AppBar(
+              iconTheme: IconThemeData(
+                color: Colors.black, //change your color here
+              ),
+              title: Text("Events"),
+              centerTitle: true,
+            ),
             body: FormKeyboardActions(child: InviteRegisterExtension()),
           ),
         ],
@@ -583,15 +571,14 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
   }
 
   void createUser(LoginData register, BuildContext context) async {
-    final url = "$baseUrl/signup";
-    var result = await CallUploadImage(image);
+    var result = await inviteRegistration(image, professionController.text,
+        cityController.text, organizationNameController.text, isRemembered);
     // var result = await makePostRequest("POST", param, url) ;
     HideLoader(context);
     if (result[kDataCode] == "200") {
       if (result[kDataStatusCode] == 200) {
         SetSharedPreference(kDataLoginUser, result[kDataData]);
         globals.globalCurrentUser = result[kDataData];
-
       } else {
         ShowErrorMessage(result[kDataResult], context);
       }

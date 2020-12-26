@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -13,15 +11,14 @@ import 'package:path/path.dart';
 import 'package:http/http.Dart' as http;
 
 Future<dynamic> CallApi(String httpType, dynamic params, String url) async {
-
-var connectivityResult = await (new
-  Connectivity().checkConnectivity());
-if (connectivityResult == ConnectivityResult.none)
- {
-   var jsonError = {"error": "No Internet Connection. Please check your Connection", "code": "401"};
-   return jsonError;
- }
-
+  var connectivityResult = await (new Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    var jsonError = {
+      "error": "No Internet Connection. Please check your Connection",
+      "code": "401"
+    };
+    return jsonError;
+  }
 
   var body = json.encode(params);
   var response;
@@ -37,7 +34,10 @@ if (connectivityResult == ConnectivityResult.none)
     } else {
       if (user == null) {
         response = await http.post(url,
-            headers: {"Content-Type": "application/json","Accept":"application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
             body: body);
       } else {
         response = await http.post(url,
@@ -74,18 +74,29 @@ if (connectivityResult == ConnectivityResult.none)
     var jsonResponse = convert.jsonDecode(response.body);
     jsonResponse[kDataCode] = "200";
     return jsonResponse;
-  }
-   else if (response.statusCode == 401) {
+  } else if (response.statusCode == 401) {
     var jsonResponse = convert.jsonDecode(response.body);
-    var jsonError = {"error": jsonResponse[kDataErrors], "code": response.statusCode.toString(),"message":jsonResponse[kDataMessage]};
+    var jsonError = {
+      "error": jsonResponse[kDataErrors],
+      "code": response.statusCode.toString(),
+      "message": jsonResponse[kDataMessage]
+    };
     return jsonError;
   } else if (response.statusCode == 422) {
     var jsonResponse = convert.jsonDecode(response.body);
-    var jsonError = {"error": jsonResponse[kDataErrors], "code": response.statusCode.toString(),"message":jsonResponse[kDataMessage]};
+    var jsonError = {
+      "error": jsonResponse[kDataErrors],
+      "code": response.statusCode.toString(),
+      "message": jsonResponse[kDataMessage]
+    };
     return jsonError;
   } else if (response.statusCode == 500) {
-   var jsonResponse = convert.jsonDecode(response.body);
-    var jsonError = {"error": jsonResponse[kDataErrors], "code": response.statusCode.toString(),"message":jsonResponse[kDataMessage]};
+    var jsonResponse = convert.jsonDecode(response.body);
+    var jsonError = {
+      "error": jsonResponse[kDataErrors],
+      "code": response.statusCode.toString(),
+      "message": jsonResponse[kDataMessage]
+    };
 
     return jsonError;
   } else {
@@ -119,7 +130,6 @@ void makePostRequest(String httpType, dynamic params, String url) async {
   // }
 }
 
-
 // Future<File> testCompressAndGetFile(File file, String targetPath) async {
 //     print("testCompressAndGetFile");
 //     final result = await FlutterImageCompress.compressAndGetFile(
@@ -137,7 +147,6 @@ void makePostRequest(String httpType, dynamic params, String url) async {
 //     return result;
 //   }
 
-
 Future<dynamic> CallUploadImag2e(File image) async {
   var response;
 
@@ -149,15 +158,16 @@ Future<dynamic> CallUploadImag2e(File image) async {
       "organization_name": "ludhiaa",
       "city": "Ludhiana",
       "terms_and_conditions": 1,
-      "document": await MultipartFile.fromFile(image.path,filename: basename(image.path))
+      "document": await MultipartFile.fromFile(image.path,
+          filename: basename(image.path))
     });
-    response= await dio.post("/events/2/register", data: formData);
-  } on DioError catch(e) {
-    if(e.response != null) {
+    response = await dio.post("/events/2/register", data: formData);
+  } on DioError catch (e) {
+    if (e.response != null) {
       print(e.response.data);
       print(e.response.headers);
       print(e.response.request);
-    } else{
+    } else {
       print(e.request);
       print(e.message);
     }
@@ -172,23 +182,13 @@ Future<dynamic> CallUploadImag2e(File image) async {
     };
     return jsonError;
   }
-
 }
 
-
-
-Future<dynamic> CallUploadImage(File image) async {
+Future<dynamic> inviteRegistration(File image, String profession, String city,
+    String organ, bool isTerm) async {
   var response;
 
   try {
-    
-    // open a byteStream
-    // ignore: deprecated_member_use
-    // if (image.path.contains(".JPG")||image.path.contains(".PNG")||image.path.contains(".jpg")||image.path.contains(".png")||image.path.contains(".jpeg")||image.path.contains(".JPEG"))
-    // {
-    //    final dir = await path_provider.getTemporaryDirectory();
-    //   // image = await testCompressAndGetFile(image, targetPath);
-    // }
     dynamic user = await GetSharedPreference(kDataLoginUser);
     Map<String, String> headers = {
       "Accept": "application/json",
@@ -201,33 +201,29 @@ Future<dynamic> CallUploadImage(File image) async {
     var length = await image.length();
 
     // string to uri
-    var uri = Uri.parse(baseUrl+'/events/2/register');
+    var uri = Uri.parse(baseUrl + '/events/2/register');
 
     // create multipart request
     var request = new http.MultipartRequest("POST", uri);
 
     request.headers.addAll(headers);
-    request.fields['profession'] = "test";
-    request.fields['organization_name'] = "love";
-    request.fields['city'] = "Ludhiana";
-    request.fields['terms_and_conditions'] = "1";
-
-
+    request.fields['profession'] = profession;
+    request.fields['organization_name'] = organ;
+    request.fields['city'] = city;
+    request.fields['terms_and_conditions'] = isTerm ? "1" : "0";
 
     // multipart that takes file.. here this "image_file" is a key of the API request
-    var multipartFile = new http.MultipartFile('document', stream, length, filename: basename(image.path));
+    var multipartFile = new http.MultipartFile('document', stream, length,
+        filename: basename(image.path));
 
     // add file to multipart
     request.files.add(multipartFile);
 
     // send request to upload image
     await request.send().then((responsee) async {
-
       responsee.stream.transform(utf8.decoder).listen((value) {
-
-        response=value;
+        response = value;
       });
-
     }).catchError((e) {
       print(e);
     });
@@ -265,7 +261,84 @@ Future<dynamic> CallUploadImage(File image) async {
   } else if (jsonResponse[kDataStatusCode] == 204) {
     var jsonError = {kDataResult: jsonResponse[kDataResult], kDataCode: "204"};
     return jsonError;
-  }else if (jsonResponse[kDataStatusCode] == 500) {
+  } else if (jsonResponse[kDataStatusCode] == 500) {
+    var jsonError = {kDataResult: jsonResponse[kDataResult], kDataCode: "500"};
+    Future.delayed(const Duration(milliseconds: 500), () {
+      RemoveSharedPreference(kDataLoginUser);
+//      SetHomePage(0);
+    });
+    return jsonError;
+  } else {
+    var jsonError = {
+      kDataResult: "Something went wrong. Please try again later.",
+      kDataCode: "404"
+    };
+    return jsonError;
+  }
+}
+
+Future<dynamic> skipRegistration() async {
+  var response;
+
+  try {
+    dynamic user = await GetSharedPreference(kDataLoginUser);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer ${user[kDataToken].toString()}",
+      "Content-Type": "multipart/form-data"
+    };
+
+    // string to uri
+    var uri = Uri.parse(baseUrl + 'events/3/register/skip');
+
+    // create multipart request
+    var request = new http.MultipartRequest("POST", uri);
+
+    request.headers.addAll(headers);
+
+    // send request to upload image
+    await request.send().then((responsee) async {
+      responsee.stream.transform(utf8.decoder).listen((value) {
+        response = value;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  } on TimeoutException catch (_) {
+    // A timeout occurred.
+    var jsonError = {
+      kDataResult: "Server not responding. Please try again later",
+      kDataCode: "500"
+    };
+    return jsonError;
+  } on SocketException catch (_) {
+    // Other exception
+    var jsonError = {
+      kDataResult: "Something went wrong. Please try again later.",
+      kDataCode: "500"
+    };
+    return jsonError;
+  }
+  var jsonResponse;
+  try {
+    jsonResponse = convert.jsonDecode(response);
+  } on Exception catch (_) {
+    var jsonError = {
+      kDataResult: "Something went wrong. Please try again later.",
+      kDataCode: "500"
+    };
+    return jsonError;
+  }
+  if (jsonResponse[kDataStatusCode] == 200) {
+    jsonResponse[kDataCode] = "200";
+    return jsonResponse;
+  } else if (jsonResponse[kDataStatusCode] == 401) {
+    var jsonError = {kDataResult: jsonResponse[kDataResult], kDataCode: "401"};
+    return jsonError;
+  } else if (jsonResponse[kDataStatusCode] == 204) {
+    var jsonError = {kDataResult: jsonResponse[kDataResult], kDataCode: "204"};
+    return jsonError;
+  } else if (jsonResponse[kDataStatusCode] == 500) {
     var jsonError = {kDataResult: jsonResponse[kDataResult], kDataCode: "500"};
     Future.delayed(const Duration(milliseconds: 500), () {
       RemoveSharedPreference(kDataLoginUser);

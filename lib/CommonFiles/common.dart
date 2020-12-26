@@ -268,13 +268,9 @@ SetHomePage(int index, String screenName) async {
   }
 
   Widget screen;
-  if (check ) {
-    
-    // screen = HomeScreen();
-    screen = InviteRegister();
-
-  }
-  else {
+  if (check) {
+    screen = HomeScreen();
+  } else {
     screen = LoginOptions();
   }
   runApp(MaterialApp(
