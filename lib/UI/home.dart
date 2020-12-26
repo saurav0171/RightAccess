@@ -138,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,9 +211,7 @@ class HomeScreenExtension extends StatefulWidget {
 }
 
 class _HomeScreenExtensionState extends State<HomeScreenExtension> {
- 
- 
-   @override
+  @override
   void initState() {
     super.initState();
 
@@ -244,7 +241,8 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
   }
 
   fetchUpcomingEvents() async {
-    final url = "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules,event_stage_media&type=upcoming";
+    final url =
+        "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules,event_stage_media&type=upcoming";
     var result = await CallApi("GET", null, url);
     HideLoader(context);
     if (result[kDataCode] == "200") {
@@ -253,7 +251,6 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
       });
     } else if (result[kDataCode] == "401") {
       ShowErrorMessage(result[kDataResult], context);
-     
     } else if (result[kDataCode] == "422") {
       ShowErrorMessage(result[kDataMessage], context);
     } else {
@@ -294,259 +291,279 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                   indicatorSelectorColor: appThemeColor1,
                   shape: IndicatorShape.circle(size: 10)),
             ),
+            currentEvents.length > 0
+                ? Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    color: Colors.white,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      child: Text(
+                        "Active Events",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: appThemeColor1,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  )
+                : Container(),
+            currentEvents.length > 0
+                ? Container(
+                    height: 300,
+                    color: Colors.white,
+                    child: ListView.separated(
+                      itemCount: currentEvents.length,
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      itemBuilder: (BuildContext context, int index) {
+                        Map current = currentEvents[index];
+                        String name = current[kDataTitle];
+                        String description = current[kDataShortDescription];
 
-           currentEvents.length>0? Container(
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              color: Colors.white,
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                child: Text(
-                                "Active Events",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: appThemeColor1,
-                                    fontWeight: FontWeight.w700),
-                              ),
-              ),
-            ):Container(),
-           currentEvents.length>0? Container(
-              height: 300,
-              color: Colors.white,
-              child: ListView.separated(
-                itemCount: currentEvents.length,
-                padding: EdgeInsets.symmetric(horizontal: 0.0),
-                itemBuilder: (BuildContext context, int index) {
-
-                  Map current = currentEvents[index];
-                  String name = current[kDataTitle];
-                  String description = current[kDataShortDescription];
-
-
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                            child: Container(
-                                height: 100,
-                                width: MediaQuery.of(context).size.width,
-                                child: Image.asset(
-                                  "images/banner.png",
-                                  fit: BoxFit.fill,
-                                )),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 0.0),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                              name,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 120,
-                              child: Text(
-                                description,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w300),
-                                    maxLines: 10,
-                              ),
-                            ),
-                                  ],
-                                ),
-                                Expanded(child: Container()),
-
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                      color:Color(0xFF3EC433),
-                                      borderRadius: BorderRadius.circular(5)
-                                    ),
-                                    height: 25,
-                                    width:  80,
-                                    child: FlatButton(onPressed: ()
-                                    {
-
-                                    }, child: Text(
-                                      "WATCH",
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w300),
-                                    )),
+                                      height: 100,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Image.asset(
+                                        "images/banner.png",
+                                        fit: BoxFit.fill,
+                                      )),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            name,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                120,
+                                            child: Text(
+                                              description,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black54,
+                                                  fontWeight: FontWeight.w300),
+                                              maxLines: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(child: Container()),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 5, 0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFF3EC433),
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          height: 25,
+                                          width: 80,
+                                          child: FlatButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                "WATCH",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                              )),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen(isRegister: true,)));
-                        });
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = index;
+                                Navigator.push(
+                                    context,
+                                    setNavigationTransition(VideoPlayerScreen(
+                                      isRegister: true,
+                                    )));
+                              });
+                            },
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                          child: Divider(
+                            color: Colors.black26,
+                            height: 2,
+                            thickness: 2,
+                          ),
+                        );
                       },
                     ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                    child: Divider(
-                      color: Colors.black26,
-                      height: 2,
-                      thickness: 2,
+                  )
+                : Container(),
+            upcomingEvents.length > 0
+                ? Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    color: Colors.white,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      child: Text(
+                        "Related Events",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: appThemeColor1,
+                            fontWeight: FontWeight.w700),
+                      ),
                     ),
-                  );
-                },
-              ),
-            ):Container(),
-
-            upcomingEvents.length>0 ?Container(
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              color: Colors.white,
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                child: Text(
-                                "Upcoming Events",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: appThemeColor1,
-                                    fontWeight: FontWeight.w700),
-                              ),
-              
-              ),
-            ):Container(),
-
-
-             upcomingEvents.length>0? Container(
-              height: 300,
-              color: Colors.white,
-              child: ListView.separated(
-                itemCount: upcomingEvents.length,
-                padding: EdgeInsets.symmetric(horizontal: 0.0),
-                itemBuilder: (BuildContext context, int index) {
-
-                   Map upcoming = upcomingEvents[index];
-                  String name = upcoming[kDataTitle];
-                  String description = upcoming[kDataShortDescription];
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                            child: Container(
-                                height: 100,
-                                width: MediaQuery.of(context).size.width,
-                                child: Image.asset(
-                                  "images/banner.png",
-                                  fit: BoxFit.fill,
-                                )),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                  )
+                : Container(),
+            upcomingEvents.length > 0
+                ? Container(
+                    height: 300,
+                    color: Colors.white,
+                    child: ListView.separated(
+                      itemCount: upcomingEvents.length,
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      itemBuilder: (BuildContext context, int index) {
+                        Map upcoming = upcomingEvents[index];
+                        String name = upcoming[kDataTitle];
+                        String description = upcoming[kDataShortDescription];
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 0.0),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                              name,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 120,
-                              child: Text(
-                                description,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w300),
-                                    maxLines: 10,
-                              ),
-                            ),
-                                  ],
-                                ),
-                                Expanded(child: Container()),
-
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                      color:appThemeColor1,
-                                      borderRadius: BorderRadius.circular(5)
-                                    ),
-                                    height: 25,
-                                    width:  90,
-                                    child: FlatButton(onPressed: ()
-                                    {
-
-                                    }, child: Text(
-                                      "REGISTER",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w300),
-                                    )),
+                                      height: 100,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Image.asset(
+                                        "images/banner.png",
+                                        fit: BoxFit.fill,
+                                      )),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            name,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                120,
+                                            child: Text(
+                                              description,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black54,
+                                                  fontWeight: FontWeight.w300),
+                                              maxLines: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(child: Container()),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 5, 0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: appThemeColor1,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          height: 25,
+                                          width: 90,
+                                          child: FlatButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                "REGISTER",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                              )),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                          Navigator.push( context, setNavigationTransition(VideoPlayerScreen(isRegister: true,)));
-                        });
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = index;
+                                Navigator.push(
+                                    context,
+                                    setNavigationTransition(VideoPlayerScreen(
+                                      isRegister: true,
+                                    )));
+                              });
+                            },
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                          child: Divider(
+                            color: Colors.black26,
+                            height: 2,
+                            thickness: 2,
+                          ),
+                        );
                       },
                     ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                    child: Divider(
-                      color: Colors.black26,
-                      height: 2,
-                      thickness: 2,
-                    ),
-                  );
-                },
-              ),
-            ):Container(),
+                  )
+                : Container(),
           ],
         ),
       ),
