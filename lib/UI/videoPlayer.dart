@@ -73,6 +73,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       setState(() {
         result = qrResult;
         // new changes........
+        // new changes again ......
 
         print(qrResult);
         ShowLoader(context);
