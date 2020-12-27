@@ -1,4 +1,5 @@
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -61,6 +62,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   void initState() {
     events = widget.eventData;
+    
     tabPages = widget.isRegister?[
       MoreScreen(
         aboutData: events,
@@ -75,7 +77,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
       
     });
-   handlyFileType(events[kDataEventModules][kDataData][clickedIndex],clickedIndex);
+   if (!widget.isRegister) 
+   {
+     handlyFileType(events[kDataEventModules][kDataData][clickedIndex],clickedIndex);  
+   }
     //  flickManager = FlickManager(
     //   videoPlayerController: VideoPlayerController.network(
     //      "https://www.youtube.com/watch?v=9xwazD5SyVg"),
@@ -273,7 +278,7 @@ PlayerState _playerState;
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+             !widget.isRegister? Container(
                 padding: EdgeInsets.all(5),
                 height: 200,
                 child: Container(
@@ -335,7 +340,23 @@ PlayerState _playerState;
                   //   ),
                   // ),
                 ),
-              ),
+              ):Container(
+                                      height: 200,
+                                      width: MediaQuery.of(context).size.width,
+                                      child:  CachedNetworkImage(
+                          height: 250,
+                          fit: BoxFit.fill,
+                          imageUrl: widget.isRegister?events[kDataBannerImage]:events[kDataEventPreStage][kDataData][kDataBannerImage],
+                          placeholder: (context, url) => Container(
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                            )),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Center(child: Icon(Icons.error)),
+                        ),
+                                ),
               Visibility(
                 visible: widget.isRegister,
                 child: GestureDetector(
@@ -364,7 +385,7 @@ PlayerState _playerState;
                       child: Stack(
                         children: <Widget>[
                           Scaffold(
-                            backgroundColor: Colors.grey,
+                            backgroundColor: Colors.grey.shade100,
                             appBar: AppBar(
                               toolbarHeight: 48,
                               bottom:widget.isRegister?TabBar(

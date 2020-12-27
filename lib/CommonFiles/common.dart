@@ -40,7 +40,8 @@ final sideMenuColor = "#7CACAE";
 
 // Constants
 
-final baseUrl = "http://www.togetherevent.tk/api/v1";
+// final baseUrl = "http://www.togetherevent.tk/api/v1";
+final baseUrl = "https://www.rightaccess.org/api/v1";
 
 final defaultFontFamily = "Comic Sans";
 final defaultFontFamilyForAppBar = "edmunds";
@@ -232,6 +233,9 @@ final kDataFileType = "file_type";
 final kDataFileName = "file_name";
 final kDataModuleType = "module_type";
 final kDataEventSponsors = "event_sponsors";
+final kDataCountryCode = "country_code";
+final kDataBannerImage = "banner_image";
+final kDataEventPreStage = "event_pre_stage";
 
 int selectedIndex = -1;
 
@@ -286,7 +290,7 @@ SetHomePage(int index, String screenName) async {
       theme: ThemeData(
           tabBarTheme: TabBarTheme(
               labelColor: appThemeColor1, unselectedLabelColor: Colors.grey),
-          fontFamily: 'OpenSans-Regular',
+          fontFamily: 'OpenSans-SemiBold',
           buttonTheme: ButtonThemeData(
               buttonColor: appThemeColor1,
               shape: RoundedRectangleBorder(

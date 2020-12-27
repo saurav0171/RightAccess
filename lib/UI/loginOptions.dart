@@ -117,7 +117,7 @@ void iOS_Permission() {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                 child: Container(
                   height: MediaQuery.of(context).size.height,
             child: Center(
@@ -128,14 +128,7 @@ void iOS_Permission() {
 
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("RIGHT", style: TextStyle(fontWeight: FontWeight.w900,fontSize: 24,color: appThemeColor1, fontStyle: FontStyle.normal)),
-                          Text("ACCESS", style: TextStyle(fontWeight: FontWeight.w500,fontSize: 24,color: Colors.black, fontStyle: FontStyle.normal)),
-
-                        ],
-                      ),
+                      child: Image.asset("images/logo.jpg",width: 200,),
                     ),
                     Container(
             height: 300,
@@ -157,7 +150,7 @@ void iOS_Permission() {
                 align: IndicatorAlign.bottom,
                 length: imagesList.length,
                 indicatorSpace: 5.0,
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(0),
                 indicatorColor: Colors.grey.shade300,
                 indicatorSelectorColor: appThemeColor1,
                 shape: IndicatorShape.circle(size: 10)),
@@ -167,7 +160,7 @@ void iOS_Permission() {
 
                    
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -204,7 +197,7 @@ void iOS_Permission() {
                               child: Text(
                                 "REGISTER NOW",
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w700),
+                                    fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black54),
                               ),
                               textColor: Colors.black,
                               onPressed: () {

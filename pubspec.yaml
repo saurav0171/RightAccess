@@ -28,7 +28,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  http: ^0.12.0+2
+  http: ^0.12.2
   flutter_spinkit: "^4.0.0"
   shared_preferences: ^0.5.8
   intl: ^0.15.8
@@ -106,9 +106,10 @@ flutter:
           - asset: fonts/OpenSans-Light.ttf
           - asset: fonts/OpenSans-Regular.ttf
           - asset: fonts/OpenSans-SemiBold.ttf
-            style: normal
-            weight: 900
-    
+  
+    - family: AlwaysForever
+      fonts:
+          - asset: fonts/alwaysforever.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

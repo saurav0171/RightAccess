@@ -172,25 +172,9 @@ class _LoginExtensionState extends State<LoginExtension> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
+                   Padding(
                       padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("RIGHT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 24,
-                                  color: appThemeColor1,
-                                  fontStyle: FontStyle.normal)),
-                          Text("ACCESS",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 24,
-                                  color: Colors.black,
-                                  fontStyle: FontStyle.normal)),
-                        ],
-                      ),
+                      child: Image.asset("images/logo.jpg",width: 200,),
                     ),
 
                     Padding(
@@ -225,7 +209,7 @@ class _LoginExtensionState extends State<LoginExtension> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 40, 20, 10),
+                      padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
                       child: TextFormField(
                           focusNode: loginFocusNode,
                           controller: loginController,
@@ -381,7 +365,7 @@ class _LoginExtensionState extends State<LoginExtension> {
                           child: Text(
                             "REGISTER NOW",
                             style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w500),
+                                fontSize: 18, fontWeight: FontWeight.w500,color: Colors.black54),
                           ),
                           textColor: Colors.black,
                           onPressed: () {

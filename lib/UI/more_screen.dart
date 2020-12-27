@@ -95,8 +95,8 @@ class _NotificationsExtensionState extends State<NotificationsExtension> {
   }
 
   Future<void> openMap(double latitude, double longitude) async {
-    String googleUrl =
-        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    // String googleUrl = 'https://www.google.com/maps/search/?api=v1&query=$latitude,$longitude';
+    String googleUrl = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/output?parameters';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     } else {

@@ -36,38 +36,25 @@ class _HistoryExtensionState extends State<HistoryExtension> {
   void initState() {
     super.initState();
 
-    // ShowLoader(context);
-    // fetchPastEvents();
+    ShowLoader(context);
+    fetchPastEvents();
   }
 
+
   fetchPastEvents() async {
-
-
-     Map param = Map();
-    // param["login_type"] = loginType;
-    param["limit"] = "10";
-    param["page"] = pageNumber.toString();
-    param["title"] = "";
-    param["includes"] = "organization,event_sponsors,event_modules";
-    param["type"] = "past";
-
-
-
-    final url = "$baseUrl/my-events";
-    var result = await CallApi("POST", param, url);
-    // var result = await makePostRequest("POST", param, url) ;
+    final url =
+        "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules,event_pre_stage&type=past";
+    var result = await CallApi("GET", null, url);
     HideLoader(context);
-
     if (result[kDataCode] == "200") {
-      if (result[kDataSuccess] == "1") {
-
-      } else {
-        ShowErrorMessage(result[kDataMessage], context);
-      }
-    }
-    else if(result[kDataCode] == "422")
-    {
-        ShowErrorMessage(result[kDataMessage], context);
+      setState(() {
+        historyEventsList = result[kDataData];
+      });
+    } else if (result[kDataCode] == "401") {
+      ShowErrorMessage(result[kDataResult], context);
+      
+    } else if (result[kDataCode] == "422") {
+      ShowErrorMessage(result[kDataMessage], context);
     } else {
       ShowErrorMessage(result[kDataError], context);
     }
@@ -78,7 +65,7 @@ class _HistoryExtensionState extends State<HistoryExtension> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
       child: ListView.separated(
-        itemCount: 6,
+        itemCount: historyEventsList.length,
         padding: EdgeInsets.symmetric(horizontal: 0.0),
         itemBuilder: (BuildContext context, int index) {
           

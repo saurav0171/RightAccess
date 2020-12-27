@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -212,25 +214,30 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    //       Text("RIGHT",
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.w900,
+                    //               fontSize: 24,
+                    //               color: appThemeColor1,
+                    //               fontStyle: FontStyle.normal)),
+                    //       Text("ACCESS",
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.w500,
+                    //               fontSize: 24,
+                    //               color: Colors.black,
+                    //               fontStyle: FontStyle.normal)),
+                    //     ],
+                    //   ),
+                    // ),
+
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("RIGHT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 24,
-                                  color: appThemeColor1,
-                                  fontStyle: FontStyle.normal)),
-                          Text("ACCESS",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 24,
-                                  color: Colors.black,
-                                  fontStyle: FontStyle.normal)),
-                        ],
-                      ),
+                      child: Image.asset("images/logo.jpg",width: 200,),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
@@ -295,7 +302,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                   iconEnabledColor: Colors.black,
                                   elevation: 16,
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 16),
+                                      color: Colors.black, fontSize: 16,),
                                   underline: Container(
                                     height: 0,
                                   ),
@@ -316,7 +323,9 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                           (String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
-                                      child: Text(value),
+                                      child: Container(
+                                        width: 80,
+                                        child: Text(value,textAlign: TextAlign.center,)),
                                     );
                                   }).toList(),
                                 ),
@@ -406,7 +415,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                           }),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
                           focusNode: emailFocusNode,
                           style: TextStyle(color: Colors.black),
@@ -477,7 +486,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             setState(() {
                               selectedCountries = newValue;
                               int index = countriesList.indexWhere((data) =>
-                                  data[kDataAttributes][kDataPhoneCode].toString() == newValue);
+                                  "+ ${data[kDataAttributes][kDataPhoneCode].toString()}" == newValue);
                               selectedCountriesObject = countriesList[index];
                             });
                           },
@@ -485,7 +494,9 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Container(
+                                width: 80,
+                                child: Text(value,textAlign: TextAlign.center,)),
                             );
                           }).toList(),
                         ),
@@ -745,7 +756,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     param["mobile_number"] = register.mobileno;
     param["password"] = register.password;
     param["email"] = register.email;
-    param["country_code"] = selectedCountriesObject[kDataID].toString();
+    param["country_code"] = selectedCountriesObject[kDataAttributes][kDataCountryCode];
     param["terms_and_conditions"] = isRemembered ? "1" : "0";
 
     final url = "$baseUrl/register";
@@ -754,10 +765,12 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     HideLoader(context);
 
     if (result[kDataCode] == "200") {
-      SetSharedPreference(kDataLoginUser, result[kDataData]);
-      globals.globalCurrentUser = result[kDataData];
-       Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-      builder: (context) => HomeScreen()),   ModalRoute.withName("") );
+      ShowSuccessMessage(result[kDataMessage], context);
+      Timer(Duration(seconds: 2), ()
+      {
+        Navigator.pop(context);
+      });
+       
     } else if (result[kDataCode] == "422") {
       Map error = result[kDataError];
       ShowErrorMessage(error.values.first[0], context);

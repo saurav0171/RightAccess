@@ -1,4 +1,5 @@
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_indicator/page_indicator.dart';
@@ -252,7 +253,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
 
   fetchCurrentEvents() async {
     final url =
-        "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules";
+        "$baseUrl/my-events?limit=20&page=1&includes=organization,event_sponsors,event_modules,event_pre_stage";
     var result = await CallApi("GET", null, url);
     if (result[kDataCode] == "200") {
       setState(() {
@@ -351,7 +352,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                         Map current = currentEvents[index];
                         String name = current[kDataTitle];
                         String description = current[kDataShortDescription];
-
+                        String image = current[kDataEventPreStage][kDataData][kDataBannerImage];
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: ListTile(
@@ -366,11 +367,20 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                   child: Container(
                                       height: 100,
                                       width: MediaQuery.of(context).size.width,
-                                      child: Image.asset(
-                                        "images/banner.png",
-                                        fit: BoxFit.fill,
-                                      )),
-                                ),
+                                      child:  CachedNetworkImage(
+                          height: 250,
+                          fit: BoxFit.fill,
+                          imageUrl: image,
+                          placeholder: (context, url) => Container(
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                            )),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Center(child: Icon(Icons.error)),
+                        ),
+                                )),
                                 Container(
                                   width: MediaQuery.of(context).size.width,
                                   child: Row(
@@ -503,6 +513,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                         Map upcoming = upcomingEvents[index];
                         String name = upcoming[kDataTitle];
                         String description = upcoming[kDataShortDescription];
+                        String image = upcoming[kDataBannerImage];
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: ListTile(
@@ -517,10 +528,20 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                   child: Container(
                                       height: 100,
                                       width: MediaQuery.of(context).size.width,
-                                      child: Image.asset(
-                                        "images/banner.png",
-                                        fit: BoxFit.fill,
-                                      )),
+                                      child: CachedNetworkImage(
+                          height: 250,
+                          fit: BoxFit.fill,
+                          imageUrl: image,
+                          placeholder: (context, url) => Container(
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                            )),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Center(child: Icon(Icons.error)),
+                        )
+                                      ),
                                 ),
                                 Container(
                                   width: MediaQuery.of(context).size.width,
@@ -604,7 +625,14 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                               height: 25,
                                               width: 90,
                                               child: FlatButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                context,
+                                                setNavigationTransition(VideoPlayerScreen(
+                                                  isRegister: true,
+                                                  eventData: upcomingEvents[index],
+                                                )));
+                                                  },
                                                   child: Text(
                                                     "VIEW",
                                                     style: TextStyle(
@@ -629,7 +657,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                     context,
                                     setNavigationTransition(VideoPlayerScreen(
                                       isRegister: true,
-                                      eventData: currentEvents[index],
+                                      eventData: upcomingEvents[index],
                                     )));
                               });
                             },

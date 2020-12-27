@@ -246,32 +246,18 @@ class _SplashScreenState extends State<SplashScreen> {
           //   gradient: setGradientColor()
           // ),),
 
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Center(
-              child: Container(
-                  alignment: Alignment.bottomCenter,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 150,
-                  decoration: new BoxDecoration(
-                      image: new DecorationImage(
-                          // alignment: Alignment(0.0, 0.0),
-                          fit: BoxFit.fitWidth,
-                          image: AssetImage("images/image.png")))),
-            ),
+          Center(
+            child: Container(
+                alignment: Alignment.bottomCenter,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                        // alignment: Alignment(0.0, 0.0),
+                        fit: BoxFit.fitWidth,
+                        image: AssetImage("images/splash.jpg")))),
           ),
 
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-            child: AnimatedOpacity(
-              opacity: toShowTitle ? 1.0 : 0.0,
-              duration: Duration(seconds: 2),
-              child: Container(
-                height: 70,
-                child: logoText(),
-              ),
-            ),
-          )
         ],
       )),
     );
