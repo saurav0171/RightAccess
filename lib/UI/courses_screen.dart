@@ -5,10 +5,14 @@ import 'dart:convert' as JSON;
 
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 
-class CoursesScreen extends StatelessWidget {
-  var eventData;
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
 
-  CoursesScreen({Key key, this.eventData}) : super(key: key);
+class CoursesScreen extends StatelessWidget {
+  var eventData;Function clickedVideo;
+
+  CoursesScreen({Key key, this.eventData,this.clickedVideo}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -23,7 +27,7 @@ class CoursesScreen extends StatelessWidget {
         Scaffold(
             backgroundColor: Colors.transparent,
             body: CourseExtension(
-              eventData: eventData,
+              eventData: eventData,clickedVideo: clickedVideo,
             )),
       ],
     );
@@ -31,9 +35,9 @@ class CoursesScreen extends StatelessWidget {
 }
 
 class CourseExtension extends StatefulWidget {
-  var eventData;
+  var eventData; Function clickedVideo;
 
-  CourseExtension({Key key, this.eventData}) : super(key: key);
+  CourseExtension({Key key, this.eventData, this.clickedVideo}) : super(key: key);
   @override
   _CourseExtensionState createState() => _CourseExtensionState();
 }
@@ -44,25 +48,10 @@ class _CourseExtensionState extends State<CourseExtension> {
   @override
   void initState() {
     super.initState();
-
-    ShowLoader(context);
-    fetchNotification();
+  courseList = widget.eventData[kDataEventModules][kDataData];
   }
 
-  fetchNotification() async {
-    final url = "$baseUrl/events/2/pre-event?includes=event,event_stage_media";
-    var result = await CallApi("GET", null, url);
-    HideLoader(context);
-
-    if (result[kDataCode] == "200") {
-      courseList = result[kDataData]['event_stage_media']['data'] as List;
-      setState(() {});
-    } else if (result[kDataCode] == "422") {
-      ShowErrorMessage(result[kDataMessage], context);
-    } else {
-      ShowErrorMessage(result[kDataError], context);
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -82,19 +71,19 @@ class _CourseExtensionState extends State<CourseExtension> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    width: 200,
+                    width: MediaQuery.of(context).size.width - 60,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          courseList[index]["name"],
+                          courseList[index][kDataTopic],
                           style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          courseList[index]["caption"],
+                          courseList[index][kDataTitle],
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.black54,
@@ -110,19 +99,17 @@ class _CourseExtensionState extends State<CourseExtension> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: Container(
-                        width: 80,
-                        height: 60,
-                        child: Image.network(
-                          courseList[index]["file_url"],
-                          fit: BoxFit.fill,
-                        )),
+                        width: 40,
+                        height: 40,
+                        child: Icon(Icons.visibility_outlined,color: Colors.grey),
+                        ),
                   ),
                 ],
               ),
               onTap: () {
                 setState(() {
                   selectedIndex = index;
-                  // Navigator.push( context, setNavigationTransition(OrderDetails(orderDetailsObject = order)));
+                  widget.clickedVideo(index);
                 });
               },
             ),

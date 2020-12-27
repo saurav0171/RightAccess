@@ -3,13 +3,39 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:page_indicator/page_indicator.dart';
 import 'package:right_access/CommonFiles/common.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/UI/courses_screen.dart';
 import 'package:right_access/UI/inviteRegister.dart';
 import 'package:right_access/UI/more_screen.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+import '../CommonFiles/common.dart';
+
+int clickedIndex = 0;
+String youtubeID = '';
+YoutubePlayerController _controller;
 class VideoPlayerScreen extends StatefulWidget {
   bool isRegister = false;
   var eventData;
@@ -35,18 +61,27 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   void initState() {
     events = widget.eventData;
-    tabPages = [
-      CoursesScreen(),
+    tabPages = widget.isRegister?[
+      MoreScreen(
+        aboutData: events,
+      ),
+    ]:[
+      CoursesScreen(eventData: events,clickedVideo: clickedVideo,),
       MoreScreen(
         aboutData: events,
       ),
     ];
-    setState(() {});
-    flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(
-          'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
-    );
-    _pageController = PageController(initialPage: _pageIndex);
+    setState(() {
+
+      
+    });
+   handlyFileType(events[kDataEventModules][kDataData][clickedIndex],clickedIndex);
+    //  flickManager = FlickManager(
+    //   videoPlayerController: VideoPlayerController.network(
+    //      "https://www.youtube.com/watch?v=9xwazD5SyVg"),
+    //       );
+    // _pageController = PageController(initialPage: _pageIndex);
+   
     super.initState();
 
     SystemChrome.setPreferredOrientations([
@@ -56,11 +91,59 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       DeviceOrientation.portraitDown,
     ]);
   }
+  handlyFileType(Map eventType, int index)
+  {
+    switch(eventType[kDataModuleType])
+    {
+      case "VIDEO":
+      {
+        setState(() {
+           youtubeID=  YoutubePlayer.convertUrlToId(eventType[kDataFileName]);
+          _controller = YoutubePlayerController(
+          initialVideoId: youtubeID,
+          flags: YoutubePlayerFlags(
+              autoPlay: true,
+              mute: true,
+          ),
+      )..addListener(listener);
+        });
+      }
+    break;
+
+    case "IMAGE":
+    {
+
+    }
+    break;
+
+    case "DOCUMENT":
+    {
+
+    }
+    break;
+    }
+
+    
+    
+
+  }
+   
+void listener() {
+    setState(() {
+        _playerState = _controller.value.playerState;
+       
+      });
+  }
+  fetchEvent()
+  {
+
+  }
 
   @override
   void dispose() {
     super.dispose();
     flickManager.dispose();
+       _controller.dispose();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -76,7 +159,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     this._pageController.animateToPage(index,
         duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
-
+  clickedVideo(int index)
+  {
+    print("Clicked index : $index");
+   setState(() {
+      clickedIndex = index;
+   });
+    handlyFileType(events[kDataEventModules][kDataData][index],index);
+  }
   //lovepreet s
   Future _scanQR() async {
     try {
@@ -131,6 +221,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
+   @override
+  void deactivate() {
+    // Pauses video while navigating to next page.
+    // _controller.pause();
+    super.deactivate();
+  }
+
+
+
+PlayerState _playerState;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -176,21 +276,64 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               Container(
                 padding: EdgeInsets.all(5),
                 height: 200,
-                child: Stack(
-                  children: [
-                    Container(
-                      child: FlickVideoPlayer(
-                        flickManager: flickManager,
-                        flickVideoWithControls: FlickVideoWithControls(
-                          controls: FlickPortraitControls(),
+                child: Container(
+                  child: events[kDataEventModules][kDataData][clickedIndex][kDataModuleType] == "VIDEO"?GestureDetector(
+                    onTap: () {
+                      print("PAuseed");
+                    },
+                                      child: YoutubePlayer(
+                        controller: _controller,
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: Colors.amber,
+                        onEnded: (YoutubeMetaData metaData)
+                        {
+                          print("ENDED");
+                        },
+                        onReady: ()
+                        {
+                          // _controller.addListener(listener);
+                          print("ENDED");
+                         print("${ _playerState.toString()}");
+                        },
+                        progressColors: ProgressBarColors(
+                            playedColor: Colors.amber,
+                            handleColor: Colors.amberAccent,
                         ),
-                        flickVideoWithControlsFullscreen:
-                            FlickVideoWithControls(
-                          controls: FlickLandscapeControls(),
-                        ),
-                      ),
-                    )
-                  ],
+                    ),
+                  ):events[kDataEventModules][kDataData][clickedIndex][kDataModuleType] == "IMAGE"? Container(
+              color: Colors.black,
+              height: 200,
+              child: PageIndicatorContainer(
+                  child: PageView.builder(
+                    itemCount: 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      String image = events[kDataEventModules][kDataData][clickedIndex][kDataFileName];
+                      // return Image.network(image,
+                      //     fit: BoxFit.contain);
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Center(child: Image.asset(image)),
+                      );
+                    },
+                  ),
+                  align: IndicatorAlign.bottom,
+                  length: 1,
+                  indicatorSpace: 5.0,
+                  padding: const EdgeInsets.all(5),
+                  indicatorColor: Colors.grey.shade300,
+                  indicatorSelectorColor: appThemeColor1,
+                  shape: IndicatorShape.circle(size: 10)),
+            ):Center(child: Icon(Icons.text_snippet,color: appThemeColor1,size: 100,)),
+                  // child: FlickVideoPlayer(
+                  //   flickManager: flickManager,
+                  //   flickVideoWithControls: FlickVideoWithControls(
+                  //     controls: FlickPortraitControls(),
+                  //   ),
+                  //   flickVideoWithControlsFullscreen:
+                  //       FlickVideoWithControls(
+                  //     controls: FlickLandscapeControls(),
+                  //   ),
+                  // ),
                 ),
               ),
               Visibility(
@@ -217,14 +360,25 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               Expanded(
                   child: DefaultTabController(
                       initialIndex: 0,
-                      length: 2,
+                      length: widget.isRegister?1:2,
                       child: Stack(
                         children: <Widget>[
                           Scaffold(
                             backgroundColor: Colors.grey,
                             appBar: AppBar(
                               toolbarHeight: 48,
-                              bottom: TabBar(
+                              bottom:widget.isRegister?TabBar(
+                                indicatorColor: Colors.white,
+                                tabs: [
+                                  Tab(
+                                    child: Text(
+                                      "More",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                 
+                                ],
+                              ) : TabBar(
                                 indicatorColor: Colors.white,
                                 tabs: [
                                   Tab(
@@ -233,7 +387,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
-                                  Tab(
+                                 Tab(
                                     child: Text(
                                       "More",
                                       style: TextStyle(color: Colors.white),

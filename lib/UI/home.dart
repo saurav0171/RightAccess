@@ -9,6 +9,8 @@ import 'package:right_access/UI/inviteRegister.dart';
 import 'package:right_access/UI/notifications.dart';
 import 'package:right_access/UI/videoPlayer.dart';
 
+import 'inviteRegister.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -155,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen>
             context,
             setNavigationTransition(VideoPlayerScreen(
               eventData: eventData,
-              isRegister: true,
+              isRegister: false,
             )));
       });
     } else if (result[kDataCode] == "401") {
@@ -421,7 +423,15 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                           height: 25,
                                           width: 80,
                                           child: FlatButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+
+                                                  Navigator.push(
+                                                context,
+                                                setNavigationTransition(VideoPlayerScreen(
+                                                  isRegister: false,
+                                                  eventData: currentEvents[index],
+                                                )));
+                                              },
                                               child: Text(
                                                 "WATCH",
                                                 style: TextStyle(
@@ -440,10 +450,11 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                             onTap: () {
                               setState(() {
                                 selectedIndex = index;
-                                Navigator.push(
+                                    Navigator.push(
                                     context,
                                     setNavigationTransition(VideoPlayerScreen(
-                                      isRegister: true,
+                                      isRegister: false,
+                                      eventData: currentEvents[index],
                                     )));
                               });
                             },
@@ -569,9 +580,8 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                               child: FlatButton(
                                                   onPressed: () {
                                                     Navigator.push(
-                                                        context,
-                                                        setNavigationTransition(
-                                                            InviteRegister()));
+                                                    context,
+                                                    setNavigationTransition(InviteRegister()));
                                                   },
                                                   child: Text(
                                                     "REGISTER",
@@ -619,6 +629,7 @@ class _HomeScreenExtensionState extends State<HomeScreenExtension> {
                                     context,
                                     setNavigationTransition(VideoPlayerScreen(
                                       isRegister: true,
+                                      eventData: currentEvents[index],
                                     )));
                               });
                             },

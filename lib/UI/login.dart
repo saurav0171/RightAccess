@@ -10,6 +10,8 @@ import 'package:right_access/UI/forget_password_screen.dart';
 import 'package:right_access/UI/register.dart';
 import 'package:right_access/data/loginData.dart';
 
+import 'home.dart';
+
 TextEditingController mobileController = TextEditingController();
 bool isRemembered = false;
 
@@ -447,8 +449,8 @@ class _LoginExtensionState extends State<LoginExtension> {
       } else {
         RemoveSharedPreference(kDataRemembered);
       }
-      // Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
-      // builder: (context) => CustomDrawer(positionForDrawer = "other0")),   ModalRoute.withName("") );
+      Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
+      builder: (context) => HomeScreen()),   ModalRoute.withName("") );
 
     } else if (result[kDataCode] == "422") {
       ShowErrorMessage(result[kDataMessage], context);

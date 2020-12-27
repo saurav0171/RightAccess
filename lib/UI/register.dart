@@ -7,6 +7,8 @@ import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/data/loginData.dart';
 
+import 'home.dart';
+
 bool isRemembered = false;
 
 List salutationList = [];
@@ -128,8 +130,10 @@ class _RegisterExtensionState extends State<RegisterExtension> {
         countriesList = result[kDataData];
         countriesListString = [];
         for (var i = 0; i < countriesList.length; i++) {
-          countriesListString.add(countriesList[i][kDataAttributes][kDataName]);
+          countriesListString.add("+ ${countriesList[i][kDataAttributes][kDataPhoneCode].toString()}");
         }
+        selectedCountriesObject = countriesList[0];
+        selectedCountries = countriesListString[0];
       });
       fetchSalutations();
     } else if (result[kDataCode] == "401") {
@@ -426,60 +430,44 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             }
                           }),
                     ),
+                   
+
+
+
+
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      child: TextFormField(
-                          focusNode: mobileFocusNode,
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.phone,
-                          maxLength: 10,
-                          decoration: setInputDecorationForEdit(
-                              "Enter your Phone Number",
-                              "Enter your Phone Number",
-                              appThemeColor1,
-                              appThemeColor1,
-                              appThemeColor1,
-                              Icons.mobile_screen_share,
-                              mobileFocusNode),
-                          validator: (value) {
-                            String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                            RegExp regExp = new RegExp(patttern);
-                            if (value.length == 0) {
-                              return 'Please enter Phone Number';
-                            } else if (!regExp.hasMatch(value)) {
-                              return 'Please enter valid Phone Number';
-                            } else {
-                              loginObj.mobileno = value;
-                            }
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black45,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15.0),
-                                bottomLeft: Radius.circular(15.0),
-                                bottomRight: Radius.circular(15.0),
-                                topRight: Radius.circular(15.0))),
-                        child: DropdownButton<String>(
+                        height: 100,
+                        child: Row(
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(maxWidth: 80),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black45,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15.0),
+                                      bottomLeft: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(0.0),
+                                      topRight: Radius.circular(0.0))),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                child: DropdownButton<String>(
                           value: selectedCountries,
                           hint: Text(
-                            "Choose country",
+                            "93",
                             style:
-                                TextStyle(color: Colors.black45, fontSize: 16),
+                                TextStyle(color: Colors.black45, fontSize: 18),
                           ),
                           isExpanded: true,
                           iconSize: 24,
                           iconEnabledColor: Colors.white,
                           elevation: 16,
-                          style: TextStyle(color: Colors.black, fontSize: 16),
+                          style: TextStyle(color: Colors.black, fontSize: 14),
                           underline: Container(
                             height: 0,
                           ),
@@ -489,7 +477,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             setState(() {
                               selectedCountries = newValue;
                               int index = countriesList.indexWhere((data) =>
-                                  data[kDataAttributes][kDataName] == newValue);
+                                  data[kDataAttributes][kDataPhoneCode].toString() == newValue);
                               selectedCountriesObject = countriesList[index];
                             });
                           },
@@ -501,8 +489,93 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             );
                           }).toList(),
                         ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: TextFormField(
+                                    focusNode: mobileFocusNode,
+                                    style: TextStyle(color: Colors.black),
+                                    textAlign: TextAlign.left,
+                                    keyboardType: TextInputType.phone,
+                                    decoration: InputDecoration(
+                                      labelStyle: TextStyle(
+                                        color: firstNameFocusNode.hasFocus
+                                            ? appThemeColor1
+                                            : Colors.black,
+                                      ),
+                                      // fillColor: Colors.transparent,
+                                      // filled: true,
+                                      errorStyle:
+                                          TextStyle(color: Colors.black),
+                                      labelText: "Enter your Phone Number",
+                                      hintText: "Enter your Phone Number",
+                                      prefixIcon: Icon(
+                                        Icons.mobile_screen_share,
+                                        color: appThemeColor1,
+                                      ),
+                                      focusColor: firstNameFocusNode.hasFocus
+                                          ? appThemeColor1
+                                          : Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black45, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
+                                    ),
+                                    validator: (value) {
+                                      String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                                      RegExp regExp = new RegExp(patttern);
+                                      if (value.length == 0) {
+                                        return 'Please enter Phone Number';
+                                      } else if (!regExp.hasMatch(value)) {
+                                        return 'Please enter valid Phone Number';
+                                      } else {
+                                        loginObj.mobileno = value;
+                                      }
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                       child: TextFormField(
@@ -683,6 +756,8 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     if (result[kDataCode] == "200") {
       SetSharedPreference(kDataLoginUser, result[kDataData]);
       globals.globalCurrentUser = result[kDataData];
+       Navigator.pushAndRemoveUntil( context,   MaterialPageRoute(
+      builder: (context) => HomeScreen()),   ModalRoute.withName("") );
     } else if (result[kDataCode] == "422") {
       Map error = result[kDataError];
       ShowErrorMessage(error.values.first[0], context);

@@ -51,7 +51,6 @@ dependencies:
   webview_flutter: ^0.3.22+1
   url_launcher: ^5.5.0
   exif: ^1.0.3
-  sms_autofill: ^1.2.5
   geocoder: ^0.2.1
   location: ^3.0.2
   google_fonts: ^1.1.1
@@ -65,6 +64,9 @@ dependencies:
   barcode_scan: "^2.0.1"
   image_picker: ^0.6.7+12
   flutter_share: ^1.0.5
+  youtube_player_flutter: ^7.0.0+7
+  googleapis: ^0.56.1
+  googleapis_auth: ^0.2.12
 
 dev_dependencies:
   flutter_test:

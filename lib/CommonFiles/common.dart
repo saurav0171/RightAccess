@@ -85,10 +85,13 @@ final kDataPhone = "phone";
 final kDataPhoneNumber = "phone_number";
 final kDataCountry = "country";
 final kDataEmail = "email";
+final kDataPhoneCode = "phone_code";
 final kDataPassword = "password";
 final kDataFirstname = "firstName";
 final kDataLastname = "lastName";
 final kDataStartDate = "start_date";
+final kDataStartDateTime = "start_datetime";
+final kDataEndDateTime ="end_datetime";
 final kDataDueDate = "due_date";
 final kDataDescription = "description";
 final kDataMonth = "month";
@@ -223,6 +226,12 @@ final kDataInfo = "info";
 final kDataRating = "rating";
 final kDataComment = "comment";
 final kDataRate = "rate";
+final kDataEventModules = "event_modules";
+final kDataTopic = "topic";
+final kDataFileType = "file_type";
+final kDataFileName = "file_name";
+final kDataModuleType = "module_type";
+final kDataEventSponsors = "event_sponsors";
 
 int selectedIndex = -1;
 
