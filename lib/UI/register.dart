@@ -1,13 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:right_access/CommonFiles/common.dart';
-import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/data/loginData.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'home.dart';
 
@@ -60,6 +59,8 @@ class _RegisterExtensionState extends State<RegisterExtension> {
   // FocusNode passwordFocusNode = new FocusNode();
   FocusNode confirmPasswordFocusNode = new FocusNode();
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
@@ -125,53 +126,60 @@ class _RegisterExtensionState extends State<RegisterExtension> {
   }
 
   fetchCountries() async {
-    final url = "$baseUrl/countries?limit=290&page=1";
-    var result = await CallApi("GET", null, url);
-    if (result[kDataCode] == "200") {
-      setState(() {
-        countriesList = result[kDataData];
-        countriesListString = [];
-        for (var i = 0; i < countriesList.length; i++) {
-          countriesListString.add("+ ${countriesList[i][kDataAttributes][kDataPhoneCode].toString()}");
-        }
-        selectedCountriesObject = countriesList[0];
-        selectedCountries = countriesListString[0];
-      });
-      fetchSalutations();
-    } else if (result[kDataCode] == "401") {
-      ShowErrorMessage(result[kDataResult], context);
-      HideLoader(context);
-    } else if (result[kDataCode] == "422") {
-      ShowErrorMessage(result[kDataMessage], context);
-      HideLoader(context);
-    } else {
-      ShowErrorMessage(result[kDataError], context);
-      HideLoader(context);
-    }
-  }
-
-  fetchSalutations() async {
-    final url = "$baseUrl/salutations";
+    final url = "$baseUrl/countryandsalutations?limit=290&page=1";
     var result = await CallApi("GET", null, url);
     HideLoader(context);
     if (result[kDataCode] == "200") {
       setState(() {
-        salutationList = result[kDataData];
+        countriesList = result[kDataCountries][kDataData];
+        countriesListString = [];
+        for (var i = 0; i < countriesList.length; i++) {
+          countriesListString.add("+ ${countriesList[i][kDataPhoneCode].toString()}");
+          if (countriesList[i][kDataPhoneCode].toString() == "91") 
+          {
+            selectedCountriesObject = countriesList[i];
+            selectedCountries = countriesListString[i];
+          }
+        }
+
+
+        salutationList = result[kDataSalutations][kDataData];
         salutationListString = [];
         for (var i = 0; i < salutationList.length; i++) {
           salutationListString.add(salutationList[i][kDataName]);
         }
         selectedSalutationObject = salutationList[0];
         selectedSalutation = salutationListString[0];
+
       });
-    } else if (result[kDataCode] == "401") {
-      ShowErrorMessage(result[kDataResult], context);
-    } else if (result[kDataCode] == "422") {
-      ShowErrorMessage(result[kDataMessage], context);
+      // fetchSalutations();
+    }  else if (result[kDataCode] == "401" || result[kDataCode] == "404" || result[kDataCode] == "422") {
+      showAlertDialog(result[kDataMessage], context);
     } else {
-      ShowErrorMessage(result[kDataError], context);
+      showAlertDialog(result[kDataError], context);
     }
   }
+
+  // fetchSalutations() async {
+  //   final url = "$baseUrl/salutations";
+  //   var result = await CallApi("GET", null, url);
+  //   HideLoader(context);
+  //   if (result[kDataCode] == "200") {
+  //     setState(() {
+  //       salutationList = result[kDataData];
+  //       salutationListString = [];
+  //       for (var i = 0; i < salutationList.length; i++) {
+  //         salutationListString.add(salutationList[i][kDataName]);
+  //       }
+  //       selectedSalutationObject = salutationList[0];
+  //       selectedSalutation = salutationListString[0];
+  //     });
+  //   }  else if (result[kDataCode] == "401" || result[kDataCode] == "404" || result[kDataCode] == "422") {
+  //     showAlertDialog(result[kDataMessage], context);
+  //   } else {
+  //     showAlertDialog(result[kDataError], context);
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -236,8 +244,24 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                     // ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: Image.asset("images/logo.jpg",width: 200,),
+                      padding: const EdgeInsets.fromLTRB(20, 50, 0, 0),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+              onTap: ()
+              {
+                Navigator.pop(context);
+              },
+              child: Container(
+                    height: 30,
+                    width: 30,
+                    child: Icon(Icons.arrow_back,color: Colors.black,))),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                            child: Image.asset("images/logo.png",width: 200,),
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
@@ -254,20 +278,20 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        child: Text(
-                          "Request a call back regarding Together's B2B offerings using the form below.",
-                          textAlign: TextAlign.center,
-                          maxLines: 10,
-                          style: TextStyle(fontSize: 16, color: Colors.black54),
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 70,
+                    //     child: Text(
+                    //       "Request a call back regarding Right Access's B2B offerings using the form below.",
+                    //       textAlign: TextAlign.center,
+                    //       maxLines: 10,
+                    //       style: TextStyle(fontSize: 16, color: Colors.black54),
+                    //     ),
+                    //     alignment: Alignment.center,
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Container(
@@ -347,8 +371,8 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                       // filled: true,
                                       errorStyle:
                                           TextStyle(color: Colors.black),
-                                      labelText: "Enter your First Name",
-                                      hintText: "Enter your First Name",
+                                      labelText: "First Name",
+                                      hintText: "First Name",
                                       prefixIcon: Icon(
                                         Icons.person,
                                         color: appThemeColor1,
@@ -377,10 +401,22 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                             topRight: Radius.circular(15.0),
                                             bottomRight: Radius.circular(15.0),
                                           )),
+                                          errorBorder:  OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.red, width: 1),
+                                        borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.red, width: 1),
+                                        borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
                                     ),
                                     validator: (value) {
                                       if (value.isEmpty) {
-                                        return "Please enter your First Name";
+                                        // return "Please enter your First Name";
                                       } else {
                                         loginObj.firstName = value;
                                       }
@@ -399,8 +435,8 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.multiline,
                           decoration: setInputDecorationForEdit(
-                              "Enter your Last Name",
-                              "Enter your Last Name",
+                              "Last Name",
+                              "Last Name",
                               appThemeColor1,
                               appThemeColor1,
                               appThemeColor1,
@@ -417,33 +453,33 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
+                          controller: emailController,
                           focusNode: emailFocusNode,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.emailAddress,
                           decoration: setInputDecorationForEdit(
-                              "Please enter your Email Address",
-                              "Please enter your Email Address",
+                              "Email Address",
+                              "Email Address",
                               appThemeColor1,
                               appThemeColor1,
                               appThemeColor1,
                               Icons.email,
                               emailFocusNode),
                           validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please enter email";
-                            } else if (!checkValidEmail(value)) {
-                              return "Please enter valid email";
-                            } else {
+                            if(mobileController.text.isEmpty) {
+                              if (value.isEmpty) {
+                                return "Please enter email";
+                              } else if (!checkValidEmail(value)) {
+                                return "Please enter valid email";
+                              } else {
+                                loginObj.email = value;
+                              }
+                            }else{
                               loginObj.email = value;
                             }
                           }),
                     ),
-                   
-
-
-
-
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Container(
@@ -486,7 +522,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             setState(() {
                               selectedCountries = newValue;
                               int index = countriesList.indexWhere((data) =>
-                                  "+ ${data[kDataAttributes][kDataPhoneCode].toString()}" == newValue);
+                                  "+ ${data[kDataPhoneCode].toString()}" == newValue);
                               selectedCountriesObject = countriesList[index];
                             });
                           },
@@ -505,6 +541,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             Expanded(
                               child: Container(
                                 child: TextFormField(
+                                    controller: mobileController,
                                     focusNode: mobileFocusNode,
                                     style: TextStyle(color: Colors.black),
                                     textAlign: TextAlign.left,
@@ -519,8 +556,8 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                       // filled: true,
                                       errorStyle:
                                           TextStyle(color: Colors.black),
-                                      labelText: "Enter your Phone Number",
-                                      hintText: "Enter your Phone Number",
+                                      labelText: "Mobile",
+                                      hintText: "Mobile",
                                       prefixIcon: Icon(
                                         Icons.mobile_screen_share,
                                         color: appThemeColor1,
@@ -549,15 +586,32 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                             topRight: Radius.circular(15.0),
                                             bottomRight: Radius.circular(15.0),
                                           )),
+                                          errorBorder:  OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.red, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
+                                          focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.red, width: 1),
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(15.0),
+                                            bottomRight: Radius.circular(15.0),
+                                          )),
                                     ),
                                     validator: (value) {
-                                      String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                                      RegExp regExp = new RegExp(patttern);
-                                      if (value.length == 0) {
-                                        return 'Please enter Phone Number';
-                                      } else if (!regExp.hasMatch(value)) {
-                                        return 'Please enter valid Phone Number';
-                                      } else {
+                                      if(emailController.text.isEmpty) {
+                                        String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                                        RegExp regExp = new RegExp(patttern);
+
+                                        if (value.length == 0) {
+                                          // return 'Please enter Phone Number';
+                                        } else if (!regExp.hasMatch(value)) {
+                                          // return 'Please enter valid Phone Number';
+                                        } else {
+                                          loginObj.mobileno = value;
+                                        }
+                                      }else{
                                         loginObj.mobileno = value;
                                       }
                                     }),
@@ -567,38 +621,20 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                         ),
                       ),
                     ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
                           focusNode: passwordFocusNode,
                           controller: passwordController,
+                          maxLength: 8,
+
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
                           obscureText: true,
                           keyboardType: TextInputType.emailAddress,
                           decoration: setInputDecorationForEdit(
-                              "Enter your Password",
-                              "Enter your Password",
+                              "Password",
+                              "Password",
                               appThemeColor1,
                               appThemeColor1,
                               appThemeColor1,
@@ -613,17 +649,33 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                           }),
                     ),
                     Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 25,
+                        child: Text(
+                          "Password must be minimum 8 characters",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: appThemeColor1,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextFormField(
                           focusNode: confirmPasswordFocusNode,
                           controller: confirmPasswordController,
+                          maxLength: 8,
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
                           obscureText: true,
                           keyboardType: TextInputType.emailAddress,
                           decoration: setInputDecorationForEdit(
-                              "Enter Confirm Password",
-                              "Enter Confirm Password",
+                              "Confirm Password",
+                              "Confirm Password",
                               appThemeColor1,
                               appThemeColor1,
                               appThemeColor1,
@@ -640,11 +692,12 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             }
                           }),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
                             width: 30,
@@ -671,12 +724,28 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                             padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Container(
                               width: MediaQuery.of(context).size.width - 80,
-                              child: Text(
-                                "I Accept Terms & Conditions and Privacy Policy",
-                                textAlign: TextAlign.start,
-                                maxLines: 10,
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black),
+                              child: GestureDetector(
+                                  child: RichText(
+                                  text:TextSpan(
+                                    children:[
+                                      TextSpan(
+                                        text: "I Agree ",
+                                       style: TextStyle(
+                                      fontSize: 14, color: Colors.black),
+                                      ),
+                                      TextSpan(
+                                        text: "Terms & Conditions and Privacy Policy",
+                                       style: TextStyle(
+                                      fontSize: 14, color: Colors.black,fontWeight: FontWeight.w800),
+                                      )
+                                    ]
+                                  ) 
+                                 
+                                ),
+                                onTap: ()
+                                {
+                                  launch("https://rightaccess.org/privacy-policy");
+                                },
                               ),
                             ),
                           ),
@@ -700,6 +769,11 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                                         fontStyle: FontStyle.normal)),
                                 onPressed: () {
                                   if (loginKey.currentState.validate()) {
+                                    if (!isRemembered) 
+                                    { 
+                                      showAlert(context, "Please accept Terms and Conditions");
+                                      return;
+                                    }
                                     ShowLoader(context);
                                     SchedulerBinding.instance
                                         .addPostFrameCallback((_) =>
@@ -712,31 +786,31 @@ class _RegisterExtensionState extends State<RegisterExtension> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 25,
-                        child: Text(
-                          "Powered By Right Access",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, color: Colors.black54),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 25,
-                        child: Text(
-                          "It is a long established fact that a reader",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, color: Colors.black54),
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 25,
+                    //     child: Text(
+                    //       "Powered By Right Access",
+                    //       textAlign: TextAlign.center,
+                    //       style: TextStyle(fontSize: 18, color: Colors.black54),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 25,
+                    //     child: Text(
+                    //       "It is a long established fact that a reader",
+                    //       textAlign: TextAlign.center,
+                    //       style: TextStyle(fontSize: 18, color: Colors.black54),
+                    //     ),
+                    //     alignment: Alignment.center,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -756,7 +830,7 @@ class _RegisterExtensionState extends State<RegisterExtension> {
     param["mobile_number"] = register.mobileno;
     param["password"] = register.password;
     param["email"] = register.email;
-    param["country_code"] = selectedCountriesObject[kDataAttributes][kDataCountryCode];
+    param["country_code"] = selectedCountriesObject[kDataCountryCode];
     param["terms_and_conditions"] = isRemembered ? "1" : "0";
 
     final url = "$baseUrl/register";

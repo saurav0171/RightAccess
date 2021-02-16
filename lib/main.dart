@@ -1,34 +1,37 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:intl/intl.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:location/location.dart';
 import 'package:package_info/package_info.dart';
 import 'package:right_access/CommonFiles/common.dart';
 import 'package:right_access/Globals/globals.dart';
 import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 
-FirebaseAnalytics analytics = FirebaseAnalytics();
-FirebaseAnalyticsObserver observer =
-    FirebaseAnalyticsObserver(analytics: analytics);
+// FirebaseAnalytics analytics = FirebaseAnalytics();
+// FirebaseAnalyticsObserver observer =
+//     FirebaseAnalyticsObserver(analytics: analytics);
 final dateFormat = DateFormat("dd/MM/yyyy");
 bool isAdult = false;
 bool isAccept = false;
-LocationData currentLocation;
 String locationError = "";
 
-void main() => runApp(new MaterialApp(
+
+const debug = false;
+
+    void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(debug: debug);
+
+  runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       home: new SplashScreen(),
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
-      ],
+      // navigatorObservers: [
+      //   FirebaseAnalyticsObserver(analytics: analytics),
+      // ],
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: appThemeColor1,
@@ -37,7 +40,8 @@ void main() => runApp(new MaterialApp(
         // Define the default font family.
         fontFamily: '-',
       ),
-    ));
+    )) ;
+}
 
 bool toShowTitle = false;
 
@@ -56,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
       startTime();
 
 
-    firebaseCloudMessaging_Listeners();
+    // firebaseCloudMessaging_Listeners();
 
     Timer(Duration(seconds: 2), () {
       setState(() {
@@ -65,89 +69,40 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  getUserLocation() async {
-    //call this async method from where ever you need
-
-    LocationData myLocation;
-
-    Location location = new Location();
-    try {
-      myLocation = await location.getLocation();
-      print("myLocation : $myLocation");
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        setState(() {
-          locationError = 'Please grant permission';
-        });
-        print(locationError);
-      }
-      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-        setState(() {
-          locationError =
-              'Permission denied- Please enable it from app settings';
-        });
-        print(locationError);
-      }
-      if (e.code == 'SERVICE_STATUS_DISABLED') {
-        setState(() {
-          locationError =
-              'Location Service Disabled- Please enable it from app settings';
-        });
-        print(locationError);
-      }
-      // ShowErrorMessage(error, context);
-      showDialog(
-          context: context,
-          builder: (_) => new AlertDialog(
-                title: new Text("Location Service"),
-                content: new Text(locationError),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("OK"))
-                ],
-              ));
-      myLocation = null;
-    }
-    globalLocationData = myLocation;
-  }
-
   String mesg = "";
 
-  void firebaseCloudMessaging_Listeners() {
-    globals.firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('on message $message');
+  // void firebaseCloudMessaging_Listeners() {
+  //   globals.firebaseMessaging.configure(
+  //     onMessage: (Map<String, dynamic> message) async {
+  //       print('on message $message');
 
-        if (Platform.isIOS) {
-          mesg = message["aps"][kDataAlert][kDataBody];
-        } else {
-          mesg = message[kDataNotification][kDataBody];
-        }
-        showDialogForNotification(mesg);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('on resume $message');
-        if (Platform.isIOS) {
-          mesg = message["aps"][kDataAlert][kDataBody];
-        } else {
-          mesg = message[kDataNotification][kDataBody];
-        }
-        showDialogForNotification(mesg);
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('on launch $message');
-        if (Platform.isIOS) {
-          mesg = message["aps"][kDataAlert][kDataBody];
-        } else {
-          mesg = message[kDataNotification][kDataBody];
-        }
-        showDialogForNotification(mesg);
-      },
-    );
-  }
+  //       if (Platform.isIOS) {
+  //         mesg = message["aps"][kDataAlert][kDataBody];
+  //       } else {
+  //         mesg = message[kDataNotification][kDataBody];
+  //       }
+  //       showDialogForNotification(mesg);
+  //     },
+  //     onResume: (Map<String, dynamic> message) async {
+  //       print('on resume $message');
+  //       if (Platform.isIOS) {
+  //         mesg = message["aps"][kDataAlert][kDataBody];
+  //       } else {
+  //         mesg = message[kDataNotification][kDataBody];
+  //       }
+  //       showDialogForNotification(mesg);
+  //     },
+  //     onLaunch: (Map<String, dynamic> message) async {
+  //       print('on launch $message');
+  //       if (Platform.isIOS) {
+  //         mesg = message["aps"][kDataAlert][kDataBody];
+  //       } else {
+  //         mesg = message[kDataNotification][kDataBody];
+  //       }
+  //       showDialogForNotification(mesg);
+  //     },
+  //   );
+  // }
 
   showDialogForNotification(String msg) {
     showDialog(
@@ -254,7 +209,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 decoration: new BoxDecoration(
                     image: new DecorationImage(
                         // alignment: Alignment(0.0, 0.0),
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.fill,
                         image: AssetImage("images/splash.jpg")))),
           ),
 

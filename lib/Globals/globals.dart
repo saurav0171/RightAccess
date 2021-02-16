@@ -1,10 +1,7 @@
 library my_prj.globals;
-
 import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:location/location.dart';
 
 // import 'package:geocoder/geocoder.dart';
 
@@ -33,7 +30,6 @@ Function updateWidgetList;
 Function updateCart;
 Function updateGroupInfo;
 BuildContext notificationContext ;
-FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 Map notificationObject ;
 bool isAudioCallOnly = false;
 String globalGroupName ;
@@ -49,12 +45,14 @@ List globalBloodGroupListData;
 String globalProfileUrl;
 String globalTabIndex = "1";
 Coordinates currentCoords;
-LocationData globalLocationData;
 int indexTab = 0;
 Map globalRetailerLogin = {};
 Function manuallyUpdateTab;
 Function updateDeliveryStatus;
 Function updatePaymentDeliveryStatus;
+List contactList = [];
+Function updateEventsList;
+
 
 // Call globalManagedCall;
 // FCXCallController globalCallController;

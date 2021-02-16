@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:right_access/CommonFiles/common.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as JSON;
-
-import 'package:right_access/ServerFiles/serviceAPI.dart';
-
-import '../CommonFiles/common.dart';
-import '../CommonFiles/common.dart';
-import '../CommonFiles/common.dart';
 
 class CoursesScreen extends StatelessWidget {
   var eventData;Function clickedVideo;
@@ -15,21 +7,24 @@ class CoursesScreen extends StatelessWidget {
   CoursesScreen({Key key, this.eventData,this.clickedVideo}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.bottomEnd,
-      children: <Widget>[
-        new Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(color: appBackgroundColor)
-            // decoration: setBackgroundImage(),
-            ),
-        Scaffold(
-            backgroundColor: Colors.transparent,
-            body: CourseExtension(
-              eventData: eventData,clickedVideo: clickedVideo,
-            )),
-      ],
+    return MediaQuery(
+       data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: Stack(
+        alignment: AlignmentDirectional.bottomEnd,
+        children: <Widget>[
+          new Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(color: appBackgroundColor)
+              // decoration: setBackgroundImage(),
+              ),
+          Scaffold(
+              backgroundColor: Colors.transparent,
+              body: CourseExtension(
+                eventData: eventData,clickedVideo: clickedVideo,
+              )),
+        ],
+      ),
     );
   }
 }
@@ -76,14 +71,14 @@ class _CourseExtensionState extends State<CourseExtension> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          courseList[index][kDataTopic],
+                          courseList[index][kDataTopic] != null?courseList[index][kDataTopic]:"N/A",
                           style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          courseList[index][kDataTitle],
+                          courseList[index][kDataTitle] != null?courseList[index][kDataTitle]:"N/A" ,
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.black54,

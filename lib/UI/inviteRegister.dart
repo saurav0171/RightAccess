@@ -1,22 +1,30 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:location/location.dart';
 import 'package:right_access/CommonFiles/common.dart';
-import 'package:right_access/Globals/globals.dart' as globals;
 import 'package:right_access/ServerFiles/serviceAPI.dart';
 import 'package:right_access/data/loginData.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool isRemembered = false;
 final dateFormat = DateFormat("dd/MM/yyyy");
 bool isAdult = false;
 String locationError = "";
-LocationData currentLocation;
+
+Map eventObj = {};
+
+
+List professionsList = [];
+List<String> professionsListString = [];
+String selectedProfessions;
+Map selectedProfessionsObject = {};
 
 class InviteRegister extends StatelessWidget {
+  InviteRegister(param);
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
@@ -29,11 +37,15 @@ class InviteRegister extends StatelessWidget {
               decoration: BoxDecoration(color: appBackgroundColor)),
           Scaffold(
             appBar: AppBar(
-              iconTheme: IconThemeData(
-                color: Colors.black, //change your color here
-              ),
-              title: Text("Events"),
-              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            leading: GestureDetector(
+              onTap: ()
+              {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back,)),
+              title: Image.asset("images/logo.png",width: 200,),
             ),
             body: FormKeyboardActions(child: InviteRegisterExtension()),
           ),
@@ -97,53 +109,32 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
     cityFocusNode.addListener(() {
       setState(() {});
     });
+    print("Obj[kDataUserRegistrationStatus]: ${eventObj[kDataUserRegistrationStatus]}");
+    ShowLoader(context);
+    fetchProfessions();
   }
 
-  getUserLocation() async {
-    //call this async method from whereever you need
-    LocationData myLocation;
-    Location location = new Location();
-    try {
-      myLocation = await location.getLocation();
-      print("myLocation : $myLocation");
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        setState(() {
-          locationError = 'Please grant permission';
-        });
-        print(locationError);
-      }
-      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-        setState(() {
-          locationError =
-              'Permission denied- Please enable it from app settings';
-        });
-        print(locationError);
-      }
-      if (e.code == 'SERVICE_STATUS_DISABLED') {
-        setState(() {
-          locationError =
-              'Location Service Disabled- Please enable it from app settings';
-        });
-        print(locationError);
-      }
-      showDialog(
-          context: context,
-          builder: (_) => new AlertDialog(
-                title: new Text("Location Service"),
-                content: new Text(locationError),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("OK"))
-                ],
-              ));
-      myLocation = null;
+  fetchProfessions() async {
+    final url = "$baseUrl/professions/listing";
+    var result = await CallApi("GET", null, url);
+    HideLoader(context);
+    if (result[kDataCode] == "200") {
+      setState(() {
+        professionsList = result[kDataData];
+        professionsListString = [];
+        for (var i = 0; i < professionsList.length; i++) {
+          professionsListString.add(professionsList[i][kDataName]);
+        }
+      });
+      // fetchSalutations();
+    }  else if (result[kDataCode] == "401" || result[kDataCode] == "404" || result[kDataCode] == "422") {
+      showAlertDialog(result[kDataMessage], context);
+    } else {
+      showAlertDialog(result[kDataError], context);
     }
-    currentLocation = myLocation;
   }
+
+ 
 
   @override
   void dispose() {
@@ -203,9 +194,35 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
     });
   }
 
+
+
+  skipRegister() async
+  {
+    Map param = Map();    
+    
+    final url = "$baseUrl/events/${eventObj[kDataEventId].toString()}/register/skip";
+    var result = await CallApi("POST", param, url);
+    // var result = await makePostRequest("POST", param, url) ;
+    HideLoader(context);
+
+    if (result[kDataCode] == "200") {
+      ShowSuccessMessage(result[kDataMessage], context);
+      Timer(Duration(seconds: 2), ()
+      {
+        Navigator.pop(context, true);
+      });
+       
+    } else if (result[kDataCode] == "422") {
+     
+      ShowErrorMessage(result[kDataMessage], context);
+    } else {
+      ShowErrorMessage(result[kDataError], context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return eventObj[kDataUserRegistrationStatus] == false? Container(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Form(
@@ -218,33 +235,14 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("RIGHT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 24,
-                                  color: appThemeColor1,
-                                  fontStyle: FontStyle.normal)),
-                          Text("ACCESS",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 24,
-                                  color: Colors.black,
-                                  fontStyle: FontStyle.normal)),
-                        ],
-                      ),
-                    ),
+                   
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: 25,
                         child: Text(
-                          "THANK YOU",
+                          "Thanks for registering!",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 22,
@@ -253,35 +251,35 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 25,
-                        child: Text(
-                          "REGISTER WITH US",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 22,
-                              color: appThemeColor1,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        child: Text(
-                          "Request a call back regarding Together's B2B\nofferings Using the form below.",
-                          textAlign: TextAlign.center,
-                          maxLines: 10,
-                          style: TextStyle(fontSize: 16, color: Colors.black54),
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 25,
+                    //     child: Text(
+                    //       "REGISTER WITH US",
+                    //       textAlign: TextAlign.center,
+                    //       style: TextStyle(
+                    //           fontSize: 22,
+                    //           color: appThemeColor1,
+                    //           fontWeight: FontWeight.w600),
+                    //     ),
+                    //   ),
+                    // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      //   child: Container(
+                      //     width: MediaQuery.of(context).size.width,
+                      //     height: 70,
+                      //     child: Text(
+                      //       "Request a call back regarding Right Access's B2B\nofferings Using the form below.",
+                      //       textAlign: TextAlign.center,
+                      //       maxLines: 10,
+                      //       style: TextStyle(fontSize: 16, color: Colors.black54),
+                      //     ),
+                      //     alignment: Alignment.center,
+                      //   ),
+                      // ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Container(
@@ -289,52 +287,104 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                         color: appThemeColor1,
                       ),
                     ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    //   child: TextFormField(
+                    //       focusNode: professionFocusNode,
+                    //       controller: professionController,
+                    //       style: TextStyle(color: Colors.black),
+                    //       textAlign: TextAlign.left,
+                    //       keyboardType: TextInputType.text,
+                    //       decoration: setInputDecorationForEdit(
+                    //           "Please enter your Profession",
+                    //           "Please enter your Profession",
+                    //           appThemeColor1,
+                    //           appThemeColor1,
+                    //           appThemeColor1,
+                    //           Icons.account_circle_rounded,
+                    //           professionFocusNode),
+                    //       validator: (value) {
+                    //         if (value.isEmpty) {
+                    //           return "Please enter City";
+                    //         }
+                    //       }),
+                    // ),
+
+                     Padding(
+                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                       child: Container(
+                         alignment: Alignment.center,
+                         height: 60,
+                         decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(15),
+                           border: Border.all(color: Colors.black45)
+                         ),
+                         child: Padding(
+                           padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
+                           child: DropdownButton<String>(
+                             value: selectedProfessions,
+                             hint: Text(
+                               "Select a Profession",
+                               style: TextStyle(color: Colors.grey.shade400, fontSize: 16),
+                             ),
+                             isExpanded: true,
+                             iconSize: 24,
+                             elevation: 16,
+                             style: TextStyle(
+                               color: Colors.black,
+                               fontSize: 16,
+                             ),
+                             underline: Container(
+                               height: 0,
+                             ),
+                             onChanged: (String newValue) {
+                               FocusScope.of(context).requestFocus(new FocusNode());
+                               setState(() {
+                                   selectedProfessions = newValue;
+                                   int index = professionsList
+                                       .indexWhere((data) => data[kDataName] == newValue);
+                                   selectedProfessionsObject = professionsList[index];
+                               });
+                             },
+                             items: professionsListString
+                                   .map<DropdownMenuItem<String>>((String value) {
+                               return DropdownMenuItem<String>(
+                                   value: value,
+                                   child: Container(
+                                       alignment: Alignment.centerLeft,
+                                       child: Text(
+                                         value,
+                                       )),
+                               );
+                             }).toList(),
+                           ),
+                         ),
+                       ),
+                     ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    //   child: TextFormField(
+                    //       focusNode: organizationNameFocusNode,
+                    //       controller: organizationNameController,
+                    //       style: TextStyle(color: Colors.black),
+                    //       textAlign: TextAlign.left,
+                    //       keyboardType: TextInputType.text,
+                    //       decoration: setInputDecorationForEdit(
+                    //           "Please enter Organization/Institute",
+                    //           "Please enter Organization/Institute",
+                    //           appThemeColor1,
+                    //           appThemeColor1,
+                    //           appThemeColor1,
+                    //           Icons.location_city,
+                    //           organizationNameFocusNode),
+                    //       validator: (value) {
+                    //         if (value.isEmpty) {
+                    //           return "Please enter Organization/Institute";
+                    //         }
+                    //       }),
+                    // ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      child: TextFormField(
-                          focusNode: professionFocusNode,
-                          controller: professionController,
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          decoration: setInputDecorationForEdit(
-                              "Please enter your Profession",
-                              "Please enter your Profession",
-                              appThemeColor1,
-                              appThemeColor1,
-                              appThemeColor1,
-                              Icons.account_circle_rounded,
-                              professionFocusNode),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please enter City";
-                            }
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      child: TextFormField(
-                          focusNode: organizationNameFocusNode,
-                          controller: organizationNameController,
-                          style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          decoration: setInputDecorationForEdit(
-                              "Please enter Organization Name",
-                              "Please enter Organization Name",
-                              appThemeColor1,
-                              appThemeColor1,
-                              appThemeColor1,
-                              Icons.location_city,
-                              organizationNameFocusNode),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please enter Organization Name";
-                            }
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: TextFormField(
                           focusNode: cityFocusNode,
                           controller: cityController,
@@ -355,6 +405,23 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                             }
                           }),
                     ),
+
+
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 30, 20, 0),
+                    child: Container(
+                      // alignment: Alignment.centerLeft,
+                      child: Text(
+                              "Upload Supporting Documents",
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              style: TextStyle(fontSize: 16, color: Colors.black54),
+                            ),
+                    ),
+                  ),
+
+
+
                     GestureDetector(
                       onTap: () {
                         if (image == null) {
@@ -435,7 +502,7 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -465,12 +532,28 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                             padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Container(
                               width: MediaQuery.of(context).size.width - 80,
-                              child: Text(
-                                "I Accept Terms & Conditions and Privacy Policy",
-                                textAlign: TextAlign.start,
-                                maxLines: 10,
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black),
+                              child: GestureDetector(
+                                  child: RichText(
+                                  text:TextSpan(
+                                    children:[
+                                      TextSpan(
+                                        text: "I Accept ",
+                                       style: TextStyle(
+                                      fontSize: 14, color: Colors.black),
+                                      ),
+                                      TextSpan(
+                                        text: "Terms & Conditions and Privacy Policy",
+                                       style: TextStyle(
+                                      fontSize: 14, color: Colors.black,fontWeight: FontWeight.w800),
+                                      )
+                                    ]
+                                  ) 
+                                 
+                                ),
+                                onTap: ()
+                                {
+                                  launch("https://rightaccess.org/privacy-policy");
+                                },
                               ),
                             ),
                           ),
@@ -493,12 +576,25 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                                         color: Colors.white,
                                         fontStyle: FontStyle.normal)),
                                 onPressed: () {
-                                  if (loginKey.currentState.validate()) {
+                                    /*if (cityController.text.length==0||(selectedProfessions==null|| selectedProfessions.length==0))
+                                    {
+                                      showAlert(context, "All Fields are mandatory");
+                                      return;
+                                    }
+                                    else if(image==null)
+                                    {
+                                      showAlert(context, "Please upload a supporting document");
+                                      return;
+                                    }*/
+                                     if(!isRemembered)
+                                    {
+                                      showAlert(context, "Please accept Terms and Conditions");
+                                      return;
+                                    }
                                     ShowLoader(context);
                                     SchedulerBinding.instance
                                         .addPostFrameCallback((_) =>
                                             createUser(loginObj, context));
-                                  }
                                 },
                               ),
                             ),
@@ -515,19 +611,15 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                               // decoration: setBoxDecoration(Colors.white),
                               child: FlatButton(
                                 color: appThemeColor1,
-                                child: Text("Go Back",
+                                child: Text("SKIP",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 18,
                                         color: Colors.white,
                                         fontStyle: FontStyle.normal)),
                                 onPressed: () {
-                                  if (loginKey.currentState.validate()) {
-                                    ShowLoader(context);
-                                    SchedulerBinding.instance
-                                        .addPostFrameCallback((_) =>
-                                            createUser(loginObj, context));
-                                  }
+                                  ShowLoader(context);
+                                  skipRegister();
                                 },
                               ),
                             ),
@@ -535,31 +627,31 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 25,
-                        child: Text(
-                          "Powered By Right Access",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, color: Colors.black54),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 25,
-                        child: Text(
-                          "It is a long established fact that a reader",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, color: Colors.black54),
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 25,
+                    //     child: Text(
+                    //       "Powered By Right Access",
+                    //       textAlign: TextAlign.center,
+                    //       style: TextStyle(fontSize: 18, color: Colors.black54),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 25,
+                    //     child: Text(
+                    //       "It is a long established fact that a reader",
+                    //       textAlign: TextAlign.center,
+                    //       style: TextStyle(fontSize: 18, color: Colors.black54),
+                    //     ),
+                    //     alignment: Alignment.center,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -567,21 +659,30 @@ class _InviteRegisterExtensionState extends State<InviteRegisterExtension> {
           ),
         ),
       ),
-    );
+    ):Container(child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 100,
+                        child: Text(
+                          "Your Registration request is under review. Kindly wait for the result",
+                          textAlign: TextAlign.center,
+                          maxLines: 10,
+                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                        ),
+                        alignment: Alignment.center,
+                      ),);
   }
 
   void createUser(LoginData register, BuildContext context) async {
-    var result = await inviteRegistration(image, professionController.text,
-        cityController.text, organizationNameController.text, isRemembered);
+    var result = await inviteRegistration(image, selectedProfessionsObject[kDataID].toString(),
+        cityController.text, isRemembered,eventObj[kDataEventId].toString());
     // var result = await makePostRequest("POST", param, url) ;
     HideLoader(context);
-    if (result[kDataCode] == "200") {
-      if (result[kDataStatusCode] == 200) {
-        SetSharedPreference(kDataLoginUser, result[kDataData]);
-        globals.globalCurrentUser = result[kDataData];
-      } else {
-        ShowErrorMessage(result[kDataResult], context);
-      }
+    if (result[kDataData].length > 0) {
+      ShowSuccessMessage(result[kDataMessage], context);
+      Timer(Duration(seconds: 2), ()
+      {
+        Navigator.pop(context, true);
+      });
     } else {
       ShowErrorMessage(result[kDataError], context);
     }

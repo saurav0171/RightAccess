@@ -14,6 +14,7 @@ import 'home.dart';
 
 TextEditingController mobileController = TextEditingController();
 bool isRemembered = false;
+bool isObsecure = true;
 
 class Login extends StatelessWidget {
   @override
@@ -156,8 +157,7 @@ class _LoginExtensionState extends State<LoginExtension> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // alignment: Alignment.center,
-      height: MediaQuery.of(context).size.height - 80,
+      alignment: Alignment.center,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Form(
@@ -169,21 +169,21 @@ class _LoginExtensionState extends State<LoginExtension> {
               color: Colors.transparent,
               child: Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                    Padding(
                       padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: Image.asset("images/logo.jpg",width: 200,),
+                      child: Image.asset("images/logo.png",width: 200,),
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         height: 25,
                         child: Text(
-                          "LOGIN WITH US",
+                          "SIGN IN",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 22,
@@ -193,23 +193,23 @@ class _LoginExtensionState extends State<LoginExtension> {
                       ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        child: Text(
-                          "Request a call back regarding Together's B2B offerings using the form below.",
-                          textAlign: TextAlign.center,
-                          maxLines: 10,
-                          style: TextStyle(fontSize: 16, color: Colors.black54),
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 70,
+                    //     child: Text(
+                    //       "Request a call back regarding Right Access's B2B offerings using the form below.",
+                    //       textAlign: TextAlign.center,
+                    //       maxLines: 10,
+                    //       style: TextStyle(fontSize: 16, color: Colors.black54),
+                    //     ),
+                    //     alignment: Alignment.center,
+                    //   ),
+                    // ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
+                      padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
                       child: TextFormField(
                           focusNode: loginFocusNode,
                           controller: loginController,
@@ -217,8 +217,8 @@ class _LoginExtensionState extends State<LoginExtension> {
                           keyboardType: TextInputType.emailAddress,
                           textAlign: TextAlign.left,
                           decoration: setInputDecorationForEdit(
-                              "Email or mobile phone  number",
-                              "Email or mobile phone  number",
+                              "Email or Mobile",
+                              "Email or Mobile",
                               Colors.yellow,
                               Colors.orange,
                               Colors.blueGrey,
@@ -245,15 +245,53 @@ class _LoginExtensionState extends State<LoginExtension> {
                           style: TextStyle(color: Colors.black),
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: setInputDecorationForEdit(
-                              "Email Password",
-                              "Email Password",
-                              Colors.red,
-                              Colors.red,
-                              Colors.red,
-                              Icons.lock,
-                              passwordFocusNode),
-                          obscureText: true,
+                          decoration: InputDecoration(
+                            suffixIcon: GestureDetector(child: Icon(isObsecure? Icons.remove_red_eye_outlined:Icons.remove_red_eye_rounded,color: appThemeColor1,),
+                            onTap: (){
+                              setState(() {
+                                  isObsecure = !isObsecure;
+                                });
+                            },),
+                          labelStyle: TextStyle(
+                            color: passwordFocusNode.hasFocus ? appThemeColor1 : Colors.black,
+                          ),
+                          // fillColor: Colors.transparent,
+                          // filled: true,
+                          errorStyle: TextStyle(color: Colors.black),
+                          labelText: "Password",
+                          hintText: "Password",
+                          prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: appThemeColor1,
+                                ),
+                          focusColor: passwordFocusNode.hasFocus ? appThemeColor1 : Colors.black,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black45, width: 1),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(15.0),
+                              )),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black45, width: 1),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(15.0),
+                              )),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black45, width: 1),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(15.0),
+                              )),
+                              errorBorder:  OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red, width: 1),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(15.0),
+                              )),
+                              focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red, width: 1),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(15.0),
+                              )),
+                        ),
+                          obscureText: isObsecure,
                           validator: (value) {
                             if (value.isEmpty) {
                               return "Please enter your password";
@@ -263,48 +301,89 @@ class _LoginExtensionState extends State<LoginExtension> {
                           }),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            width: 30,
-                            height: 30,
-                            child: FlatButton(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 0.0, horizontal: 0.0),
-                              color: Colors.transparent,
-                              child: Icon(
-                                isRemembered
-                                    ? Icons.check_box
-                                    : Icons.check_box_outline_blank,
-                                size: 30,
-                                color: Colors.black45,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isRemembered = !isRemembered;
-                                });
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: Text(
-                              "Remember Me",
-                              textAlign: TextAlign.center,
-                              maxLines: 10,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: <Widget>[
+                    //       Container(
+                    //         width: 30,
+                    //         height: 30,
+                    //         child: FlatButton(
+                    //           padding: EdgeInsets.symmetric(
+                    //               vertical: 0.0, horizontal: 0.0),
+                    //           color: Colors.transparent,
+                    //           child: Icon(
+                    //             !isObsecure
+                    //                 ? Icons.check_box
+                    //                 : Icons.check_box_outline_blank,
+                    //             size: 30,
+                    //             color: Colors.black45,
+                    //           ),
+                    //           onPressed: () {
+                    //             setState(() {
+                    //               isObsecure = !isObsecure;
+                    //             });
+                    //           },
+                    //         ),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    //         child: Text(
+                    //           "Show",
+                    //           textAlign: TextAlign.center,
+                    //           maxLines: 10,
+                    //           style:
+                    //               TextStyle(fontSize: 16, color: Colors.black),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: <Widget>[
+                    //       Container(
+                    //         width: 30,
+                    //         height: 30,
+                    //         child: FlatButton(
+                    //           padding: EdgeInsets.symmetric(
+                    //               vertical: 0.0, horizontal: 0.0),
+                    //           color: Colors.transparent,
+                    //           child: Icon(
+                    //             isRemembered
+                    //                 ? Icons.check_box
+                    //                 : Icons.check_box_outline_blank,
+                    //             size: 30,
+                    //             color: Colors.black45,
+                    //           ),
+                    //           onPressed: () {
+                    //             setState(() {
+                    //               isRemembered = !isRemembered;
+                    //             });
+                    //           },
+                    //         ),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    //         child: Text(
+                    //           "Remember Me",
+                    //           textAlign: TextAlign.center,
+                    //           maxLines: 10,
+                    //           style:
+                    //               TextStyle(fontSize: 16, color: Colors.black),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 40, 0, 0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -345,6 +424,8 @@ class _LoginExtensionState extends State<LoginExtension> {
                                       fontStyle: FontStyle.normal)),
                               onPressed: () {
                                 if (loginKey.currentState.validate()) {
+                                  loginFocusNode.unfocus();
+                                  passwordFocusNode.unfocus();
                                   ShowLoader(context);
                                   SchedulerBinding.instance
                                       .addPostFrameCallback((_) => loginUser(
@@ -358,12 +439,12 @@ class _LoginExtensionState extends State<LoginExtension> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                       child: Container(
                         height: 30,
                         child: FlatButton(
                           child: Text(
-                            "REGISTER NOW",
+                            "JOIN NOW",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w500,color: Colors.black54),
                           ),
@@ -376,32 +457,32 @@ class _LoginExtensionState extends State<LoginExtension> {
                       ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 25,
-                        child: Text(
-                          "Powered By Right Access",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, color: Colors.black54),
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 25,
+                    //     child: Text(
+                    //       "Powered By Right Access",
+                    //       textAlign: TextAlign.center,
+                    //       style: TextStyle(fontSize: 18, color: Colors.black54),
+                    //     ),
+                    //   ),
+                    // ),
 
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 25,
-                        child: Text(
-                          "It is a long established fact that a reader",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18, color: Colors.black54),
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 25,
+                    //     child: Text(
+                    //       "It is a long established fact that a reader",
+                    //       textAlign: TextAlign.center,
+                    //       style: TextStyle(fontSize: 18, color: Colors.black54),
+                    //     ),
+                    //     alignment: Alignment.center,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

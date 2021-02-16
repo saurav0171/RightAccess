@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:right_access/Globals/globals.dart';
 import 'package:right_access/ServerFiles/serviceAPI.dart';
@@ -33,6 +32,8 @@ final appBackgroundColor = Color(0xFFFFFFFF);
 final appThemeColor1 = Color(0xFFE0161D);
 final appThemeColor2 = Color(0xFF3885C6);
 // final lightTheme2Color = Color(0xFF04A4FF);
+
+final appEventColor = Color(0xFF076DB7);
 
 final galleryBackgroundColor = "#202021";
 final greyShadeColor = "#434445";
@@ -88,8 +89,8 @@ final kDataCountry = "country";
 final kDataEmail = "email";
 final kDataPhoneCode = "phone_code";
 final kDataPassword = "password";
-final kDataFirstname = "firstName";
-final kDataLastname = "lastName";
+final kDataFirstname = "first_name";
+final kDataLastname = "last_name";
 final kDataStartDate = "start_date";
 final kDataStartDateTime = "start_datetime";
 final kDataEndDateTime ="end_datetime";
@@ -104,6 +105,7 @@ final kDataStates = "states";
 final kDataCities = "cities";
 final kDataAddress = "address";
 final kDataMobile = "mobile";
+final kDataMobileNumber = "mobile_number";
 final kDataAvatar = "avatar";
 final kDataOtpCode = "otpCode";
 final kDataStatus = "status";
@@ -235,7 +237,31 @@ final kDataModuleType = "module_type";
 final kDataEventSponsors = "event_sponsors";
 final kDataCountryCode = "country_code";
 final kDataBannerImage = "banner_image";
+final kDataBannerUrl = "banner_url";
 final kDataEventPreStage = "event_pre_stage";
+final kDataMediumProfileImage = "medium_profile_image";
+final kDataSubject = "subject";
+final kDataMainVenue = "main_venue";
+final kDataResource = "resource";
+final kDataSalutation = "salutation";
+final kDataSalutations = "salutations";
+final kDataEvent = "event";
+final kDataOrganizationLogo = "organization_logo";
+final kDataEventId = "event_id";
+final kDataLink = "link";
+final kDataUserRegistrationStatus = "user_registration_status";
+final kDataInvitationLists = "invitation_lists";
+final kDataInvitationId = "invitation_id";
+final kDataHasInviteAccess = "has_invite_access";
+final kDataOrganizationName = "organization_name";
+final kDataThumbProfileImage = "thumb_profile_image";
+final kDataDocument = "document";
+final kDataSponserDisplayName = "sponser_display_name";
+
+
+
+
+
 
 int selectedIndex = -1;
 
@@ -374,7 +400,7 @@ Spin kit Source : https://flutterappdev.com/2019/01/29/a-collection-of-loading-i
 showAlertDialog(String msg, BuildContext context) {
   // set up the AlertDialog
   final AlertDialog alert = AlertDialog(
-    title: Text("Alert!"),
+    title: Text("Right Access"),
     content: Text(msg),
     actions: [
       FlatButton(
@@ -404,17 +430,18 @@ void ShowLoader(BuildContext context) {
           child: AbsorbPointer(
             absorbing: true,
             // child: Image.asset("images/loader.gif"),
-            child: SpinKitFadingGrid(
-              itemBuilder: (_, int index) {
-                return DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: index.isEven ? appThemeColor1 : appThemeColor2,
-                  ),
-                );
-              },
-              // color: hexToColor(mustardColor),
-              size: 50.0,
-            ),
+            child: SpinKitCircle(color: Colors.grey,size: 75,)
+            // SpinKitWave(
+            //   itemBuilder: (_, int index) {
+            //     return DecoratedBox(
+            //       decoration: BoxDecoration(
+            //         color: index.isEven ? appThemeColor1 : Colors.black,
+            //       ),
+            //     );
+            //   },
+            //   // color: hexToColor(mustardColor),
+            //   size: 50.0,
+            // ),
           ),
         );
       }));
@@ -577,7 +604,7 @@ InputDecoration setInputDecorationForEdit(
     ),
     // fillColor: Colors.transparent,
     // filled: true,
-    errorStyle: TextStyle(color: Colors.black),
+    errorStyle: TextStyle(color: Colors.red),
     labelText: labelText,
     hintText: hintText,
     prefixIcon: prefix == null
@@ -599,6 +626,16 @@ InputDecoration setInputDecorationForEdit(
         )),
     focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.black45, width: 1),
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(15.0),
+        )),
+        errorBorder:  OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1),
+        borderRadius: const BorderRadius.all(
+          const Radius.circular(15.0),
+        )),
+        focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 1),
         borderRadius: const BorderRadius.all(
           const Radius.circular(15.0),
         )),
@@ -861,7 +898,7 @@ launchEmail(String emaill) async {
   final Uri _emailLaunchUri = Uri(
       scheme: 'mailto',
       path: emaill,
-      queryParameters: {'subject': 'Plasma Donation'});
+      queryParameters: {'subject': 'Right Access'});
   launch(_emailLaunchUri.toString());
 }
 
@@ -880,7 +917,7 @@ showAlert(BuildContext context, String message) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text(
-      "MEDIT",
+      "Right Access",
       style: TextStyle(color: appThemeColor1),
     ),
     content: Text(message),
@@ -929,38 +966,8 @@ rotatePersonImage(BuildContext context, File image3) async {
   return imageB642;
 }
 
-Future<dynamic> compressImageFunction(File image) async {
-  if (image.path.contains(".JPG") ||
-      image.path.contains(".jpg") ||
-      image.path.contains(".jpeg") ||
-      image.path.contains(".JPEG")) {
-    final dir = await path_provider.getTemporaryDirectory();
-    final targetPath = dir.absolute.path + "/" + basename(image.path);
-    image = await testCompressAndGetFile(image, targetPath, false);
-  } else if (image.path.contains(".PNG") || image.path.contains(".png")) {
-    final dir = await path_provider.getTemporaryDirectory();
-    final targetPath = dir.absolute.path + "/" + basename(image.path);
-    image = await testCompressAndGetFile(image, targetPath, true);
-  }
-  return image;
-}
 
-Future<File> testCompressAndGetFile(
-    File file, String targetPath, bool isPNG) async {
-  print("testCompressAndGetFile");
-  final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path, targetPath,
-      quality: isPNG ? 70 : 90,
-      minWidth: 1024,
-      minHeight: 1024,
-      rotate: 360,
-      format: isPNG ? CompressFormat.png : CompressFormat.jpeg);
 
-  print(file.lengthSync());
-  print(result.lengthSync());
-
-  return result;
-}
 
 Widget logoText() {
   return Row(

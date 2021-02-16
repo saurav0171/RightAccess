@@ -48,15 +48,10 @@ class _CountryExtensionState extends State<CountrySelectionExtension> {
       setState(() {
         countriesList = result[kDataData];
       });
-    } else if (result[kDataCode] == "401") {
-      ShowErrorMessage(result[kDataResult], context);
-      HideLoader(context);
-    } else if (result[kDataCode] == "422") {
-      ShowErrorMessage(result[kDataMessage], context);
-      HideLoader(context);
+    }  else if (result[kDataCode] == "401" || result[kDataCode] == "404" || result[kDataCode] == "422") {
+      showAlertDialog(result[kDataMessage], context);
     } else {
-      ShowErrorMessage(result[kDataError], context);
-      HideLoader(context);
+      showAlertDialog(result[kDataError], context);
     }
   }
 

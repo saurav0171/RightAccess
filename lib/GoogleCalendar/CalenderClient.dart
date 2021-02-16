@@ -1,15 +1,17 @@
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import "package:googleapis_auth/auth_io.dart";
 import 'package:googleapis/calendar/v3.dart';
+import 'package:right_access/CommonFiles/common.dart';
+import 'package:right_access/Globals/globals.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CalendarClient {
   static const _scopes = const [CalendarApi.CalendarScope];
 
   insert(title, startTime, endTime) {
-    var _clientID = new ClientId("228053407368-hmr6a5p4llmtena8sqjq7qmsg7noabda.apps.googleusercontent.com", "");
+    var _clientID = new ClientId(Platform.isAndroid?"228053407368-hmr6a5p4llmtena8sqjq7qmsg7noabda.apps.googleusercontent.com":"228053407368-k3ti8ku6hhfa6loch0781gml2nslh3eq.apps.googleusercontent.com", "");
     clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) {
       var calendar = CalendarApi(client);
       calendar.calendarList.list().then((value) => print("VAL________$value"));
@@ -33,12 +35,15 @@ class CalendarClient {
           print("ADDEDDD_________________${value.status}");
           if (value.status == "confirmed") {
             log('Event added in google calendar');
+           return {kDataStatus:"true"};
           } else {
             log("Unable to add event in google calendar");
+            return {kDataStatus:"false"};
           }
         });
       } catch (e) {
         log('Error creating event $e');
+        return {kDataStatus:"false"};
       }
     });
   }
